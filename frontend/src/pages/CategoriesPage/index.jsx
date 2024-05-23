@@ -1,25 +1,27 @@
+// Third party
 import React from "react";
 
-import Heading from "../../components/Heading";
+// Components
 import Navbar from "../../components/Navbar";
-import BlogGrid from "../../components/BlogGrid";
-import SubHeading from "../../components/SubHeading";
+import Heading from "../../components/Heading";
 import CategoryList from "../../components/CategoryList";
 import Footer from "../../components/Footer";
 
+// Styles
+import "../../App.css";
+
 const data = require("../../dummy-data.json");
-const blogs = data.blogPosts.reverse();
 const categories = data.categories;
 
-export default function HomePage() {
+export default function CategoriesPage() {
   return (
     <>
       <Navbar />
       <div className="container">
         <Heading />
-        <SubHeading subHeading={"Recent Blog Posts"} />
-        <BlogGrid blogPosts={blogs}></BlogGrid>
-        <SubHeading subHeading={"Categories"} />
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <p className="page-subtitle">Categories</p>
+        </div>
         <CategoryList categories={categories}></CategoryList>
       </div>
       <Footer />

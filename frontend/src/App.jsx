@@ -4,13 +4,13 @@ import "bootstrap/dist/js/bootstrap.bundle.min";
 import "bootstrap/dist/js/bootstrap.min.js";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import HomePage from "./pages/HomePage";
-import Footer from "./components/Footer";
+import CategoriesPage from "./pages/CategoriesPage";
 
 function App() {
   return (
     <div className="App">
-      <HomePage />
-      <Footer />
+      {/* <HomePage /> */}
+      <CategoriesPage />
     </div>
   );
 }
