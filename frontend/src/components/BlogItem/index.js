@@ -1,5 +1,6 @@
 import React from "react";
 import BlogItemText from "../BlogItemText";
+import "./index.css"
 
 export default function BlogItem ({imageOrientation, index, blogPost, setBlog}) {
     if (imageOrientation === "top") {

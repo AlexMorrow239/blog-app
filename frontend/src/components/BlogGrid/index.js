@@ -1,5 +1,6 @@
 import React from "react";
 import BlogItem from "../BlogItem"
+import "./index.css"
 
 export default function BlogGrid({blogPosts}) {
     if (!blogPosts || !blogPosts.length) {
