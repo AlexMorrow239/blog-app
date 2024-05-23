@@ -43,3 +43,10 @@ export default function BlogItem({
     );
   }
 }
+
+BlogItem.prototype = {
+  imageOrientation: PropTypes.string.isRequired,
+  index: PropTypes.string.isRequired,
+  blogPost: PropTypes.object.isRequired,
+  setBlog: PropTypes.func.isRequired,
+};
