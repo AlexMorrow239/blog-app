@@ -1,5 +1,5 @@
 import React from "react";
-import BlogItem from "./BlogItem";
+import BlogItem from "../../components/BlogItem";
 import PropTypes from "prop-types";
 
 export default function BlogList({ blogs }) {
