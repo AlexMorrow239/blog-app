@@ -1,15 +1,16 @@
 import React from "react";
-import BlogItem from "../BlogItem"
-import "./index.css"
+import BlogItem from "../BlogItem";
+import PropTypes from "prop-types";
+import "./index.css";
 
-export default function BlogGrid({blogPosts}) {
-    if (!blogPosts || !blogPosts.length) {
-        return null;
-    }
+export default function BlogGrid({ blogPosts }) {
+  if (!blogPosts || !blogPosts.length) {
+    return null;
+  }
 
-    return (
-        <>
-        <div className="blog-grid-container">
+  return (
+    <>
+      <div className="blog-grid-container">
         <div className="item-1">
           {blogPosts.length > 0 && (
             <BlogItem
@@ -43,7 +44,10 @@ export default function BlogGrid({blogPosts}) {
           <BlogItem index={3} blogPost={blogPosts[3]} />
         </div>
       )}
-        </>
-    )
-
+    </>
+  );
 }
+
+BlogGrid.prototype = {
+  blogPost: PropTypes.array.isRequired,
+};

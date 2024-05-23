@@ -1,10 +1,11 @@
 import React from "react";
 
-import Heading from "../Heading";
-import Navbar from "../Navbar";
-import BlogGrid from "../BlogGrid";
-import SubHeading from "../SubHeading";
-import CategoryList from "../CategoryList";
+import Heading from "../../components/Heading";
+import Navbar from "../../components/Navbar";
+import BlogGrid from "../../components/BlogGrid";
+import SubHeading from "../../components/SubHeading";
+import CategoryList from "../../components/CategoryList";
+import Footer from "../../components/Footer";
 
 const data = require("../../dummy-data.json");
 const blogs = data.blogPosts.reverse();
