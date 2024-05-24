@@ -1,0 +1,14 @@
+.scroll-menu {
+  overflow: auto;
+  white-space: nowrap;
+}
+
+.scroll-menu button {
+  background-color: white;
+  border: none;
+  display: inline-block;
+  color: white;
+  text-align: center;
+  padding: 14px;
+  font-size: larger;
+}

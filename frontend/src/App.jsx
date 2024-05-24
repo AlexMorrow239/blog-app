@@ -1,26 +1,42 @@
-import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.bundle.min";
 import "bootstrap/dist/js/bootstrap.min.js";
-import "bootstrap-icons/font/bootstrap-icons.css";
-import HomePage from "./pages/HomePage";
-import CategoriesPage from "./pages/CategoriesPage";
-import BlogPage from "./pages/BlogPage";
+import "bootstrap/dist/js/bootstrap.bundle.min";
 
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import "./App.css";
+
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
+import HomePage from "./pages/HomePage";
+import BlogsPage from "./pages/BlogsPage";
+import BlogPage from "./pages/BlogPage";
+import CategoriesPage from "./pages/CategoriesPage";
+
+const routes = [
+  {
+    path: "",
+    element: <HomePage />,
+  },
+  {
+    path: "/home",
+    element: <HomePage />,
+  },
+  {
+    path: "/blogs",
+    element: <BlogsPage />,
+  },
+  {
+    path: "/blog/:blogId",
+    element: <BlogPage />,
+  },
+  {
+    path: "/categories",
+    element: <CategoriesPage />,
+  },
+];
+const router = createBrowserRouter(routes);
 
 function App() {
-  return (
-    <Router>
-      <div className="App">
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/categories" element={<CategoriesPage />} />
-          <Route path="/blog" element={<BlogPage />} />
-        </Routes>
-      </div>
-    </Router>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;

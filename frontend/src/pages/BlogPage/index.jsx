@@ -1,32 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 
-import Navbar from "../../components/Navbar";
-import Heading from "../../components/Heading";
-import BlogList from "../../components/BlogList";
-import Footer from "../../components/Footer";
-
-import "../../App.css";
-
-import PropTypes from "prop-types";
-
-const data = require("../../dummy-data.json");
-const blogPosts = data.blogPosts;
+import { useParams } from "react-router-dom";
 
 export default function BlogPage() {
-  const [blogs, setBlogs] = useState(blogPosts);
+  const { blogId } = useParams();
 
-  return (
-    <>
-      <Navbar />
-      <div className="container">
-        <Heading />
-        <BlogList blogs={blogs} />
-      </div>
-      <Footer />
-    </>
-  );
+  console.log(blogId);
+  return <div>TODO Build the read blog page</div>;
 }
-
-BlogPage.prototype = {
-  blogs: PropTypes.array.isRequired,
-};
