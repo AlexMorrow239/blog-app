@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import Navbar from "../../components/Navbar";
 import Heading from "../../components/Heading";
@@ -13,12 +13,14 @@ const data = require("../../dummy-data.json");
 const blogPosts = data.blogPosts;
 
 export default function BlogPage() {
+  const [blogs, setBlogs] = useState(blogPosts);
+
   return (
     <>
       <Navbar />
       <div className="container">
         <Heading />
-        <BlogList blogs={blogPosts} />
+        <BlogList blogs={blogs} />
       </div>
       <Footer />
     </>
