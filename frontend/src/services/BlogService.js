@@ -19,7 +19,8 @@ const getBlogs = async () => {
 const getBlogsByCategoryId = async (categoryId) => {
   try {
     const blogsRes = await fetch(
-      "https://ix-blog-app-2d5c689132cd.herokuapp.com/api/blogs/category/",
+      "https://ix-blog-app-2d5c689132cd.herokuapp.com/api/blogs/category/" +
+        categoryId,
       { method: "GET", headers: { "Content-Type": "application/json" } }
     );
     const filteredBlogs = await blogsRes.json();

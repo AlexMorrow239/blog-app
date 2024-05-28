@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
+const blogController = require("../controllers/blogController");
+
 /** GET /api/blogs/ */
 router.get("/", (req, res) => {
   res.send("Hello Alex!");

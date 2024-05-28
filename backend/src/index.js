@@ -1,7 +1,7 @@
 // Imports
 const express = require("express");
 const cors = require("cors");
-const blogRoutes = require("./routes/BlogsRoutes");
+const blogRoutes = require("./routes/blogs");
 
 // Instantiate Express and define the port
 const app = express();

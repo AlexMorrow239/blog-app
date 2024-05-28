@@ -14,31 +14,24 @@ export default function BlogsPage() {
 
   const [blogs, setBlogs] = useState();
   const [categories, setCategories] = useState([]);
-
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const blogsRes = await BlogService.getBlogs();
-        const categoriesRes = await CategoryService.getCategories();
-        setCategories(categoriesRes);
-        setBlogs(blogsRes);
-        setLoading(false);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
-  }, []);
+  const [loading, setLoading] = useState([]);
 
   useEffect(() => {
     const getBlogsByCategoryId = async () => {
       try {
-        const filterBlogs = await BlogService.getBlogsByCategoryId(categoryId);
+        setLoading(true);
+
+        const categoriesRes = await CategoryService.getCategories();
+        const filterBlogs = await BlogService.getBlogsByCategoryId(
+          categoryId || null
+        );
+
         setBlogs(filterBlogs);
+        setCategories(categoriesRes);
+        setLoading(false);
       } catch (error) {
         console.log(error);
+        setLoading(false);
       }
     };
     getBlogsByCategoryId();
@@ -55,8 +48,7 @@ export default function BlogsPage() {
           className="link"
           key={category.id}
           style={{ color: "blue" }}
-          to={"/blogs/" + categoryId}
-          onClick={setLoading(true)}
+          to={"/blogs/" + category.id}
         >
           <p key={category.id}>{category.title}</p>
         </Link>
@@ -65,8 +57,7 @@ export default function BlogsPage() {
           className="link"
           key={category.id}
           style={{ color: "black" }}
-          to={"/blogs/" + categoryId}
-          onClick={setLoading(true)}
+          to={"/blogs/" + category.id}
         >
           <p key={category.id}>{category.title}</p>
         </Link>
@@ -76,9 +67,9 @@ export default function BlogsPage() {
 
   if (loading) {
     return (
-      <div classname="d-flex justify-content-center align-items-center">
-        <div class="spinner-border" role="status">
-          <span class="sr-only">Loading...</span>
+      <div className="d-flex justify-content-center align-items-center">
+        <div className="spinner-border" role="status">
+          <span className="visually-hidden">Loading...</span>
         </div>
       </div>
     );
