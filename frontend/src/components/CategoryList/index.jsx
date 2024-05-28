@@ -3,7 +3,10 @@ import PropTypes from "prop-types";
 import "./index.css";
 
 export default function CategoryList({ categories }) {
-  if (!categories) return null;
+  if (!categories && categories?.length) {
+    return null;
+  }
+
   return (
     <div className="category-list">
       {categories?.map((category, index) => {

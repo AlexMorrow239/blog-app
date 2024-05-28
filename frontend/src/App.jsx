@@ -21,7 +21,7 @@ const routes = [
     element: <HomePage />,
   },
   {
-    path: "/blogs",
+    path: "/blogs/:categoryId?",
     element: <BlogsPage />,
   },
   {

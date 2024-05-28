@@ -1,5 +1,6 @@
 // Third party
 import React from "react";
+import { useEffect, useState } from "react";
 
 // Components
 import Navbar from "../../components/Navbar";
@@ -7,13 +8,25 @@ import Heading from "../../components/Heading";
 import CategoryList from "../../components/CategoryList";
 import Footer from "../../components/Footer";
 
+import CategoryService from "../../services/CategoryService";
 // Styles
 import "../../App.css";
 
-const data = require("../../dummy-data.json");
-const categories = data.categories;
-
 export default function CategoriesPage() {
+  const [categories, setCategories] = useState();
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const categoriesData = await CategoryService.getCategories();
+        setCategories(categoriesData);
+      } catch (error) {
+        throw new Error(error);
+      }
+    };
+    fetchCategories();
+  }, []);
+
   return (
     <>
       <Navbar />
