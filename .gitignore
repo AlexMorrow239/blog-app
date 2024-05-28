@@ -20,4 +20,8 @@
 /frontend/npm-debug.log*
 /frontend/yarn-debug.log*
 /frontend/yarn-error.log*
-#-----------------------------------
+
+# EXPRESS BACKEND-----------------
+# dependencies
+/backend/node_modules
+
