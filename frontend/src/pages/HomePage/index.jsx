@@ -6,39 +6,54 @@ import SubHeading from "../../components/SubHeading";
 import BlogGrid from "../../components/BlogGrid";
 import CategoriesList from "../../components/CategoryList";
 import Footer from "../../components/Footer";
+import Loader from "../../components/Loader";
+import SuccessToast from "../../components/SuccessToast";
+import ErrorToast from "../../components/ErrorToast";
 
 import BlogService from "../../services/BlogService";
 import CategoryService from "../../services/CategoryService";
 
 export default function HomePage() {
-  const [blogs, setBlogs] = useState();
-  const [categories, setCategories] = useState();
-  const [loading, setLoading] = useState(true);
+  const [blogs, setBlogs] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [isError, setIsError] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
-    const renderPage = async () => {
+    const fetchData = async () => {
       try {
-        const blogsRes = await BlogService.getBlogs();
-        const categoriesRes = await CategoryService.getCategories();
+        setIsLoading(true);
+        const blogs = await BlogService.fetchBlogs();
+        const categories = await CategoryService.fetchCategories();
 
-        setBlogs(blogsRes);
-        setCategories(categoriesRes);
-        setLoading(false);
-      } catch (err) {
-        console.log(err);
+        setBlogs(blogs.data.reverse());
+        setCategories(categories.data.reverse());
+        setIsSuccess(true);
+        setMessage(blogs.message);
+        setIsLoading(false);
+      } catch (error) {
+        setIsError(true);
+        setMessage(error.message);
+        setIsLoading(false);
       }
     };
-    renderPage();
+    fetchData();
   }, []);
 
-  if (loading) {
-    return (
-      <div className="d-flex justify-content-center align-items-center">
-        <div className="spinner-border" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
-      </div>
-    );
+  const resetSuccess = () => {
+    setIsSuccess(false);
+    setMessage("");
+  };
+
+  const resetError = () => {
+    setIsError(false);
+    setMessage("");
+  };
+
+  if (isLoading) {
+    return <Loader />;
   }
 
   return (
@@ -51,6 +66,10 @@ export default function HomePage() {
         <CategoriesList categories={categories} />
         <Footer />
       </div>
+
+      <SuccessToast show={isSuccess} message={message} onClose={resetSuccess} />
+
+      <ErrorToast show={isError} message={message} onClose={resetError} />
     </>
   );
 }

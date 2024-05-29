@@ -1,9 +1,10 @@
 const Blog = require("../models/blogModel");
+const Category = require("../models/categoryModel");
 
 const getBlogs = async (req, res) => {
   try {
     const blogs = await Blog.find();
-    res.status(200).json({ message: "get all blogs", data: [] });
+    res.status(200).json({ message: "get all blogs", data: blogs });
   } catch (error) {
     res.status(500).json({ message: error.message, data: [] });
   }
@@ -11,11 +12,47 @@ const getBlogs = async (req, res) => {
 
 const getBlogById = async (req, res) => {
   try {
-    const blog = await Blog.findById(req.parama.id);
+    const blog = await Blog.findById(req.params.id);
     if (blog) {
-      res.status(200).json({ message: "get a blog by id", data: [] });
+      res.status(200).json({ message: "get a blog by id", data: blog });
     } else {
       res.status(404).json({ message: "blog not found", data: [] });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message, data: [] });
+  }
+};
+
+const getBlogsByCategoryId = async (req, res) => {
+  try {
+    const blogs = await Blog.find({});
+    if (blogs) {
+      blogs.filter((blog) => {
+        blog.categoryIds.some((categoryId) => {
+          return categoryId === req.params.categoryIds;
+        });
+      });
+      res
+        .status(200)
+        .json({ message: "get blogs by category id", data: blogs });
+    } else {
+      res.status(500).json({ message: "there are no blogs", data: [] });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message, data: [] });
+  }
+};
+
+const getBlogsByAuthorId = async (req, res) => {
+  try {
+    const blogs = await Blog.find({});
+    if (blogs) {
+      blogs.filter((blog) => {
+        blog.authorId === req.params.authorId;
+      });
+      res.status(200).json({ message: "get blogs by author id", data: blogs });
+    } else {
+      res.status(500).json({ message: "there are no blogs", data: [] });
     }
   } catch (error) {
     res.status(500).json({ message: error.message, data: [] });
@@ -62,9 +99,9 @@ const updateBlogById = async (req, res) => {
 
 const deleteBlogById = async (req, res) => {
   try {
-    const blog = await Blog.findByIdAndRemove(req.params.id);
+    const blog = await Blog.findByIdAndDelete(req.params.id);
     if (blog) {
-      return res.status(200).json({ message: "delete a blog", data: [] });
+      return res.status(200).json({ message: "delete a blog", data: blog });
     } else {
       return res.status(404).json({ message: "blog not found", data: [] });
     }
@@ -77,6 +114,8 @@ module.exports = {
   getBlogs,
   createBlog,
   getBlogById,
+  getBlogsByCategoryId,
+  getBlogsByAuthorId,
   updateBlogById,
   deleteBlogById,
 };

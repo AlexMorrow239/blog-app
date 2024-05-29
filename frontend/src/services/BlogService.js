@@ -1,38 +1,141 @@
-const getBlogs = async () => {
-  try {
-    const data = await fetch(
-      "https://ix-blog-app-2d5c689132cd.herokuapp.com/api/blogs",
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    const blogsApiData = await data.json();
-    return blogsApiData.data;
-  } catch (error) {
-    throw new Error(error);
+const createBlog = async (blog) => {
+  const response = await fetch("http://localhost:8000/api/blogs", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: blog,
+  });
+
+  if (!response.ok) {
+    let res = await response.json();
+    throw res;
   }
+
+  const responseData = await response.json();
+  return responseData;
 };
 
-const getBlogsByCategoryId = async (categoryId) => {
-  try {
-    const blogsRes = await fetch(
-      "https://ix-blog-app-2d5c689132cd.herokuapp.com/api/blogs/category/" +
-        categoryId,
-      { method: "GET", headers: { "Content-Type": "application/json" } }
-    );
-    const filteredBlogs = await blogsRes.json();
-    return filteredBlogs.data;
-  } catch (error) {
-    console.log(error);
+const fetchBlogs = async () => {
+  const response = await fetch("http://localhost:8000/api/blogs", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    let res = await response.json();
+    throw res;
   }
+
+  const responseData = await response.json();
+  return responseData;
+};
+
+const fetchBlogById = async (id) => {
+  const response = await fetch("http://localhost:8000/api/blogs/" + id, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    let res = await response.json();
+    throw res;
+  }
+
+  const responseData = await response.json();
+  return responseData;
+};
+
+const fetchBlogsByCategoryId = async (categoryId) => {
+  const response = await fetch(
+    "http://localhost:8000/api/blogs/category/" + categoryId,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  if (!response.ok) {
+    let res = await response.json();
+    throw res;
+  }
+
+  const responseData = await response.json();
+  return responseData;
+};
+
+const fetchBlogsByAuthorId = async (authorId) => {
+  const response = await fetch(
+    "http://localhost:8000/api/blogs/author/" + authorId,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  if (!response.ok) {
+    let res = await response.json();
+    throw res;
+  }
+
+  const responseData = await response.json();
+  return responseData;
+};
+
+const updateBlog = async (blog) => {
+  const response = await fetch(
+    "http://localhost:8000/api/blogs/" + blog.get("id"),
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: blog,
+    }
+  );
+
+  if (!response.ok) {
+    let res = await response.json();
+    throw res;
+  }
+
+  const responseData = await response.json();
+  return responseData;
+};
+
+const deleteBlogsById = async (id) => {
+  const response = await fetch("http://localhost:8000/api/blogs/" + id, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    let res = await response.json();
+    throw res;
+  }
+
+  const responseData = await response.json();
+  return responseData;
 };
 
 const BlogService = {
-  getBlogs,
-  getBlogsByCategoryId,
+  createBlog,
+  fetchBlogs,
+  fetchBlogById,
+  fetchBlogsByCategoryId,
+  fetchBlogsByAuthorId,
+  updateBlog,
+  deleteBlogsById,
 };
 
 export default BlogService;

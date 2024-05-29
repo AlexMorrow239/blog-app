@@ -1,5 +1,6 @@
 import React from "react";
 import BlogItemText from "../BlogItemText";
+import EditButtons from "../EditButtons";
 import PropTypes from "prop-types";
 import "./index.css";
 
@@ -8,7 +9,16 @@ export default function BlogItem({
   index,
   blogPost,
   setBlog,
+  setEditBlog,
+  setDeleteBlog,
 }) {
+  const EditButtonsContainer = () => {
+    <EditButtons
+      onEdit={() => setEditBlog(blogPost)}
+      onDelete={() => setDeleteBlog(blogPost)}
+    />;
+  };
+
   if (imageOrientation === "top") {
     return (
       <div
@@ -18,10 +28,8 @@ export default function BlogItem({
       >
         <img src={blogPost.image} className="card-img-top" alt="..." />
         <div className="card-text-bottom">
-          <BlogItemText
-            blogPost={blogPost}
-            headerFontSize="20px"
-          ></BlogItemText>
+          <BlogItemText blogPost={blogPost} headerFontSize="20px" />
+          <EditButtonsContainer />
         </div>
       </div>
     );
@@ -49,4 +57,6 @@ BlogItem.prototype = {
   index: PropTypes.string.isRequired,
   blogPost: PropTypes.object.isRequired,
   setBlog: PropTypes.func.isRequired,
+  setEditBlog: PropTypes.func.isRequired,
+  setDeleteBlog: PropTypes.func.isRequired,
 };
