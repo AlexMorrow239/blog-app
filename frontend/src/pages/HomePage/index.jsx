@@ -13,6 +13,7 @@ import CategoryService from "../../services/CategoryService";
 export default function HomePage() {
   const [blogs, setBlogs] = useState();
   const [categories, setCategories] = useState();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const renderPage = async () => {
@@ -22,12 +23,23 @@ export default function HomePage() {
 
         setBlogs(blogsRes);
         setCategories(categoriesRes);
+        setLoading(false);
       } catch (err) {
         console.log(err);
       }
     };
     renderPage();
   }, []);
+
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center">
+        <div className="spinner-border" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
