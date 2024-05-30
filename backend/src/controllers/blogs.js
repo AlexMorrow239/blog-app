@@ -1,10 +1,9 @@
 const Blog = require("../models/blogModel");
-const Category = require("../models/categoryModel");
 
 const getBlogs = async (req, res) => {
   try {
     const blogs = await Blog.find();
-    res.status(200).json({ message: "get all blogs", data: blogs });
+    res.status(201).json({ message: "get all blogs", data: blogs });
   } catch (error) {
     res.status(500).json({ message: error.message, data: [] });
   }
@@ -14,7 +13,7 @@ const getBlogById = async (req, res) => {
   try {
     const blog = await Blog.findById(req.params.id);
     if (blog) {
-      res.status(200).json({ message: "get a blog by id", data: blog });
+      res.status(201).json({ message: "get a blog by id", data: blog });
     } else {
       res.status(404).json({ message: "blog not found", data: [] });
     }
@@ -33,7 +32,7 @@ const getBlogsByCategoryId = async (req, res) => {
         });
       });
       res
-        .status(200)
+        .status(201)
         .json({ message: "get blogs by category id", data: blogs });
     } else {
       res.status(500).json({ message: "there are no blogs", data: [] });
@@ -50,7 +49,7 @@ const getBlogsByAuthorId = async (req, res) => {
       blogs.filter((blog) => {
         blog.authorId === req.params.authorId;
       });
-      res.status(200).json({ message: "get blogs by author id", data: blogs });
+      res.status(201).json({ message: "get blogs by author id", data: blogs });
     } else {
       res.status(500).json({ message: "there are no blogs", data: [] });
     }
@@ -88,7 +87,7 @@ const updateBlogById = async (req, res) => {
       blog.content = req.body.content || blog.content;
 
       const updatedBlog = await blog.save();
-      res.status(200).json({ message: "update a blog", data: updatedBlog });
+      res.status(201).json({ message: "update a blog", data: updatedBlog });
     } else {
       res.status(404).json({ message: "blog not found", data: [] });
     }
@@ -101,7 +100,7 @@ const deleteBlogById = async (req, res) => {
   try {
     const blog = await Blog.findByIdAndDelete(req.params.id);
     if (blog) {
-      return res.status(200).json({ message: "delete a blog", data: blog });
+      return res.status(201).json({ message: "delete a blog", data: blog });
     } else {
       return res.status(404).json({ message: "blog not found", data: [] });
     }
