@@ -6,7 +6,7 @@ import SubHeading from "../../components/SubHeading";
 import BlogGrid from "../../components/BlogGrid";
 import CategoriesList from "../../components/CategoryList";
 import Footer from "../../components/Footer";
-import Loader from "../../components/Loader";
+import Loader from "../../components/Loading";
 import SuccessToast from "../../components/SuccessToast";
 import ErrorToast from "../../components/ErrorToast";
 

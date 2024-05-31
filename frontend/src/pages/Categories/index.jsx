@@ -8,7 +8,7 @@ import Heading from "../../components/Heading";
 import CategoryList from "../../components/CategoryList";
 import Footer from "../../components/Footer";
 
-import CategoryService from "../../services/CategoryService";
+import CategoryService from "../../services/Category";
 // Styles
 import "../../App.css";
 

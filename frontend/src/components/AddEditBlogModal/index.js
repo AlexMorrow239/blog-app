@@ -5,7 +5,7 @@ import { Modal } from "bootstrap";
 import Categories from "../Categories";
 import SuccessToast from "../../components/SuccessToast";
 import ErrorToast from "../../components/ErrorToast";
-import Loader from "../../components/Loader";
+import Loader from "../Loading";
 
 /**
  * AddEditBlogModal component

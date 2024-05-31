@@ -4,16 +4,22 @@ const createBlog = async (blog) => {
     headers: {
       "Content-Type": "application/json",
     },
-    body: blog,
+    body: JSON.stringify(blog),
   });
 
   if (!response.ok) {
-    let res = await response.json();
-    throw res;
+    try {
+      let res = await response.json();
+      throw res.message || JSON.stringify(res);
+    } catch (err) {
+      console.log(err);
+      const error = new Error("Something went wrong");
+      throw error.message;
+    }
   }
 
-  const responseData = await response.json();
-  return responseData;
+  const blogsApiData = await response.json();
+  return blogsApiData;
 };
 
 const fetchBlogs = async () => {
@@ -25,34 +31,45 @@ const fetchBlogs = async () => {
   });
 
   if (!response.ok) {
-    let res = await response.json();
-    throw res;
+    try {
+      let res = await response.json();
+      throw res.message || JSON.stringify(res);
+    } catch (err) {
+      console.log(err);
+      const error = new Error("Something went wrong");
+      throw error.message;
+    }
   }
 
-  const responseData = await response.json();
-  return responseData;
+  const blogsApiData = await response.json();
+  return blogsApiData;
 };
 
-const fetchBlogById = async (id) => {
+const fetchBlogByID = async (id) => {
   const response = await fetch("http://localhost:8000/api/blogs/" + id, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
   });
-
   if (!response.ok) {
-    let res = await response.json();
-    throw res;
+    try {
+      let res = await response.json();
+      throw res.message || JSON.stringify(res);
+    } catch (err) {
+      console.log(err);
+      const error = new Error("Something went wrong");
+      throw error.message;
+    }
   }
 
-  const responseData = await response.json();
-  return responseData;
+  const blogsApiData = await response.json();
+  return blogsApiData;
 };
 
 const fetchBlogsByCategoryId = async (categoryId) => {
   const response = await fetch(
-    "http://localhost:8000/api/blogs/category/" + categoryId,
+    "http://localhost:8000/api/blogs/categories/" + categoryId,
     {
       method: "GET",
       headers: {
@@ -60,14 +77,19 @@ const fetchBlogsByCategoryId = async (categoryId) => {
       },
     }
   );
-
   if (!response.ok) {
-    let res = await response.json();
-    throw res;
+    try {
+      let res = await response.json();
+      throw res.message || JSON.stringify(res);
+    } catch (err) {
+      console.log(err);
+      const error = new Error("Something went wrong");
+      throw error.message;
+    }
   }
 
-  const responseData = await response.json();
-  return responseData;
+  const blogsApiData = await response.json();
+  return blogsApiData;
 };
 
 const fetchBlogsByAuthorId = async (authorId) => {
@@ -80,38 +102,45 @@ const fetchBlogsByAuthorId = async (authorId) => {
       },
     }
   );
-
   if (!response.ok) {
-    let res = await response.json();
-    throw res;
+    try {
+      let res = await response.json();
+      throw res.message || JSON.stringify(res);
+    } catch (err) {
+      console.log(err);
+      const error = new Error("Something went wrong");
+      throw error.message;
+    }
   }
 
-  const responseData = await response.json();
-  return responseData;
+  const blogsApiData = await response.json();
+  return blogsApiData;
 };
 
 const updateBlog = async (blog) => {
-  const response = await fetch(
-    "http://localhost:8000/api/blogs/" + blog.get("id"),
-    {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: blog,
-    }
-  );
-
+  const response = await fetch("http://localhost:8000/api/blogs/" + blog.id, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(blog),
+  });
   if (!response.ok) {
-    let res = await response.json();
-    throw res;
+    try {
+      let res = await response.json();
+      throw res.message || JSON.stringify(res);
+    } catch (err) {
+      console.log(err);
+      const error = new Error("Something went wrong");
+      throw error.message;
+    }
   }
 
-  const responseData = await response.json();
-  return responseData;
+  const blogsApiData = await response.json();
+  return blogsApiData;
 };
 
-const deleteBlogsById = async (id) => {
+const deleteBlog = async (id) => {
   const response = await fetch("http://localhost:8000/api/blogs/" + id, {
     method: "DELETE",
     headers: {
@@ -120,22 +149,28 @@ const deleteBlogsById = async (id) => {
   });
 
   if (!response.ok) {
-    let res = await response.json();
-    throw res;
+    try {
+      let res = await response.json();
+      throw res.message || JSON.stringify(res);
+    } catch (err) {
+      console.log(err);
+      const error = new Error("Something went wrong");
+      throw error.message;
+    }
   }
 
-  const responseData = await response.json();
-  return responseData;
+  const blogsApiData = await response.json();
+  return blogsApiData;
 };
 
-const BlogService = {
+const blogService = {
   createBlog,
   fetchBlogs,
-  fetchBlogById,
+  fetchBlogByID,
   fetchBlogsByCategoryId,
   fetchBlogsByAuthorId,
   updateBlog,
-  deleteBlogsById,
+  deleteBlog,
 };
 
-export default BlogService;
+export default blogService;

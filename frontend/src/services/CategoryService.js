@@ -4,15 +4,22 @@ const createCategory = async (category) => {
     headers: {
       "Content-Type": "application/json",
     },
-    body: category,
+    body: JSON.stringify(category),
   });
 
   if (!response.ok) {
-    let res = await response.json();
-    throw res;
+    try {
+      let res = await response.json();
+      throw res.message || JSON.stringify(res);
+    } catch (err) {
+      console.log(err);
+      const error = new Error("Something went wrong");
+      throw error.message;
+    }
   }
-  const responseData = await response.json();
-  return responseData;
+
+  const categoriesApiData = await response.json();
+  return categoriesApiData;
 };
 
 const fetchCategories = async () => {
@@ -24,57 +31,75 @@ const fetchCategories = async () => {
   });
 
   if (!response.ok) {
-    let res = await response.json();
-    throw res;
+    try {
+      let res = await response.json();
+      throw res.message || JSON.stringify(res);
+    } catch (err) {
+      console.log(err);
+      const error = new Error("Something went wrong");
+      throw error.message;
+    }
   }
 
-  const responseData = await response.json();
-  return responseData;
+  const categoriesApiData = await response.json();
+  return categoriesApiData;
 };
 
 const updateCategory = async (category) => {
-  const response = await fetch("http://localhost:8000/api/categories", {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: category,
-  });
-
-  if (!response.ok) {
-    let res = await response.json();
-    throw res;
-  }
-
-  const responseData = await response.json();
-  return responseData;
-};
-
-const deleteCategoryById = async (category) => {
   const response = await fetch(
     "http://localhost:8000/api/categories/" + category.id,
     {
-      method: "DELETE",
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
+      body: JSON.stringify(category),
     }
   );
 
   if (!response.ok) {
-    let res = await response.json();
-    throw res;
+    try {
+      let res = await response.json();
+      throw res.message || JSON.stringify(res);
+    } catch (err) {
+      console.log(err);
+      const error = new Error("Something went wrong");
+      throw error.message;
+    }
   }
 
-  const responseData = await response.json();
-  return responseData;
+  const categoriesApiData = await response.json();
+  return categoriesApiData;
 };
 
-const CategoryService = {
-  fetchCategories,
+const deleteCategory = async (id) => {
+  const response = await fetch("http://localhost:8000/api/categories/" + id, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    try {
+      let res = await response.json();
+      throw res.message || JSON.stringify(res);
+    } catch (err) {
+      console.log(err);
+      const error = new Error("Something went wrong");
+      throw error.message;
+    }
+  }
+
+  const categoriesApiData = await response.json();
+  return categoriesApiData;
+};
+
+const categoryService = {
   createCategory,
+  fetchCategories,
   updateCategory,
-  deleteCategoryById,
+  deleteCategory,
 };
 
-export default CategoryService;
+export default categoryService;

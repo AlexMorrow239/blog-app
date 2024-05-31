@@ -1,7 +1,14 @@
 const express = require("express");
 const router = express.Router();
 
-const blogController = require("../controllers/blogs.js");
+const blogController = require("../controllers/Blogs.js");
+
+/**
+ * POST /api/blogs/
+ */
+router.post("/", (req, res) => {
+  blogController.createBlogs(req, res);
+});
 
 /** GET /api/blogs/ */
 router.get("/", (req, res) => {
@@ -9,45 +16,24 @@ router.get("/", (req, res) => {
 });
 
 /**
- * POST /api/blogs/
- */
-router.post("/", (req, res) => {
-  blogController.createBlog(req, res);
-});
-
-/**
- * PUT /api/blogs/
- */
-router.put("/", (req, res) => {
-  res.status(101).send("No function");
-});
-
-/**
- * DELETE /api/blogs/
- */
-router.delete("/", (req, res) => {
-  res.status(101).send("No function");
-});
-
-/**
  * GET /api/blogs/:id
  */
 router.get("/:id", (req, res) => {
-  blogController.getBlogById(req, res);
+  blogController.getBlogByID(req, res);
 });
 
 /**
- * POST /api/blogs/:id
+ * GET /api/blogs/category/:id
  */
-router.post("/:id", (req, res) => {
-  res.status(101).send("No function");
+router.get("/category/:id", (req, res) => {
+  blogController.getBlogsByCategoryID(req, res);
 });
 
 /**
  * PUT /api/blogs/:id
  */
 router.put("/:id", (req, res) => {
-  blogController.updateBlogById(req, res);
+  blogController.updateBlogByID(req, res);
 });
 
 /**
@@ -55,13 +41,6 @@ router.put("/:id", (req, res) => {
  */
 router.delete("/:id", (req, res) => {
   blogController.deleteBlogById(req, res);
-});
-
-/**
- * GET /api/blogs/category/:id
- */
-router.get("/category/:id", (req, res) => {
-  blogController.getBlogsByCategoryId(req, res);
 });
 
 router.get("/author/:id", (reg, res) => {

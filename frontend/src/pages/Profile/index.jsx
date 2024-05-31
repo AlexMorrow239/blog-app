@@ -10,7 +10,7 @@ import ErrorToast from "../../components/ErrorToast";
 import Footer from "../../components/Footer";
 import AddEditBlogModal from "../../components/AddEditBlogModal";
 
-import BlogService from "../../services/BlogService";
+import BlogService from "../../services/Blog";
 
 export default function ProfilePage() {
   const { authorId } = useParams();
