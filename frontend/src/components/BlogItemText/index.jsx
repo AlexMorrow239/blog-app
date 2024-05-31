@@ -10,7 +10,7 @@ export default function BlogItemText({ blogPost, headerFontSize }) {
     <div>
       <div style={{ display: "flex" }}>
         <p className="date-author-text">
-          {/* {blogPost.author.firstName} {blogPost.author.lastName} */}
+          {blogPost.author.firstName} {blogPost.author.lastName}
         </p>
         <div className="dot-divider"></div>
         <p className="date-author-text">
