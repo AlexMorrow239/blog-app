@@ -8,39 +8,45 @@ import { useParams, Link } from "react-router-dom";
 
 import "./index.css";
 
-import blogService from "../../services/BlogService";
-import categoryService from "../../services/CategoryService";
+import blogService from "../../services/blogService";
+import categoryService from "../../services/categoryService";
 import AddEditBlogModal from "../../components/AddEditBlogModal";
 import Loading from "../../components/Loading";
 import SuccessToast from "../../components/SuccessToast";
 import ErrorToast from "../../components/ErrorToast";
+import DeleteBlogModal from "../../components/DeleteBlogModal";
 
 export default function BlogsPage() {
   const { categoryId } = useParams();
 
   const [blogs, setBlogs] = useState([]);
-  const [addBlog, setAddBlog] = useState();
   const [categories, setCategories] = useState();
 
+  const [addBlog, setAddBlog] = useState();
+  const [editBlog, setEditBlog] = useState();
+  const [deleteBlog, setDeleteBlog] = useState();
+
   const [loading, setLoading] = useState();
-  const [isSuccess, setIsSucces] = useState();
+  const [isSuccess, setIsSuccess] = useState();
   const [isError, setIsError] = useState();
   const [message, setMessage] = useState();
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      const blogsRes = await blogService.getBlogsByCategoryId(categoryId);
-      const categoriesRes = await categoryService.getCategories();
-      setBlogs(blogsRes);
-      setCategories(categoriesRes);
+      const blogsRes = await blogService.fetchBlogsByCategoryId(
+        categoryId ? categoryId : null
+      );
+      const categoriesRes = await categoryService.fetchCategories();
+      setBlogs(blogsRes.data);
+      setCategories(categoriesRes.data);
       setLoading(false);
     };
 
     fetchData();
   }, [categoryId]);
 
-  const onBlogAddClick = () => {
+  const onBlogAdd = () => {
     setAddBlog({
       title: "",
       description: "",
@@ -63,22 +69,62 @@ export default function BlogsPage() {
     });
   };
 
-  const createBlogPost = async (blog) => {
+  const onBlogEdit = (blog) => {
+    setEditBlog(blog);
+  };
+
+  const onBlogDelete = (blog) => {
+    setDeleteBlog(blog);
+  };
+
+  const createBlog = async (blog) => {
     try {
       const newBlog = await blogService.createBlog(blog);
-      setIsSucces(true);
+      setIsSuccess(true);
       setMessage(newBlog.message);
       setBlogs((prev) => {
-        if (newBlog.data.categories.some((x) => x.id === categoryId)) {
-          prev?.unshift(newBlog.data);
-        }
-        return prev;
+        return [...prev, newBlog.data];
       });
     } catch (err) {
       setIsError(true);
       setMessage(err);
     }
     setAddBlog(null);
+  };
+
+  const updateBlog = async (blog) => {
+    try {
+      const newBlog = await blogService.updateBlog(blog);
+      setIsSuccess(true);
+      setMessage(newBlog.message);
+      setBlogs((prev) => {
+        return prev.map((x) => {
+          if (x.id === newBlog.data.id) {
+            return newBlog.data;
+          }
+          return x;
+        });
+      });
+    } catch (err) {
+      setIsError(true);
+      setMessage(err);
+    }
+    setEditBlog(null);
+  };
+
+  const removeBlog = async (blog) => {
+    try {
+      const newBlog = await blogService.deleteBlog(blog.id);
+      setIsSuccess(true);
+      setMessage(newBlog.message);
+      setBlogs((prev) => {
+        return prev.filter((x) => x.id !== blog.id);
+      });
+    } catch (err) {
+      setIsError(true);
+      setMessage(err);
+    }
+    setDeleteBlog(null);
   };
 
   const CategoriesList = ({ categoryId }) => {
@@ -123,18 +169,26 @@ export default function BlogsPage() {
         </div>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <p className="page-subtitle">Blog Posts</p>
-          <button
-            className="btn btn-outline-dark h-75"
-            onClick={onBlogAddClick}
-          >
+          <button className="btn btn-outline-dark h-75" onClick={onBlogAdd}>
             ADD BLOG
           </button>
         </div>
-        <BlogList blogPosts={blogs} />
+        <BlogList
+          blogPosts={blogs}
+          onBlogEdit={onBlogEdit}
+          onBlogDelete={onBlogDelete}
+        />
         <AddEditBlogModal
           categories={categories}
           addBlog={addBlog}
-          createBlogPost={createBlogPost}
+          editBlog={editBlog}
+          createBlog={createBlog}
+          updateBlog={updateBlog}
+        />
+        <DeleteBlogModal
+          deleteBlog={deleteBlog}
+          removeBlog={removeBlog}
+          onClose={() => setDeleteBlog(null)}
         />
       </div>
 
@@ -143,7 +197,7 @@ export default function BlogsPage() {
         show={isSuccess}
         message={message}
         onClose={() => {
-          setIsSucces(false);
+          setIsSuccess(false);
         }}
       />
 

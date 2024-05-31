@@ -1,38 +1,31 @@
 import React from "react";
+
 import PropTypes from "prop-types";
 
-import Categories from "../Categories";
 import "./index.css";
 
-export default function BlogItemText({ blogPost, headerFontSize }) {
+export default function Categories({ categories }) {
+  if (!categories && !categories?.length) return null;
   return (
-    <div>
-      <div style={{ display: "flex" }}>
-        <p className="date-author-text">
-          {blogPost.author.firstName} {blogPost.author.lastName}
-        </p>
-        <div className="dot-divider"></div>
-        <p className="date-author-text">
-          {blogPost.createdAt.substring(0, 10)}
-        </p>
-      </div>
-      <p
-        style={{
-          fontSize: headerFontSize,
-          fontWeight: "bold",
-          textAlign: "left",
-        }}
-      >
-        {blogPost.title}
-      </p>
-      <p style={{ fontSize: "16px", color: "#667085", textAlign: "left" }}>
-        {blogPost.description.substring(0, 100)}...
-      </p>
-      <Categories blogPost={blogPost?.categories} />
+    <div className="flex-wrap">
+      {categories.map((category, index) => {
+        return (
+          <p
+            key={index}
+            className="category-tag"
+            style={{
+              color: category.color,
+              backgroundColor: category.color + "33",
+            }}
+          >
+            {category.title}
+          </p>
+        );
+      })}
     </div>
   );
 }
-BlogItemText.propTypes = {
-  blogPost: PropTypes.array.isRequired,
-  headerFontSize: PropTypes.string.isRequired,
+
+Categories.prototype = {
+  categories: PropTypes.array.isRequired,
 };

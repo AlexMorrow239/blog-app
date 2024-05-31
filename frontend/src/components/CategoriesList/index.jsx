@@ -2,56 +2,57 @@ import React, { useMemo, useEffect, useState } from "react";
 import { Modal } from "bootstrap";
 import PropTypes from "prop-types";
 
-export default function DeleteBlogModal({ deleteBlog, removeBlog, onClose }) {
-  const [blog, setBlog] = useState();
+export default function DeleteCategoryModal({
+  deleteCategory,
+  removeCategory,
+  onClose,
+}) {
+  const [category, setCategory] = useState();
 
-  const modalEl = document.getElementById("deleteBlogModal");
-  const deleteBlogModal = useMemo(() => {
+  const modalEl = document.getElementById("deleteCategoryModal");
+  const deleteCategoryModal = useMemo(() => {
     return modalEl ? new Modal(modalEl) : null;
   }, [modalEl]);
 
   useEffect(() => {
-    if (deleteBlog) {
-      setBlog(deleteBlog);
-      deleteBlogModal?.show();
+    if (deleteCategory) {
+      setCategory(deleteCategory);
+      deleteCategoryModal?.show();
     }
-  }, [deleteBlog, deleteBlogModal]);
+  }, [deleteCategory, deleteCategoryModal]);
 
-  const resetBlog = () => {
-    setBlog({
-      image: "",
+  const resetCategory = () => {
+    setCategory({
       title: "",
       description: "",
-      categories: [],
-      content: [],
-      authorId: "",
+      color: "#000000",
     });
   };
 
   const onCloseModal = () => {
-    resetBlog();
+    resetCategory();
     onClose();
-    deleteBlogModal?.hide();
+    deleteCategoryModal?.hide();
   };
 
   const onDelete = () => {
-    removeBlog(deleteBlog);
-    resetBlog();
-    deleteBlogModal?.hide();
+    removeCategory(deleteCategory);
+    resetCategory();
+    deleteCategoryModal?.hide();
   };
 
   return (
     <div
       className="modal fade"
-      id="deleteBlogModal"
-      aria-labelledby="deleteBlogModalLabel"
+      id="deleteCategoryModal"
+      aria-labelledby="deleteCategoryModalLabel"
       aria-hidden="true"
     >
       <div className="modal-dialog">
         <div className="modal-content">
           <div className="modal-header">
-            <h1 className="modal-title fs-5" id="deleteBlogModalLabel">
-              Delete Blog
+            <h1 className="modal-title fs-5" id="deleteCategoryModalLabel">
+              Delete Category
             </h1>
             <button
               type="button"
@@ -61,14 +62,9 @@ export default function DeleteBlogModal({ deleteBlog, removeBlog, onClose }) {
             ></button>
           </div>
           <div className="modal-body">
-            <p>Are You sure you want to delete this Blog Post?</p>
+            <p>Are You sure you want to delete this Category?</p>
             <div style={{ display: "flex", alignItems: "center" }}>
-              <img
-                src={blog?.image}
-                alt={blog?.title}
-                style={{ width: "50px" }}
-              />
-              <h5 style={{ marginLeft: "8px" }}>{blog?.title}</h5>
+              <h5 style={{ marginLeft: "8px" }}>{category?.title}</h5>
             </div>
           </div>
 
@@ -94,8 +90,7 @@ export default function DeleteBlogModal({ deleteBlog, removeBlog, onClose }) {
   );
 }
 
-DeleteBlogModal.prototype = {
-  deleteBlog: PropTypes.object,
-  removeBlog: PropTypes.func,
-  onClose: PropTypes.func,
+DeleteCategoryModal.prototype = {
+  deleteCategory: PropTypes.object,
+  removeCategory: PropTypes.func.isRequired,
 };

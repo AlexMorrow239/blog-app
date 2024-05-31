@@ -10,6 +10,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import HomePage from "./pages/Home";
 import BlogsPage from "./pages/Blogs";
 import BlogPage from "./pages/Blog";
+import CategoryPage from "./pages/Categories";
 
 const routes = [
   {
@@ -27,6 +28,10 @@ const routes = [
   {
     path: "/blog/:blogId",
     element: <BlogPage />,
+  },
+  {
+    path: "/categories",
+    element: <CategoryPage />,
   },
 ];
 const router = createBrowserRouter(routes);

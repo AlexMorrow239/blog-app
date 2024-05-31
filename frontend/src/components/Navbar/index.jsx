@@ -32,7 +32,7 @@ export default function Navbar() {
                 Blogs
               </Link>
             </li>
-            <li>
+            <li className="nav-item">
               <Link
                 className="nav-link active"
                 aria-current="page"

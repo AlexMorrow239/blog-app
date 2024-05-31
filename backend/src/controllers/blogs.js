@@ -2,21 +2,30 @@ const Blog = require("../models/Blog");
 
 const createBlogs = async (req, res) => {
   try {
+    console.log(req.body);
     const categoryIds = req?.body?.categories.map((x) => x.id);
     const blog = new Blog({
-      author: req?.body?.author,
+      title: req.body.title,
+      description: req.body.description,
+      image: req.body.image,
+      content: req.body.content,
+      author: req.body.author,
       categoryIds: categoryIds,
-      title: req?.body?.title,
-      description: req?.body?.description,
-      content: req?.body?.content,
     });
+
     const newBlog = await blog.save();
+
     const blogRes = await Blog.findById(newBlog._id).populate({
       path: "categoryIds",
     });
-    res.status(201).json({ message: "New blog created!", data: blogRes });
-  } catch (error) {
-    res.status(500).json({ message: error.message, data: {} });
+
+    res.status(200).json({
+      message: "Blog created!",
+      data: blogRes,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: err.message, data: {} });
   }
 };
 
@@ -32,7 +41,7 @@ const getBlogs = async (req, res) => {
   }
 };
 
-const getBlogByID = async (req, res) => {
+const getBlogById = async (req, res) => {
   try {
     console.log(req.params.id);
     const blog = await Blog.findById(req.params.id).populate({
@@ -55,7 +64,9 @@ const getBlogsByCategoryID = async (req, res) => {
     if (req.params.id != "null" && req.params.id != "undefined") {
       filter = { categoryIds: req.params.id };
     }
-    const blogs = await Blog.find(filter).populate({ path: "categoryIds" });
+    const blogs = await Blog.find(filter).populate({
+      path: "categoryIds",
+    });
     res.status(200).json({
       message: "Get blogs by categoryID!",
       data: blogs,
@@ -105,11 +116,10 @@ const deleteBlogByID = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
-
 const blogController = {
   createBlogs,
   getBlogs,
-  getBlogByID,
+  getBlogById,
   getBlogsByCategoryID,
   updateBlogByID,
   deleteBlogByID,
