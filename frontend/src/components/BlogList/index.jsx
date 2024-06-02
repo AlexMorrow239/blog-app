@@ -10,7 +10,6 @@ export default function BlogList({ blogPosts, onBlogEdit, onBlogDelete }) {
     return null;
   }
 
-  // TODO: Styling
   return (
     <div className="blog-list">
       {blogPosts.map((blog, index) => {

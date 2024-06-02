@@ -13,7 +13,10 @@ export default function EditButtons({ onEdit, onDelete }) {
         }}
         type="button"
         className="btn"
-        onClick={onEdit}
+        onClick={(event) => {
+          event.stopPropagation();
+          onEdit();
+        }}
       >
         <i className="bi bi-pencil-fill"></i>
       </button>
@@ -27,7 +30,10 @@ export default function EditButtons({ onEdit, onDelete }) {
         }}
         type="button"
         className="btn"
-        onClick={onDelete}
+        onClick={(event) => {
+          event.stopPropagation();
+          onDelete();
+        }}
       >
         <i className="bi bi-trash-fill"></i>
       </button>

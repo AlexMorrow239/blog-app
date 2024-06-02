@@ -1,5 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 
+import PropTypes from "prop-types";
+
 import { Modal } from "bootstrap";
 
 import Categories from "../Categories";
@@ -10,6 +12,7 @@ export default function AddEditBlogModal({
   categories,
   createBlog,
   updateBlog,
+  onClose,
 }) {
   const [blog, setBlog] = useState();
 
@@ -28,10 +31,6 @@ export default function AddEditBlogModal({
       addEditModal.show();
     }
   }, [addBlog, editBlog, addEditModal]);
-
-  if (!categories && !categories?.length) {
-    return null;
-  }
 
   const onSubmit = (e) => {
     e?.preventDefault();
@@ -62,16 +61,26 @@ export default function AddEditBlogModal({
     return form?.checkValidity();
   };
 
+  const onCloseModal = () => {
+    resetBlog();
+    addEditModal?.hide();
+    onClose();
+  };
+
+  if (!categories && !categories?.length) {
+    return null;
+  }
+
   return (
     <div>
       <div
         className="modal fade"
         id="addEditModal"
-        tabindex="-1"
+        tabIndex="-1"
         aria-labelledby="addEditModalLabel"
         aria-hidden="true"
       >
-        <div className="modal-dialog">
+        <div className="modal-dialog modal-xl">
           <div className="modal-content">
             <div className="modal-header">
               <h1 className="modal-title fs-5" id="addEditModalLabel">
@@ -80,8 +89,8 @@ export default function AddEditBlogModal({
               <button
                 type="button"
                 className="btn-close"
-                data-bs-dismiss="modal"
                 aria-label="Close"
+                onClick={onCloseModal}
               ></button>
             </div>
             <div className="modal-body">
@@ -288,7 +297,7 @@ export default function AddEditBlogModal({
               <button
                 type="button"
                 className="btn btn-secondary"
-                data-bs-dismiss="modal"
+                onClick={onCloseModal}
               >
                 Close
               </button>
@@ -306,3 +315,12 @@ export default function AddEditBlogModal({
     </div>
   );
 }
+
+AddEditBlogModal.prototype = {
+  addBlog: PropTypes.object,
+  editBlog: PropTypes.object,
+  categories: PropTypes.array,
+  createBlog: PropTypes.func,
+  updateBlog: PropTypes.func,
+  onClose: PropTypes.func,
+};

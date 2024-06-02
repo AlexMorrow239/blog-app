@@ -2,7 +2,6 @@ const Blog = require("../models/Blog");
 
 const createBlogs = async (req, res) => {
   try {
-    console.log(req.body);
     const categoryIds = req?.body?.categories.map((x) => x.id);
     const blog = new Blog({
       title: req.body.title,
@@ -43,7 +42,6 @@ const getBlogs = async (req, res) => {
 
 const getBlogById = async (req, res) => {
   try {
-    console.log(req.params.id);
     const blog = await Blog.findById(req.params.id).populate({
       path: "categoryIds",
     });
@@ -59,7 +57,6 @@ const getBlogById = async (req, res) => {
 
 const getBlogsByCategoryID = async (req, res) => {
   try {
-    console.log(req.params.id);
     let filter = {};
     if (req.params.id != "null" && req.params.id != "undefined") {
       filter = { categoryIds: req.params.id };
@@ -77,7 +74,6 @@ const getBlogsByCategoryID = async (req, res) => {
 };
 
 const updateBlogByID = async (req, res) => {
-  console.log(req.body);
   try {
     const blog = await Blog.findById(req.params.id).populate({
       path: "categoryIds",

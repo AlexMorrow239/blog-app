@@ -184,6 +184,10 @@ export default function BlogsPage() {
           editBlog={editBlog}
           createBlog={createBlog}
           updateBlog={updateBlog}
+          onClose={() => {
+            setAddBlog(null);
+            setEditBlog(null);
+          }}
         />
         <DeleteBlogModal
           deleteBlog={deleteBlog}

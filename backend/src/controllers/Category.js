@@ -29,7 +29,6 @@ const getCategories = async (req, res) => {
 };
 
 const getCategoryById = async (req, res) => {
-  console.log(req.params.id);
   res.status(200).json({
     message: "Get category by ID!",
     data: [],
