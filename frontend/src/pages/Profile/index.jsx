@@ -4,13 +4,13 @@ import { useState, useEffect, useParams } from "react";
 import NavBar from "../../components/Navbar";
 import AuthorDetails from "../../components/AuthorDetails";
 import BlogList from "../../components/BlogList";
-import Loader from "../../components/Loader";
+import Loader from "../../components/Loading";
 import SuccessToast from "../../components/SuccessToast";
 import ErrorToast from "../../components/ErrorToast";
 import Footer from "../../components/Footer";
 import AddEditBlogModal from "../../components/AddEditBlogModal";
 
-import BlogService from "../../services/Blog";
+import BlogService from "../../services/blogService";
 
 export default function ProfilePage() {
   const { authorId } = useParams();

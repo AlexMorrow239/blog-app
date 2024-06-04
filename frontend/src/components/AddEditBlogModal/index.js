@@ -14,6 +14,7 @@ export default function AddEditBlogModal({
   updateBlog,
   onClose,
 }) {
+  const user = JSON.parse(localStorage.getItem("user"));
   const [blog, setBlog] = useState();
 
   const modalEl = document.getElementById("addEditModal");
@@ -51,7 +52,7 @@ export default function AddEditBlogModal({
       description: "",
       categories: [],
       content: [],
-      authorId: "",
+      authorId: user?.id,
     });
   };
 
@@ -66,6 +67,9 @@ export default function AddEditBlogModal({
     addEditModal?.hide();
     onClose();
   };
+
+  const modalTitle = addBlog ? "Add Blog" : "Edit Blog";
+  const modalBtn = addBlog ? "Create Blog" : "Save Changes";
 
   if (!categories && !categories?.length) {
     return null;
@@ -84,7 +88,7 @@ export default function AddEditBlogModal({
           <div className="modal-content">
             <div className="modal-header">
               <h1 className="modal-title fs-5" id="addEditModalLabel">
-                Modal title
+                {modalTitle}
               </h1>
               <button
                 type="button"
@@ -306,7 +310,7 @@ export default function AddEditBlogModal({
                 className="btn btn-primary"
                 onClick={onSubmit}
               >
-                Save changes
+                {modalBtn}
               </button>
             </div>
           </div>

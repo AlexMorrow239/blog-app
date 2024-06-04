@@ -15,6 +15,7 @@ export default function BlogItem({
   onBlogEdit,
   onBlogDelete,
 }) {
+  const user = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
   const navigateToBlog = () => {
     if (!onBlogEdit && !onBlogDelete) {
@@ -46,7 +47,9 @@ export default function BlogItem({
         <img src={blog.image} className="card-img-left" alt="..." />
         <div className="card-text-right">
           <BlogItemText blogPost={blog} headerFontSize="20px" />
-          {onBlogEdit && onBlogDelete ? <EditButtonsContainer /> : null}
+          {user && user.token && onBlogEdit && onBlogDelete ? (
+            <EditButtonsContainer />
+          ) : null}
         </div>
       </div>
     );
