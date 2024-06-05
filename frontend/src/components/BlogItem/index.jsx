@@ -17,27 +17,36 @@ export default function BlogItem({
 }) {
   const user = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
+
   const navigateToBlog = () => {
     if (!onBlogEdit && !onBlogDelete) {
       navigate(`/blog/${blog.id}`);
     }
   };
 
-  const EditButtonsContainer = () => {
-    return (
-      <EditButtons
-        onEdit={() => onBlogEdit(blog)}
-        onDelete={() => onBlogDelete(blog)}
-      />
-    );
+  const EditButtonscontainer = () => {
+    if (user && user.token && onBlogEdit && onBlogDelete) {
+      return (
+        <EditButtons
+          onEdit={() => {
+            onBlogEdit(blog);
+          }}
+          onDelete={() => {
+            onBlogDelete(blog);
+          }}
+        />
+      );
+    }
+    return null;
   };
+
   if (imageOrientation === "top") {
     return (
       <div key={index} className="card-1" onClick={navigateToBlog}>
         <img src={blog.image} className="card-img-top" alt="..." />
         <div className="card-text-bottom">
           <BlogItemText blogPost={blog} headerFontSize="20px" />
-          {onBlogEdit && onBlogDelete ? <EditButtonsContainer /> : null}
+          <EditButtonscontainer />
         </div>
       </div>
     );
@@ -47,9 +56,7 @@ export default function BlogItem({
         <img src={blog.image} className="card-img-left" alt="..." />
         <div className="card-text-right">
           <BlogItemText blogPost={blog} headerFontSize="20px" />
-          {user && user.token && onBlogEdit && onBlogDelete ? (
-            <EditButtonsContainer />
-          ) : null}
+          <EditButtonscontainer />
         </div>
       </div>
     );

@@ -67,7 +67,7 @@ const login = async (req, res) => {
     let resUser = user.toJSON();
     resUser.token = generateToken(resUser._id);
     delete resUser.password;
-    res.status(200).json({ message: "Login successful!", data: resUser });
+    res.status(201).json({ message: "Login successful!", data: resUser });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
