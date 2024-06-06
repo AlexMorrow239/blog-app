@@ -7,7 +7,6 @@ const categoryRoutes = require("./routes/Categories");
 const authRoutes = require("./routes/Auth");
 
 const connectDB = require("./database/db");
-
 connectDB();
 
 const port = process.env.PORT || 8000;

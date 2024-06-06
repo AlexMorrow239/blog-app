@@ -1,165 +1,119 @@
-import React, { useEffect, useState } from "react";
+// Third party
+import React, { useEffect } from "react";
+import { Link, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+
+// Components
 import Navbar from "../../components/Navbar";
 import Heading from "../../components/Heading";
 import BlogList from "../../components/BlogList";
 import Footer from "../../components/Footer";
-
-import { useParams, Link } from "react-router-dom";
-
-import "./index.css";
-
-import blogService from "../../services/blogService";
-import categoryService from "../../services/categoryService";
 import AddEditBlogModal from "../../components/AddEditBlogModal";
-import Loading from "../../components/Loading";
+import DeleteBlogModal from "../../components/DeleteBlogModal";
 import SuccessToast from "../../components/SuccessToast";
 import ErrorToast from "../../components/ErrorToast";
-import DeleteBlogModal from "../../components/DeleteBlogModal";
+import Loading from "../../components/Loading";
+
+// Styles
+import "../../App.css";
+import "./index.css";
+
+// State
+import {
+  setAddBlog,
+  fetchBlogsByCategoryId,
+  resetSuccessAndError as resetBlog,
+} from "../../features/blogsSlice";
+import {
+  fetchCategories,
+  resetSuccessAndError as resetCategory,
+} from "../../features/categoriesSlice";
 
 export default function BlogsPage() {
-  const user = JSON.parse(localStorage.getItem("user"));
-
   const { categoryId } = useParams();
 
-  const [blogs, setBlogs] = useState([]);
-  const [categories, setCategories] = useState();
+  const user = useSelector((state) => state.auth.user);
 
-  const [addBlog, setAddBlog] = useState();
-  const [editBlog, setEditBlog] = useState();
-  const [deleteBlog, setDeleteBlog] = useState();
-
-  const [loading, setLoading] = useState();
-  const [isSuccess, setIsSuccess] = useState();
-  const [isError, setIsError] = useState();
-  const [message, setMessage] = useState();
+  const dispatch = useDispatch();
+  const {
+    blogs,
+    isError: isBlogsError,
+    isSuccess: isBlogSuccess,
+    isLoading: isLoadingBlogs,
+    message: blogsMessage,
+  } = useSelector((state) => state.blogs);
+  const {
+    categories,
+    isError: isCategoriesError,
+    isLoading: isLoadingCategories,
+    message: categoriesMessage,
+  } = useSelector((state) => state.categories);
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      const blogsRes = await blogService.fetchBlogsByCategoryId(
-        categoryId ? categoryId : null
-      );
-      const categoriesRes = await categoryService.fetchCategories();
-      setBlogs(blogsRes.data);
-      setCategories(categoriesRes.data);
-      setLoading(false);
+    dispatch(fetchCategories());
+    dispatch(fetchBlogsByCategoryId(categoryId));
+    return () => {
+      dispatch(resetBlog());
+      dispatch(resetCategory());
     };
+  }, [categoryId, dispatch]);
 
-    fetchData();
-  }, [categoryId]);
-
-  const onBlogAdd = () => {
-    setAddBlog({
-      title: "",
-      description: "",
-      categories: [],
-      authorId: user._id,
-      content: [
-        {
-          sectionHeader: "Introduction",
-          sectionText:
-            "I'm so excited to share my first blog post with the world. I've been working on this for a while and I'm happy to finally share it with you.\n\nLorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-        },
-      ],
-    });
-  };
-
-  const onBlogEdit = (blog) => {
-    setEditBlog(blog);
-  };
-
-  const onBlogDelete = (blog) => {
-    setDeleteBlog(blog);
-  };
-
-  const createBlog = async (blog) => {
-    try {
-      const newBlog = await blogService.createBlog(blog);
-      setIsSuccess(true);
-      setMessage(newBlog.message);
-      setBlogs((prev) => {
-        return [...prev, newBlog.data];
-      });
-    } catch (err) {
-      setIsError(true);
-      setMessage(err);
-    }
-    setAddBlog(null);
-  };
-
-  const updateBlog = async (blog) => {
-    try {
-      const newBlog = await blogService.updateBlog(blog);
-      setIsSuccess(true);
-      setMessage(newBlog.message);
-      setBlogs((prev) => {
-        return prev.map((x) => {
-          if (x.id === newBlog.data.id) {
-            return newBlog.data;
-          }
-          return x;
-        });
-      });
-    } catch (err) {
-      setIsError(true);
-      setMessage(err);
-    }
-    setEditBlog(null);
-  };
-
-  const removeBlog = async (blog) => {
-    try {
-      const newBlog = await blogService.deleteBlog(blog.id);
-      setIsSuccess(true);
-      setMessage(newBlog.message);
-      setBlogs((prev) => {
-        return prev.filter((x) => x.id !== blog.id);
-      });
-    } catch (err) {
-      setIsError(true);
-      setMessage(err);
-    }
-    setDeleteBlog(null);
-  };
-
-  const CategoriesList = ({ categoryId }) => {
-    if (!categories && !categories?.length) {
-      return null;
-    }
-
-    return categories.map((category) => {
-      return categoryId === category.id ? (
-        <Link
-          className="link"
-          key={category.id}
-          to={"/blogs/" + category.id}
-          style={{ color: "blue" }}
-        >
-          <p key={category.id}>{category.title}</p>
-        </Link>
-      ) : (
-        <Link
-          className="link"
-          key={category.id}
-          to={"/blogs/" + category.id}
-          style={{ color: "black" }}
-        >
-          <p key={category.id}>{category.title}</p>
-        </Link>
-      );
-    });
-  };
-
-  const AddButton = () => {
-    if (!user?.token) return null;
-    return (
-      <button className="btn btn-outline-dark h-75" onClick={onBlogAdd}>
-        ADD BLOG
-      </button>
+  const onAddBlog = () => {
+    dispatch(
+      setAddBlog({
+        image: "",
+        title: "",
+        description: "",
+        categories: [],
+        content: [],
+        authorId: user?.id,
+      })
     );
   };
 
-  if (loading) {
+  const CategoriesList = () => {
+    return categories.map((category, index) => {
+      return categoryId === category.id.toString() ? (
+        <Link
+          key={index}
+          to={"/blogs/" + category.id}
+          style={{ color: "blue" }}
+          className="link"
+        >
+          <p key={index}>{category.title}</p>
+        </Link>
+      ) : (
+        <Link
+          key={index}
+          to={"/blogs/" + category.id}
+          style={{ color: "black" }}
+          className="link"
+        >
+          <p key={index}>{category.title}</p>
+        </Link>
+      );
+    });
+  };
+
+  const AddBlog = () => {
+    return (
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <p className="page-subtitle">Blog Posts</p>
+        {user && (
+          <button
+            style={{ margin: "16px" }}
+            type="button"
+            className="btn btn-outline-secondary"
+            onClick={onAddBlog}
+          >
+            Add Blog Post
+          </button>
+        )}
+      </div>
+    );
+  };
+
+  if (isLoadingCategories || isLoadingBlogs) {
     return <Loading />;
   }
 
@@ -169,49 +123,28 @@ export default function BlogsPage() {
       <div className="container">
         <Heading />
         <div className="scroll-menu">
-          <CategoriesList categoryId={categoryId} />
+          <CategoriesList />
         </div>
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <p className="page-subtitle">Blog Posts</p>
-          <AddButton />
-        </div>
-        <BlogList
-          blogPosts={blogs}
-          onBlogEdit={onBlogEdit}
-          onBlogDelete={onBlogDelete}
-        />
-        <AddEditBlogModal
-          categories={categories}
-          addBlog={addBlog}
-          editBlog={editBlog}
-          createBlog={createBlog}
-          updateBlog={updateBlog}
-          onClose={() => {
-            setAddBlog(null);
-            setEditBlog(null);
-          }}
-        />
-        <DeleteBlogModal
-          deleteBlog={deleteBlog}
-          removeBlog={removeBlog}
-          onClose={() => setDeleteBlog(null)}
-        />
+        <AddBlog />
+        <BlogList blogPosts={blogs} />
       </div>
-
       <Footer />
+      <AddEditBlogModal />
+      <DeleteBlogModal />
       <SuccessToast
-        show={isSuccess}
-        message={message}
+        show={isBlogSuccess}
+        message={blogsMessage}
         onClose={() => {
-          setIsSuccess(false);
+          dispatch(resetBlog());
+          dispatch(resetCategory());
         }}
       />
-
       <ErrorToast
-        show={isError}
-        message={message}
+        show={isBlogsError || isCategoriesError}
+        message={blogsMessage || categoriesMessage}
         onClose={() => {
-          setIsError(false);
+          dispatch(resetBlog());
+          dispatch(resetCategory());
         }}
       />
     </>

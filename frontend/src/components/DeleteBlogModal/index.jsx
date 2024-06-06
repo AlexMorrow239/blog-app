@@ -1,9 +1,12 @@
-import React, { useMemo, useEffect, useState } from "react";
+import React, { useMemo, useEffect } from "react";
 import { Modal } from "bootstrap";
-import PropTypes from "prop-types";
+import { useDispatch, useSelector } from "react-redux";
 
-export default function DeleteBlogModal({ deleteBlog, removeBlog, onClose }) {
-  const [blog, setBlog] = useState();
+import { deleteBlogById, setDeleteBlog } from "../../features/blogsSlice";
+
+export default function DeleteBlogModal() {
+  const dispatch = useDispatch();
+  const blog = useSelector((state) => state.blogs.deleteBlog);
 
   const modalEl = document.getElementById("deleteBlogModal");
   const deleteBlogModal = useMemo(() => {
@@ -11,32 +14,20 @@ export default function DeleteBlogModal({ deleteBlog, removeBlog, onClose }) {
   }, [modalEl]);
 
   useEffect(() => {
-    if (deleteBlog) {
-      setBlog(deleteBlog);
+    if (blog) {
       deleteBlogModal?.show();
     }
-  }, [deleteBlog, deleteBlogModal]);
+  }, [blog, deleteBlogModal]);
 
-  const resetBlog = () => {
-    setBlog({
-      image: "",
-      title: "",
-      description: "",
-      categories: [],
-      content: [],
-      authorId: "",
-    });
-  };
-
-  const onCloseModal = () => {
-    resetBlog();
-    onClose();
+  const onClose = (e) => {
+    e.preventDefault();
+    dispatch(setDeleteBlog(null));
     deleteBlogModal?.hide();
   };
 
-  const onDelete = () => {
-    removeBlog(deleteBlog);
-    resetBlog();
+  const onDelete = (e) => {
+    e.preventDefault();
+    dispatch(deleteBlogById(blog.id));
     deleteBlogModal?.hide();
   };
 
@@ -56,8 +47,8 @@ export default function DeleteBlogModal({ deleteBlog, removeBlog, onClose }) {
             <button
               type="button"
               className="btn-close"
+              data-bs-dismiss="modal"
               aria-label="Close"
-              onClick={onCloseModal}
             ></button>
           </div>
           <div className="modal-body">
@@ -76,7 +67,7 @@ export default function DeleteBlogModal({ deleteBlog, removeBlog, onClose }) {
             <button
               type="button"
               className="btn btn-secondary"
-              onClick={onCloseModal}
+              onClick={onClose}
             >
               Close
             </button>
@@ -93,9 +84,3 @@ export default function DeleteBlogModal({ deleteBlog, removeBlog, onClose }) {
     </div>
   );
 }
-
-DeleteBlogModal.prototype = {
-  deleteBlog: PropTypes.object,
-  removeBlog: PropTypes.func,
-  onClose: PropTypes.func,
-};

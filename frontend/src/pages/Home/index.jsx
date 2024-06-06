@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import Navbar from "../../components/Navbar";
 import Heading from "../../components/Heading";
@@ -6,36 +7,47 @@ import SubHeading from "../../components/Subheading";
 import BlogGrid from "../../components/BlogGrid";
 import CategoriesList from "../../components/CategoriesList";
 import Footer from "../../components/Footer";
+import Loader from "../../components/Loading";
 
-import blogService from "../../services/blogService";
-import categoryService from "../../services/categoryService";
+import { fetchBlogs, reset as resetBlogs } from "../../features/blogsSlice";
+import {
+  fetchCategories,
+  reset as resetCategories,
+} from "../../features/categoriesSlice";
 
 export default function Home() {
-  const [blogs, setBlogs] = useState();
-  const [categories, setCategories] = useState();
+  const dispatch = useDispatch();
+
+  const { blogs, isLoading: isLoadingBlogs } = useSelector(
+    (state) => state.blogs
+  );
+
+  const { categories, isLoading: isLoadingCategories } = useSelector(
+    (state) => state.categories
+  );
 
   useEffect(() => {
-    const fetchBlogs = async () => {
-      try {
-        const blogsRes = await blogService.fetchBlogs();
-        const categoryRes = await categoryService.fetchCategories();
-        setBlogs(blogsRes.data);
-        setCategories(categoryRes.data);
-      } catch (err) {
-        console.log(err);
-      }
+    dispatch(fetchCategories());
+    dispatch(fetchBlogs());
+    return () => {
+      dispatch(resetBlogs());
+      dispatch(resetCategories());
     };
-    fetchBlogs();
-  }, []);
+  }, [dispatch]);
+
+  if (isLoadingCategories || isLoadingBlogs) {
+    return <Loader />;
+  }
 
   return (
     <>
       <Navbar />
       <div className="container">
         <Heading />
-        <SubHeading subHeading={"Recent blog posts"} />
-        <BlogGrid blogPosts={blogs} />
-        <CategoriesList categories={categories} />
+        <SubHeading subHeading={"Recent Blog Posts"} />
+        <BlogGrid blogPosts={blogs}></BlogGrid>
+        <SubHeading subHeading={"Categories"} />
+        <CategoriesList categories={categories}></CategoriesList>
         <Footer />
       </div>
     </>
