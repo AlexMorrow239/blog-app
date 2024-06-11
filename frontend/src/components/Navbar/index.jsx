@@ -9,9 +9,9 @@ export default function Navbar() {
   return (
     <nav className="navbar navbar-expand-lg">
       <div style={{ margin: "0px 5%" }} className="container-fluid">
-        <a className="navbar-brand" href="#">
+        <Link className="navbar-brand" to="/home">
           iX Software Engineering Blog
-        </a>
+        </Link>
         <button
           className="navbar-toggler"
           type="button"
@@ -60,7 +60,7 @@ export default function Navbar() {
                       <Link
                         className=" dropdown-item"
                         aria-current="page"
-                        to={"/profile/" + user.id}
+                        to={"/profile/" + user._id}
                       >
                         Profile
                       </Link>
@@ -80,6 +80,28 @@ export default function Navbar() {
                   </ul>
                 </div>
               </li>
+            ) : null}
+            {!user || !user.token ? (
+              <>
+                <li className="nav-item">
+                  <Link
+                    className="nav-link active"
+                    aria-current="page"
+                    to="/login"
+                  >
+                    Login
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link
+                    className="nav-link active"
+                    aria-current="page"
+                    to="/register"
+                  >
+                    Register
+                  </Link>
+                </li>
+              </>
             ) : null}
           </ul>
         </div>

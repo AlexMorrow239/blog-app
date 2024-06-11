@@ -1,6 +1,6 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
 
 import "./index.css";
 
@@ -9,9 +9,6 @@ import EditButtons from "../EditButtons";
 export default function CategoriesList({ categories, onEdit, onDelete }) {
   const user = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
-  const toBlogsFilteredByCategoryID = (categoryID) => {
-    navigate(`/blogs/${categoryID}`);
-  };
 
   if (!categories && !categories?.length) {
     return null;
@@ -21,12 +18,14 @@ export default function CategoriesList({ categories, onEdit, onDelete }) {
     <div className="category-list">
       {categories.map((category) => {
         return (
-          <div
+          <button
             key={category.id}
             className="card"
-            style={{ borderRadius: "0px", border: "none" }}
+            style={{ borderRadius: "0px", border: "none", padding: 0 }}
             onClick={() => {
-              toBlogsFilteredByCategoryID(category.id);
+              if ((!user && !user?.token) || (!onEdit && !onDelete)) {
+                navigate(`/blogs/${category.id}`);
+              }
             }}
           >
             <div
@@ -41,10 +40,10 @@ export default function CategoriesList({ categories, onEdit, onDelete }) {
             </div>
             <div className="card-body">
               <p className="card-text">
-                {category.description.substring(0, 100)} ...
+                {category.description.substring(1, 100)} ...
               </p>
             </div>
-            {user && user.token && onEdit && onDelete && (
+            {user && user?.token && onEdit && onDelete && (
               <EditButtons
                 onEdit={() => {
                   onEdit(category);
@@ -52,9 +51,12 @@ export default function CategoriesList({ categories, onEdit, onDelete }) {
                 onDelete={() => {
                   onDelete(category);
                 }}
+                onNavigate={() => {
+                  navigate(`/blogs/${category.id}`);
+                }}
               />
             )}
-          </div>
+          </button>
         );
       })}
     </div>
@@ -63,4 +65,6 @@ export default function CategoriesList({ categories, onEdit, onDelete }) {
 
 CategoriesList.prototype = {
   categories: PropTypes.array.isRequired,
+  onEdit: PropTypes.func,
+  onDelete: PropTypes.func,
 };

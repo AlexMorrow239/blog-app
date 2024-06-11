@@ -93,4 +93,5 @@ export default function DeleteCategoryModal({
 DeleteCategoryModal.prototype = {
   deleteCategory: PropTypes.object,
   removeCategory: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
 };

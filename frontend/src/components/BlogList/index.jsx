@@ -5,14 +5,14 @@ import BlogItem from "../BlogItem";
 
 import "./index.css";
 
-export default function BlogList({ blogPosts, onBlogEdit, onBlogDelete }) {
-  if (!blogPosts && !blogPosts?.length) {
+export default function BlogList({ blogs, onBlogEdit, onBlogDelete }) {
+  if (!blogs && !blogs?.length) {
     return null;
   }
 
   return (
     <div className="blog-list">
-      {blogPosts.map((blog, index) => {
+      {blogs.map((blog, index) => {
         return (
           <BlogItem
             key={index}
@@ -29,5 +29,5 @@ export default function BlogList({ blogPosts, onBlogEdit, onBlogDelete }) {
 }
 
 BlogList.prototype = {
-  blogPosts: PropTypes.array.isRequired,
+  blogs: PropTypes.array.isRequired,
 };

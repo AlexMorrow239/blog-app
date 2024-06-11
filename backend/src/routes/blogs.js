@@ -36,6 +36,14 @@ router.get("/categories/:id", (req, res) => {
 });
 
 /**
+ * Get blogs by authorId
+ * GET /api/blogs/author/:id
+ */
+router.get("/author/:id", (req, res) => {
+  blogController.getBlogsByAuthorID(req, res);
+});
+
+/**
  * Put /api/blogs/
  */
 router.put("/:id", protect, (req, res) => {

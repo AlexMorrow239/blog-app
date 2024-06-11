@@ -1,34 +1,36 @@
-import React from "react";
-import { useState, useEffect, useParams } from "react";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
-import NavBar from "../../components/Navbar";
-import AuthorDetails from "../../components/AuthorDetails";
+import Navbar from "../../components/Navbar";
 import BlogList from "../../components/BlogList";
-import Loader from "../../components/Loading";
+import Footer from "../../components/Footer";
+import Loading from "../../components/Loading";
+import AddEditBlogModal from "../../components/AddEditBlogModal";
+import DeleteBlogModal from "../../components/DeleteBlogModal";
 import SuccessToast from "../../components/SuccessToast";
 import ErrorToast from "../../components/ErrorToast";
-import Footer from "../../components/Footer";
-import AddEditBlogModal from "../../components/AddEditBlogModal";
 
-import BlogService from "../../services/blogService";
+import blogService from "../../services/blogService";
+import authService from "../../services/authService";
 
 export default function ProfilePage() {
   const { authorId } = useParams();
 
-  const [authorBlogs, setAuthorBlogs] = useState([]);
+  const [author, setAuthor] = useState();
+  const [blogs, setBlogs] = useState([]);
   const [isError, setIsError] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const getAuthorBlogs = async () => {
+    const fetchAuthorBlogs = async () => {
       try {
         setIsLoading(true);
-        const authorBlogsRes = await BlogService.fetchBlogsByAuthorId(authorId);
-        setAuthorBlogs(authorBlogsRes.data);
-        setIsSuccess(true);
-        setMessage(authorBlogsRes.message);
+        const author = await authService.getUser(authorId);
+        const blogs = await blogService.fetchBlogsByAuthorId(authorId);
+        setBlogs(blogs.data);
+        setAuthor(author.data);
         setIsLoading(false);
       } catch (error) {
         setIsError(true);
@@ -36,7 +38,7 @@ export default function ProfilePage() {
         setMessage(error.message || error);
       }
     };
-    getAuthorBlogs();
+    fetchAuthorBlogs();
   }, [authorId]);
 
   const resetSuccess = () => {
@@ -49,22 +51,37 @@ export default function ProfilePage() {
     setMessage("");
   };
 
-  if (isLoading) {
-    return <Loader />;
+  const AuthorDetails = () => {
+    return (
+      <div className="col-md-8 col-lg-6 col-xl-4 mx-auto">
+        <div className="position-sticky my-5" style={{ top: "2rem" }}>
+          <div className="p-4 mb-3 bg-light rounded">
+            <h4 className="fst-italic">
+              {author.firstName} {author.lastName}
+            </h4>
+            <img src={author.image} className="avatar" alt="..." />
+            <p>{author.bio.substring(0, 100)}...</p>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  if (isLoading || !author || !blogs) {
+    return <Loading />;
   }
 
   return (
     <>
-      <NavBar />
+      <Navbar />
       <div className="container">
         <AuthorDetails />
         <p className="page-subtitle">Author Blog Posts</p>
-        <BlogList blogPosts={authorBlogs} />
+        <BlogList blogs={blogs} />
         <Footer />
       </div>
-      {/* <EditProfileModal /> */}
       <AddEditBlogModal />
-      {/* <DeleteBlogModal /> */}
+      <DeleteBlogModal />
       <SuccessToast show={isSuccess} message={message} onClose={resetSuccess} />
       <ErrorToast show={isError} message={message} onClose={resetError} />
     </>
