@@ -1,4 +1,5 @@
 const Category = require("../models/Category");
+const Blog = require("../models/Blog");
 
 const createCategory = async (req, res) => {
   try {
@@ -56,12 +57,13 @@ const updateCategoryByID = async (req, res) => {
 
 const deleteCategoryByID = async (req, res) => {
   try {
-    const categoryDB = await Category.findById(req.params.id);
-    if (!categoryDB) {
-      res
-        .status(400)
-        .json({ message: "Cannot delete category with existing blogs!" });
+    const blog = await Blog.findOne({ categoryIds: req.params.id });
+    if (blog) {
+      return res
+        .status(412)
+        .json({ message: "Can't delete category still associated with blogs" });
     }
+
     const category = await Category.findByIdAndDelete(req.params.id);
     if (category) {
       res.status(200).json({ message: "Category deleted!", id: req.params.id });
