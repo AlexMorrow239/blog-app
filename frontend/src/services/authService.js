@@ -52,11 +52,10 @@ const getUser = async (authorId) => {
 
 const updateUser = async (userId, userData) => {
   const response = await fetch(
-    `http://localhost:8000/api/auth/user/${userId}`,
+    `http://localhost:8000/api/auth/user/${userId.getItem("id")}`,
     {
       method: "PUT",
       headers: {
-        "Content-Type": "application/json",
         Authorization:
           "Bearer " + JSON.parse(localStorage.getItem("user")).token,
       },

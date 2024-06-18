@@ -18,7 +18,7 @@ export default function CategoriesList({ categories, onEdit, onDelete }) {
     <div className="category-list">
       {categories.map((category) => {
         return (
-          <button
+          <div
             key={category.id}
             className="card"
             style={{ borderRadius: "0px", border: "none", padding: 0 }}
@@ -40,7 +40,7 @@ export default function CategoriesList({ categories, onEdit, onDelete }) {
             </div>
             <div className="card-body">
               <p className="card-text">
-                {category.description.substring(1, 100)} ...
+                {category.description.substring(0, 100)} ...
               </p>
             </div>
             {user && user?.token && onEdit && onDelete && (
@@ -56,7 +56,7 @@ export default function CategoriesList({ categories, onEdit, onDelete }) {
                 }}
               />
             )}
-          </button>
+          </div>
         );
       })}
     </div>

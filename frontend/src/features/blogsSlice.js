@@ -78,7 +78,7 @@ export const deleteBlogById = createAsyncThunk(
   "blogs/deleteBlogById",
   async (blogId, thunkAPI) => {
     try {
-      return await blogService.deleteBlogsById(blogId);
+      return await blogService.deleteBlog(blogId);
     } catch (error) {
       const message = error.message || error;
       return thunkAPI.rejectWithValue(message);
@@ -202,7 +202,7 @@ export const blogsSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(deleteBlogById.fulfilled, (state, { payload }) => {
-        state.blogs = state.blogs.filter((x) => x !== payload.id);
+        state.blogs = state.blogs.filter((x) => x !== payload._id);
         state.deleteBlog = null;
         state.isLoading = false;
         state.isSuccess = true;

@@ -48,7 +48,6 @@ router.get("/author/:id", (req, res) => {
  * Put /api/blogs/
  */
 router.put("/:id", protect, upload.single("image"), (req, res) => {
-  console.log(req.body);
   blogController.updateBlogByID(req, res);
 });
 

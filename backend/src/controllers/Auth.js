@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const GoogleCloudService = require("../services/cloud-storage");
 
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -88,6 +89,13 @@ const getUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
+    let imageUrl = "";
+    if (req?.file?.path) {
+      imageUrl = await GoogleCloudService.uploadToFirebaseStorage(
+        req?.file?.path,
+        req?.file?.path
+      );
+    }
     const user = await User.findById(req.params.id);
     if (!user) {
       res.status(404).json({ message: "User not found" });
@@ -97,6 +105,7 @@ const updateUser = async (req, res) => {
     user.lastName = req.body.lastName || user.lastName;
     user.email = req.body.email || user.email;
     user.bio = req.body.bio || user.bio;
+    user.image = imageUrl || user.image;
     if (req.body.password) {
       const salt = await bcrypt.genSalt(10);
       user.password = await bcrypt.hash(req.body.password, salt);

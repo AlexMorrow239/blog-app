@@ -6,7 +6,12 @@ import BlogItem from "../BlogItem";
 
 import "./index.css";
 
-import { setEditBlog, setDeleteBlog } from "../../features/blogsSlice";
+import {
+  setEditBlog,
+  setDeleteBlog,
+  deleteBlogById,
+  updateBlog,
+} from "../../features/blogsSlice";
 
 export default function BlogList({ blogs }) {
   const dispatch = useDispatch();

@@ -32,3 +32,6 @@
 /backend/.env
 /backend/gcp_key.json
 
+# images
+/backend/uploads
+

@@ -24,10 +24,6 @@ export default function BlogItem({
     }
   };
 
-  console.log(blog.author.id);
-  console.log(user._id);
-  console.log(blog.author.id === user._id);
-
   const EditButtonsContainer = () => {
     return (
       <EditButtons

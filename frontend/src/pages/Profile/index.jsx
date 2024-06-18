@@ -12,6 +12,7 @@ import ErrorToast from "../../components/ErrorToast";
 
 import blogService from "../../services/blogService";
 import authService from "../../services/authService";
+import EditProfileModal from "../../components/EditProfileModal";
 
 export default function ProfilePage() {
   const { authorId } = useParams();
@@ -22,6 +23,11 @@ export default function ProfilePage() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [editAuthor, setEditAuthor] = useState();
+
+  const onEditProfile = () => {
+    setEditAuthor(author);
+  };
 
   useEffect(() => {
     const fetchAuthorBlogs = async () => {
@@ -32,6 +38,9 @@ export default function ProfilePage() {
         setBlogs(blogs.data);
         setAuthor(author.data);
         setIsLoading(false);
+        setIsSuccess(true);
+        setMessage(blogs.message);
+        setIsError(false);
       } catch (error) {
         setIsError(true);
         setIsLoading(false);
@@ -76,12 +85,23 @@ export default function ProfilePage() {
       <Navbar />
       <div className="container">
         <AuthorDetails />
+        <div className="text-center">
+          <button
+            className="btn btn-outline-dark m-3"
+            data-bs-toggle="modal"
+            data-bs-target="#addEditProfileModal"
+            onClick={onEditProfile}
+          >
+            Edit Profile
+          </button>
+        </div>
         <p className="page-subtitle">Author Blog Posts</p>
         <BlogList blogs={blogs} />
         <Footer />
       </div>
       <AddEditBlogModal />
       <DeleteBlogModal />
+      <EditProfileModal editAuthor={editAuthor} setEditAuthor={setEditAuthor} />
       <SuccessToast show={isSuccess} message={message} onClose={resetSuccess} />
       <ErrorToast show={isError} message={message} onClose={resetError} />
     </>

@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useState } from "react";
-import PropTypes from "prop-types";
 import { Modal } from "bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -138,12 +137,6 @@ export default function AddEditBlogModal() {
                 <div>
                   <FormImage image={blogImage} onChange={onImageChange} />
                 </div>
-                {/* <input
-                  id="fileInput"
-                  type="file"
-                  name="img"
-                  onChange={onImageChange}
-                ></input> */}
                 <div className="input-group mb-3">
                   <label
                     className="input-group-text"
@@ -364,7 +357,3 @@ export default function AddEditBlogModal() {
     </div>
   );
 }
-
-AddEditBlogModal.prototype = {
-  onClose: PropTypes.func,
-};

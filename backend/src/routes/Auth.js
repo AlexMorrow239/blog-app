@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const { upload } = require("../middleware/Multer");
 
 const { login, register, getUser, updateUser } = require("../controllers/Auth");
 /**
@@ -30,7 +31,7 @@ router.get("/user/:id", (req, res) => {
  * @route PUT api/auth/user/:id
  * @description Update User by ID
  */
-router.put("/user/:id", (req, res) => {
+router.put("/user/:id", upload.single("image"), (req, res) => {
   updateUser(req, res);
 });
 
