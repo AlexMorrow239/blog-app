@@ -4,11 +4,12 @@ const router = express.Router();
 const blogController = require("../controllers/Blogs");
 
 const { protect } = require("../middleware/Auth");
+const { upload } = require("../middleware/Multer");
 
 /**
  * POST /api/blogs
  */
-router.post("/", protect, (req, res) => {
+router.post("/", protect, upload.single("image"), (req, res) => {
   blogController.createBlogs(req, res);
 });
 
@@ -46,7 +47,8 @@ router.get("/author/:id", (req, res) => {
 /**
  * Put /api/blogs/
  */
-router.put("/:id", protect, (req, res) => {
+router.put("/:id", protect, upload.single("image"), (req, res) => {
+  console.log(req.body);
   blogController.updateBlogByID(req, res);
 });
 

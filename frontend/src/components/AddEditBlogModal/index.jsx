@@ -1,21 +1,28 @@
 import React, { useEffect, useMemo, useState } from "react";
-
 import PropTypes from "prop-types";
-
 import { Modal } from "bootstrap";
+import { useDispatch, useSelector } from "react-redux";
 
 import Categories from "../Categories";
+import FormImage from "../FormImage";
 
-export default function AddEditBlogModal({
-  addBlog,
-  editBlog,
-  categories,
+import {
   createBlog,
   updateBlog,
-  onClose,
-}) {
+  setAddBlog,
+  setEditBlog,
+} from "../../features/blogsSlice";
+
+export default function AddEditBlogModal() {
+  const dispatch = useDispatch();
+
   const user = JSON.parse(localStorage.getItem("user"));
+
+  const { addBlog, editBlog } = useSelector((state) => state.blogs);
+  const { categories } = useSelector((state) => state.categories);
+
   const [blog, setBlog] = useState();
+  const [blogImage, setBlogImage] = useState("");
 
   const modalEl = document.getElementById("addEditModal");
 
@@ -33,26 +40,53 @@ export default function AddEditBlogModal({
     }
   }, [addBlog, editBlog, addEditModal]);
 
+  const buildFormData = () => {
+    const formData = new FormData();
+    formData.append("id", blog.id);
+    formData.append("image", blog.image);
+    formData.append("title", blog.title);
+    formData.append("description", blog.description);
+    formData.append("categories", JSON.stringify(blog.categories));
+    formData.append("content", JSON.stringify(blog.content));
+    formData.append("authorId", user?._id);
+    return formData;
+  };
+
   const onSubmit = (e) => {
     e?.preventDefault();
     if (isFormValid()) {
+      const blogForm = buildFormData();
+
       if (addBlog) {
-        createBlog(blog);
+        dispatch(createBlog(blogForm));
       } else if (editBlog) {
-        updateBlog(blog);
+        dispatch(updateBlog(blogForm));
       }
       resetBlog();
       addEditModal?.hide();
     }
   };
 
+  const onImageChange = (e) => {
+    e?.preventDefault();
+
+    if (e?.target?.files?.length) {
+      const file = e.target.files[0];
+      setBlogImage(URL.createObjectURL(file));
+      setBlog({ ...blog, image: file });
+    }
+  };
+
   const resetBlog = () => {
+    dispatch(setEditBlog(null));
+    dispatch(setAddBlog(null));
+
     setBlog({
       title: "",
       description: "",
       categories: [],
       content: [],
-      authorId: user?.id,
+      authorId: "",
     });
   };
 
@@ -62,14 +96,16 @@ export default function AddEditBlogModal({
     return form?.checkValidity();
   };
 
-  const onCloseModal = () => {
+  const onCloseModal = (e) => {
+    e?.preventDefault();
     resetBlog();
     addEditModal?.hide();
-    onClose();
+    if (editBlog) {
+      dispatch(setEditBlog(null));
+    } else if (addBlog) {
+      dispatch(setAddBlog(null));
+    }
   };
-
-  const modalTitle = addBlog ? "Add Blog" : "Edit Blog";
-  const modalBtn = addBlog ? "Create Blog" : "Save Changes";
 
   if (!categories && !categories?.length) {
     return null;
@@ -88,7 +124,7 @@ export default function AddEditBlogModal({
           <div className="modal-content">
             <div className="modal-header">
               <h1 className="modal-title fs-5" id="addEditModalLabel">
-                {modalTitle}
+                Modal title
               </h1>
               <button
                 type="button"
@@ -99,6 +135,15 @@ export default function AddEditBlogModal({
             </div>
             <div className="modal-body">
               <form id="blogForm">
+                <div>
+                  <FormImage image={blogImage} onChange={onImageChange} />
+                </div>
+                {/* <input
+                  id="fileInput"
+                  type="file"
+                  name="img"
+                  onChange={onImageChange}
+                ></input> */}
                 <div className="input-group mb-3">
                   <label
                     className="input-group-text"
@@ -310,7 +355,7 @@ export default function AddEditBlogModal({
                 className="btn btn-primary"
                 onClick={onSubmit}
               >
-                {modalBtn}
+                Save changes
               </button>
             </div>
           </div>
@@ -321,10 +366,5 @@ export default function AddEditBlogModal({
 }
 
 AddEditBlogModal.prototype = {
-  addBlog: PropTypes.object,
-  editBlog: PropTypes.object,
-  categories: PropTypes.array,
-  createBlog: PropTypes.func,
-  updateBlog: PropTypes.func,
   onClose: PropTypes.func,
 };

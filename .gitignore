@@ -21,7 +21,14 @@
 /frontend/yarn-debug.log*
 /frontend/yarn-error.log*
 
+# images
+/uploads
+
 # EXPRESS BACKEND-----------------
 # dependencies
 /backend/node_modules
+
+# keys
+/backend/.env
+/backend/gcp_key.json
 

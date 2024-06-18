@@ -22,7 +22,7 @@ const getCategories = async (req, res) => {
     const categories = await Category.find();
     res
       .status(200)
-      .json({ message: "Return all categories!", data: categories });
+      .json({ message: "Returned all categories!", data: categories });
   } catch (error) {
     res.status(500).json({ message: error.message, data: [] });
   }
@@ -30,7 +30,7 @@ const getCategories = async (req, res) => {
 
 const getCategoryById = async (req, res) => {
   res.status(200).json({
-    message: "Get category by ID!",
+    message: "Got category by ID!",
     data: [],
   });
 };
