@@ -24,7 +24,7 @@ export default function EditProfileModal({ editAuthor, setEditAuthor }) {
 
   const buildFormData = () => {
     const formData = new FormData();
-    formData.append("id", editAuthor.id);
+    formData.append("id", editAuthor._id);
     formData.append("image", editAuthor.image);
     formData.append("firstName", editAuthor.firstName);
     formData.append("lastName", editAuthor.lastName);
@@ -46,9 +46,9 @@ export default function EditProfileModal({ editAuthor, setEditAuthor }) {
       if (editAuthor) {
         dispatch(updateAuthor(authorForm));
       }
-      setEditAuthor(null);
-      editProfileModal?.hide();
     }
+    editProfileModal?.hide();
+    setEditAuthor(null);
   };
 
   const onCloseModal = (e) => {
@@ -181,6 +181,7 @@ export default function EditProfileModal({ editAuthor, setEditAuthor }) {
               <button
                 type="button"
                 className="btn btn-primary"
+                data-bs-dismiss="modal"
                 onClick={onSubmit}
               >
                 Save changes

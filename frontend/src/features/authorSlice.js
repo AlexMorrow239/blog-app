@@ -10,6 +10,8 @@ const initialState = {
   isSuccess: false,
   isLoading: false,
   message: "",
+  isAuthorEditSuccess: false,
+  isAuthorEditError: false,
 };
 
 // Fetch Author
@@ -92,6 +94,21 @@ export const authSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = false;
         state.isError = true;
+        state.message = payload.message;
+      })
+      .addCase(updateAuthor.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateAuthor.fulfilled, (state, { payload }) => {
+        state.author = payload.data;
+        state.isLoading = false;
+        state.isAuthorEditSuccess = true;
+        state.isAuthorEditError = false;
+      })
+      .addCase(updateAuthor.rejected, (state, { payload }) => {
+        state.isLoading = false;
+        state.isAuthorEditError = true;
+        state.isAuthorEditSuccess = false;
         state.message = payload.message;
       });
   },
