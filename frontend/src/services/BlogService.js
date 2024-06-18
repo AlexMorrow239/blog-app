@@ -2,7 +2,6 @@ const createBlog = async (blog) => {
   const response = await fetch("http://localhost:8000/api/blogs", {
     method: "POST",
     headers: {
-      // "Content-Type": "application/json",
       authorization: "Bearer " + JSON.parse(localStorage.getItem("user")).token,
     },
     body: blog,
@@ -124,11 +123,10 @@ const updateBlog = async (blog) => {
     {
       method: "PUT",
       headers: {
-        "Content-Type": "application/json",
         authorization:
           "Bearer " + JSON.parse(localStorage.getItem("user")).token,
       },
-      body: JSON.stringify(blog),
+      body: blog,
     }
   );
   if (!response.ok) {
