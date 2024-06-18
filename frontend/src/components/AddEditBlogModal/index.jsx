@@ -123,7 +123,7 @@ export default function AddEditBlogModal() {
           <div className="modal-content">
             <div className="modal-header">
               <h1 className="modal-title fs-5" id="addEditModalLabel">
-                Modal title
+                {addBlog ? "Add Blog" : "Edit Blog"}
               </h1>
               <button
                 type="button"
@@ -348,7 +348,7 @@ export default function AddEditBlogModal() {
                 className="btn btn-primary"
                 onClick={onSubmit}
               >
-                Save changes
+                {addBlog ? "Add" : "Save Changes"}
               </button>
             </div>
           </div>
