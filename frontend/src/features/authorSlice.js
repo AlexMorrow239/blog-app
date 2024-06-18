@@ -25,6 +25,18 @@ export const fetchAuthor = createAsyncThunk(
   }
 );
 
+export const updateAuthor = createAsyncThunk(
+  "auth/updateAuthor",
+  async (userData, thunkAPI) => {
+    try {
+      return await authService.updateUser(userData);
+    } catch (error) {
+      const message = error.message || error;
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const fetchBlogsByAuthorId = createAsyncThunk(
   "blogs/fetchBlogsByAuthorId",
   async (authorId, thunkAPI) => {
