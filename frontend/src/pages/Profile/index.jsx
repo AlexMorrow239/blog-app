@@ -89,7 +89,7 @@ export default function ProfilePage() {
           <button
             className="btn btn-outline-dark m-3"
             data-bs-toggle="modal"
-            data-bs-target="#addEditProfileModal"
+            data-bs-target="#editProfileModal"
             onClick={onEditProfile}
           >
             Edit Profile

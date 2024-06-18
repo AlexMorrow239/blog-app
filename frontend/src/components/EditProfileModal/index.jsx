@@ -12,7 +12,6 @@ export default function EditProfileModal({ editAuthor, setEditAuthor }) {
   const [authorImage, setAuthorImage] = useState(editAuthor?.image);
 
   const modalEl = document.getElementById("editProfileModal");
-
   const editProfileModal = useMemo(() => {
     return modalEl ? new Modal(modalEl) : null;
   }, [modalEl]);
@@ -44,7 +43,6 @@ export default function EditProfileModal({ editAuthor, setEditAuthor }) {
     e?.preventDefault();
     if (isFormValid()) {
       const authorForm = buildFormData();
-
       if (editAuthor) {
         dispatch(updateAuthor(authorForm));
       }
@@ -56,9 +54,7 @@ export default function EditProfileModal({ editAuthor, setEditAuthor }) {
   const onCloseModal = (e) => {
     e?.preventDefault();
     editProfileModal?.hide();
-    if (editAuthor) {
-      setEditAuthor(null);
-    }
+    setEditAuthor(null);
   };
 
   const onImageChange = (e) => {
