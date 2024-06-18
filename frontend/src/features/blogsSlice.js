@@ -202,7 +202,7 @@ export const blogsSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(deleteBlogById.fulfilled, (state, { payload }) => {
-        state.blogs = state.blogs.filter((x) => x !== payload._id);
+        state.blogs = state.blogs.filter((x) => x.id !== payload.id);
         state.deleteBlog = null;
         state.isLoading = false;
         state.isSuccess = true;
