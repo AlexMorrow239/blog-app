@@ -347,7 +347,7 @@ export default function AddEditBlogModal() {
               </button>
               <button
                 type="button"
-                className="btn btn-primary"
+                className="btn btn-outline-success"
                 onClick={onSubmit}
               >
                 {addBlog ? "Add" : "Save Changes"}

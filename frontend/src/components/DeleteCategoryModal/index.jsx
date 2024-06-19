@@ -64,7 +64,17 @@ export default function DeleteCategoryModal({
           <div className="modal-body">
             <p>Are You sure you want to delete this Category?</p>
             <div style={{ display: "flex", alignItems: "center" }}>
-              <h5 style={{ marginLeft: "8px" }}>{category?.title}</h5>
+              <span
+                style={{
+                  width: "12px",
+                  height: "12px",
+                  borderRadius: "50%",
+                  backgroundColor: category?.color,
+                }}
+              ></span>
+              <h5 style={{ marginLeft: "8px", marginBottom: "0" }}>
+                {category?.title}
+              </h5>
             </div>
           </div>
 

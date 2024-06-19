@@ -38,8 +38,8 @@ export default function ProfilePage() {
         setBlogs(blogs.data);
         setAuthor(author.data);
         setIsLoading(false);
-        setIsSuccess(true);
-        setMessage(blogs.message);
+        // setIsSuccess(true);
+        // setMessage(blogs.message);
         setIsError(false);
       } catch (error) {
         setIsError(true);
@@ -101,7 +101,11 @@ export default function ProfilePage() {
       </div>
       <AddEditBlogModal />
       <DeleteBlogModal />
-      <EditProfileModal editAuthor={editAuthor} setEditAuthor={setEditAuthor} />
+      <EditProfileModal
+        editAuthor={editAuthor}
+        setEditAuthor={setEditAuthor}
+        setAuthor={setAuthor}
+      />
       <SuccessToast show={isSuccess} message={message} onClose={resetSuccess} />
       <ErrorToast show={isError} message={message} onClose={resetError} />
     </>

@@ -42,9 +42,9 @@ export const categoriesSlice = createSlice({
       })
       .addCase(fetchCategories.fulfilled, (state, { payload }) => {
         state.categories = payload.data;
-        state.isSuccess = true;
+        // state.isSuccess = true;
         state.isLoading = false;
-        state.message = payload.message;
+        // state.message = payload.message;
       })
       .addCase(fetchCategories.rejected, (state, { payload }) => {
         state.message = payload;

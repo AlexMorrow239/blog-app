@@ -28,9 +28,9 @@ export default function BlogPage() {
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        const blog = await blogService.fetchBlogByID(blogId);
-        setBlog(blog.data);
-        setMessage(blog.message);
+        const blogRes = await blogService.fetchBlogByID(blogId);
+        setBlog(blogRes.data);
+        setMessage(blogRes.message);
         setIsLoading(false);
       } catch (error) {
         setIsError(true);
@@ -76,7 +76,10 @@ export default function BlogPage() {
                   </Link>
                 </p>
                 <p>{blog.description}</p>
-                <Categories blogPost={blog} />
+                <Categories
+                  categories={blog.categories}
+                  removeCategory={null}
+                />
               </div>
               <hr />
               {blog.content.map((content, index) => {

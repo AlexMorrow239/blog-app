@@ -8,6 +8,7 @@ import EditButtons from "../EditButtons";
 import PropTypes from "prop-types";
 
 import "./index.css";
+import Categories from "../Categories";
 
 export default function BlogItem({
   index,
@@ -46,6 +47,7 @@ export default function BlogItem({
         <img src={blog.image} className="card-img-top" alt="..." />
         <div className="card-text-bottom">
           <BlogItemText blogPost={blog} headerFontSize="20px" />
+          <Categories categories={blog.categories} removeCategory={null} />
           {user &&
           user.token &&
           blog.author.id === user._id &&
@@ -62,6 +64,7 @@ export default function BlogItem({
         <img src={blog.image} className="card-img-left" alt="..." />
         <div className="card-text-right">
           <BlogItemText blogPost={blog} headerFontSize="20px" />
+          <Categories categories={blog.categories} removeCategory={null} />
           {user &&
           user.token &&
           blog.author.id === user._id &&

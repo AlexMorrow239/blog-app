@@ -61,6 +61,11 @@ export const authSlice = createSlice({
       state.isError = false;
       state.message = "";
     },
+    resetEditStatus: (state) => {
+      state.isAuthorEditSuccess = false;
+      state.isAuthorEditError = false;
+      state.message = "";
+    },
   },
   extraReducers: (builder) => {
     builder

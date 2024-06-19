@@ -6,11 +6,14 @@ import { updateAuthor } from "../../features/authorSlice";
 
 import FormImage from "../FormImage";
 
-export default function EditProfileModal({ editAuthor, setEditAuthor }) {
+export default function EditProfileModal({
+  editAuthor,
+  setEditAuthor,
+  setAuthor,
+}) {
   const dispatch = useDispatch();
 
   const [authorImage, setAuthorImage] = useState(editAuthor?.image);
-  console.log(authorImage);
 
   const modalEl = document.getElementById("editProfileModal");
   const editProfileModal = useMemo(() => {
@@ -50,6 +53,7 @@ export default function EditProfileModal({ editAuthor, setEditAuthor }) {
       }
     }
     editProfileModal?.hide();
+    setAuthor(editAuthor);
     setEditAuthor(null);
   };
 
@@ -181,7 +185,7 @@ export default function EditProfileModal({ editAuthor, setEditAuthor }) {
               </button>
               <button
                 type="button"
-                className="btn btn-primary"
+                className="btn btn-outline-success"
                 data-bs-dismiss="modal"
                 onClick={onSubmit}
               >

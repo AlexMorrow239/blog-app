@@ -1,9 +1,10 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-
 import { Link, useNavigate } from "react-router-dom";
 
 import { setUser, resetSuccessAndError } from "../../features/authSlice";
+
+import "./index.css";
 
 export default function Navbar() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -66,7 +67,7 @@ export default function Navbar() {
                   >
                     <i className="bi bi-person-circle"></i>
                   </button>
-                  <ul className="dropdown-menu">
+                  <ul className="dropdown-menu ">
                     <li>
                       <Link
                         className=" dropdown-item"
