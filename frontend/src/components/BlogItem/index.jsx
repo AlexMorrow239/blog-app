@@ -19,9 +19,7 @@ export default function BlogItem({
   const user = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
   const navigateToBlog = () => {
-    if ((!user && !user?.token) || (!onBlogEdit && !onBlogDelete)) {
-      navigate(`/blog/${blog.id}`);
-    }
+    navigate(`/blog/${blog.id}`);
   };
 
   const EditButtonsContainer = () => {
