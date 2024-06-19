@@ -1,10 +1,21 @@
 import React from "react";
+import { useDispatch } from "react-redux";
 
 import { Link, useNavigate } from "react-router-dom";
+
+import { setUser, resetSuccessAndError } from "../../features/authSlice";
 
 export default function Navbar() {
   const user = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const logout = () => {
+    localStorage.removeItem("user");
+    dispatch(setUser(null));
+    dispatch(resetSuccessAndError());
+    navigate("/home");
+  };
 
   return (
     <nav className="navbar navbar-expand-lg">
@@ -70,8 +81,7 @@ export default function Navbar() {
                         style={{ cursor: "pointer" }}
                         className="dropdown-item"
                         onClick={() => {
-                          localStorage.removeItem("user");
-                          navigate("/login");
+                          logout();
                         }}
                       >
                         Logout

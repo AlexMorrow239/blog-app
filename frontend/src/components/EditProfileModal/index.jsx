@@ -10,6 +10,7 @@ export default function EditProfileModal({ editAuthor, setEditAuthor }) {
   const dispatch = useDispatch();
 
   const [authorImage, setAuthorImage] = useState(editAuthor?.image);
+  console.log(authorImage);
 
   const modalEl = document.getElementById("editProfileModal");
   const editProfileModal = useMemo(() => {
@@ -18,6 +19,7 @@ export default function EditProfileModal({ editAuthor, setEditAuthor }) {
 
   useEffect(() => {
     if (editAuthor) {
+      setAuthorImage(editAuthor.image);
       editProfileModal.show();
     }
   }, [editAuthor, editProfileModal]);
@@ -86,7 +88,6 @@ export default function EditProfileModal({ editAuthor, setEditAuthor }) {
                 type="button"
                 className="btn-close"
                 data-bs-dismiss="modal"
-                aria-label="Close"
                 onClick={onCloseModal}
               ></button>
             </div>

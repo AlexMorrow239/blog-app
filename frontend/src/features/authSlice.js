@@ -66,6 +66,9 @@ export const authSlice = createSlice({
     setEditUser: (state, { payload }) => {
       state.editUser = payload;
     },
+    setUser: (state, { payload }) => {
+      state.user = payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -121,5 +124,6 @@ export const authSlice = createSlice({
   },
 });
 
-export const { reset, resetSuccessAndError, setEditUser } = authSlice.actions;
+export const { reset, resetSuccessAndError, setEditUser, setUser } =
+  authSlice.actions;
 export default authSlice.reducer;

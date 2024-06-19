@@ -32,9 +32,11 @@ export default function AddEditBlogModal() {
   useEffect(() => {
     if (addBlog) {
       setBlog(addBlog);
+      setBlogImage(addBlog?.image);
       addEditModal.show();
     } else if (editBlog) {
       setBlog(editBlog);
+      setBlogImage(editBlog?.image);
       addEditModal.show();
     }
   }, [addBlog, editBlog, addEditModal]);
