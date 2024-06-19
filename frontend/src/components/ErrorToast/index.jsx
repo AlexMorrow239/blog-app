@@ -46,7 +46,7 @@ export default function ErrorToast({ show, message, onClose }) {
 }
 
 ErrorToast.propTypes = {
-  show: PropTypes.bool.isRequired,
-  message: PropTypes.string.isRequired,
+  show: PropTypes.bool,
+  message: PropTypes.string,
   onClose: PropTypes.func.isRequired,
 };
