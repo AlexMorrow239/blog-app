@@ -25,9 +25,18 @@ export default function BlogItem({
   const EditButtonsContainer = () => {
     return (
       <EditButtons
-        onEdit={() => onBlogEdit(blog)}
-        onDelete={() => onBlogDelete(blog)}
-        onNavigate={() => navigate(`/blog/${blog.id}`)}
+        onEdit={(e) => {
+          e.stopPropagation();
+          onBlogEdit(blog);
+        }}
+        onDelete={(e) => {
+          e.stopPropagation();
+          onBlogDelete(blog);
+        }}
+        onNavigate={(e) => {
+          e.stopPropagation();
+          navigate(`/blog/${blog.id}`);
+        }}
       />
     );
   };
