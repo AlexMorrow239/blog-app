@@ -86,6 +86,7 @@ const deleteCategory = async (id) => {
 
   if (!response.ok) {
     try {
+      console.log(response);
       let res = await response.json();
       throw res.message || JSON.stringify(res);
     } catch (err) {

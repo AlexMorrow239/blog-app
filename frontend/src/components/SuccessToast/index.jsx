@@ -48,7 +48,7 @@ export default function SuccessToast({ show, message, onClose }) {
 }
 
 SuccessToast.propTypes = {
-  show: PropTypes.bool.isRequired,
-  message: PropTypes.string.isRequired,
+  show: PropTypes.bool,
+  message: PropTypes.string,
   onClose: PropTypes.func.isRequired,
 };

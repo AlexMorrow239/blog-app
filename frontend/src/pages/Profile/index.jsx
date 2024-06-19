@@ -16,6 +16,7 @@ import EditProfileModal from "../../components/EditProfileModal";
 
 export default function ProfilePage() {
   const { authorId } = useParams();
+  const user = JSON.parse(localStorage.getItem("user"));
 
   const [author, setAuthor] = useState();
   const [blogs, setBlogs] = useState([]);
@@ -86,14 +87,16 @@ export default function ProfilePage() {
       <div className="container">
         <AuthorDetails />
         <div className="text-center">
-          <button
-            className="btn btn-outline-dark m-3"
-            data-bs-toggle="modal"
-            data-bs-target="#editProfileModal"
-            onClick={onEditProfile}
-          >
-            Edit Profile
-          </button>
+          {authorId === user._id && (
+            <button
+              className="btn btn-outline-dark m-3 btn-lg"
+              data-bs-toggle="modal"
+              data-bs-target="#editProfileModal"
+              onClick={onEditProfile}
+            >
+              Edit Profile
+            </button>
+          )}
         </div>
         <p className="page-subtitle">Author Blog Posts</p>
         <BlogList blogs={blogs} />

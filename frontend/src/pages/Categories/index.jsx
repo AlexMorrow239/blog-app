@@ -92,9 +92,9 @@ export default function CategoriesPage() {
 
   const removeCategory = async (category) => {
     try {
-      const newBlog = await categoryService.deleteCategory(category.id);
+      const categoryRes = await categoryService.deleteCategory(category.id);
       setIsSuccess(true);
-      setMessage(newBlog.message);
+      setMessage(categoryRes.message);
       setCategories((prev) => prev.filter((x) => x.id !== category.id));
     } catch (err) {
       setIsError(true);
