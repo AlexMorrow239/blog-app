@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function EditButtons({ onEdit, onDelete, onNavigate }) {
   return (
     <>
@@ -13,7 +11,10 @@ export default function EditButtons({ onEdit, onDelete, onNavigate }) {
         }}
         type="button"
         className="btn"
-        onClick={onEdit}
+        onClick={(e) => {
+          e.stopPropagation();
+          onEdit();
+        }}
       >
         <i className="bi bi-pencil-fill"></i>
       </button>
@@ -27,7 +28,10 @@ export default function EditButtons({ onEdit, onDelete, onNavigate }) {
         }}
         type="button"
         className="btn"
-        onClick={onDelete}
+        onClick={(e) => {
+          e.stopPropagation();
+          onDelete();
+        }}
       >
         <i className="bi bi-trash-fill"></i>
       </button>
@@ -41,7 +45,10 @@ export default function EditButtons({ onEdit, onDelete, onNavigate }) {
         }}
         type="button"
         className="btn"
-        onClick={onNavigate}
+        onClick={(e) => {
+          e.stopPropagation();
+          onNavigate();
+        }}
       >
         <i className="bi bi-arrows-fullscreen"></i>
       </button>

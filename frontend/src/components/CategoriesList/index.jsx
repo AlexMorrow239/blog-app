@@ -1,14 +1,35 @@
 import React from "react";
-import PropTypes from "prop-types";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import "./index.css";
 
 import EditButtons from "../EditButtons";
 
-export default function CategoriesList({ categories, onEdit, onDelete }) {
-  const user = JSON.parse(localStorage.getItem("user"));
+import {
+  setEditCategory,
+  setRemoveCategory,
+} from "../../features/categoriesSlice";
+
+export default function CategoriesList() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
+
+  const categories = useSelector((state) => state.categories.categories);
+  const addCategory = useSelector((state) => state.categories.addCategory);
+  const editCategory = useSelector((state) => state.categories.editCategory);
+  const removeCategory = useSelector(
+    (state) => state.categories.removeCategory
+  );
+
+  const onCategoryUpdate = (category) => {
+    dispatch(setEditCategory(category));
+  };
+
+  const onCategoryDelete = (category) => {
+    dispatch(setRemoveCategory(category));
+  };
 
   if (!categories && !categories?.length) {
     return null;
@@ -23,7 +44,10 @@ export default function CategoriesList({ categories, onEdit, onDelete }) {
             className="card"
             style={{ borderRadius: "0px", border: "none", padding: 0 }}
             onClick={() => {
-              if ((!user && !user?.token) || (!onEdit && !onDelete)) {
+              if (
+                (!user && !user?.token) ||
+                (!editCategory && !addCategory && !removeCategory)
+              ) {
                 navigate(`/blogs/${category.id}`);
               }
             }}
@@ -43,13 +67,13 @@ export default function CategoriesList({ categories, onEdit, onDelete }) {
                 {category.description.substring(0, 100)} ...
               </p>
             </div>
-            {user && user?.token && onEdit && onDelete && (
+            {user && user?.token && (
               <EditButtons
                 onEdit={() => {
-                  onEdit(category);
+                  onCategoryUpdate(category);
                 }}
                 onDelete={() => {
-                  onDelete(category);
+                  onCategoryDelete(category);
                 }}
                 onNavigate={() => {
                   navigate(`/blogs/${category.id}`);
@@ -62,9 +86,3 @@ export default function CategoriesList({ categories, onEdit, onDelete }) {
     </div>
   );
 }
-
-CategoriesList.prototype = {
-  categories: PropTypes.array.isRequired,
-  onEdit: PropTypes.func,
-  onDelete: PropTypes.func,
-};

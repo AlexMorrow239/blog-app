@@ -1,59 +1,53 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Modal } from "bootstrap";
-import PropTypes from "prop-types";
 
-export default function AddEditCategoryModal({
-  addCategory,
-  editCategory,
+import {
   createCategory,
   updateCategory,
-  onClose,
-}) {
+  setModifyCategory,
+  resetCategoryModifiers,
+} from "../../features/categoriesSlice";
+
+export default function AddEditCategoryModal() {
+  const dispatch = useDispatch();
+
+  const addCategory = useSelector((state) => state.categories.addCategory);
+  const editCategory = useSelector((state) => state.categories.editCategory);
+  const modifyCategory = useSelector(
+    (state) => state.categories.modifyCategory
+  );
+
   const modalEl = document.getElementById("addEditCategoryModal");
   const addEditCategoryModal = useMemo(() => {
     return modalEl ? new Modal(modalEl) : null;
   }, [modalEl]);
 
-  const [category, setCategory] = useState({
-    title: "",
-    description: "",
-    color: "",
-  });
-
   useEffect(() => {
     if (addCategory) {
-      setCategory(addCategory);
+      dispatch(setModifyCategory(addCategory));
       addEditCategoryModal?.show();
     } else if (editCategory) {
-      setCategory(editCategory);
+      dispatch(setModifyCategory(editCategory));
       addEditCategoryModal?.show();
     }
-  }, [addEditCategoryModal, addCategory, editCategory]);
-
-  const resetCategory = () => {
-    setCategory({
-      title: "",
-      description: "",
-      color: "",
-    });
-  };
+  }, [addCategory, editCategory, addEditCategoryModal]);
 
   const onSubmit = (e) => {
     e?.preventDefault();
     if (isFormValid()) {
       if (addCategory) {
-        createCategory(category);
+        dispatch(createCategory(modifyCategory));
       } else if (editCategory) {
-        updateCategory(category);
+        dispatch(updateCategory(modifyCategory));
       }
-      resetCategory();
+      dispatch(resetCategoryModifiers());
       addEditCategoryModal?.hide();
     }
   };
 
   const onCloseModal = () => {
-    resetCategory();
-    onClose();
+    dispatch(resetCategoryModifiers());
     addEditCategoryModal.hide();
   };
 
@@ -92,9 +86,14 @@ export default function AddEditCategoryModal({
                   type="text"
                   className="form-control"
                   id="title"
-                  value={category?.title}
+                  value={modifyCategory?.title}
                   onChange={(e) => {
-                    setCategory({ ...category, title: e.target.value });
+                    dispatch(
+                      setModifyCategory({
+                        ...modifyCategory,
+                        title: e.target.value,
+                      })
+                    );
                   }}
                   required
                 />
@@ -108,9 +107,14 @@ export default function AddEditCategoryModal({
                   type="text"
                   className="form-control"
                   id="description"
-                  value={category?.description}
+                  value={modifyCategory?.description}
                   onChange={(e) => {
-                    setCategory({ ...category, description: e.target.value });
+                    dispatch(
+                      setModifyCategory({
+                        ...modifyCategory,
+                        description: e.target.value,
+                      })
+                    );
                   }}
                   required
                 />
@@ -124,9 +128,14 @@ export default function AddEditCategoryModal({
                   type="text"
                   className="form-control"
                   id="color"
-                  value={category?.color}
+                  value={modifyCategory?.color}
                   onChange={(e) => {
-                    setCategory({ ...category, color: e.target.value });
+                    dispatch(
+                      setModifyCategory({
+                        ...modifyCategory,
+                        color: e.target.value,
+                      })
+                    );
                   }}
                   required
                 ></input>
@@ -155,11 +164,3 @@ export default function AddEditCategoryModal({
     </div>
   );
 }
-
-AddEditCategoryModal.propTypes = {
-  addCategory: PropTypes.object,
-  editCategory: PropTypes.object,
-  createCategory: PropTypes.func.isRequired,
-  updateCategory: PropTypes.func.isRequired,
-  onClose: PropTypes.func.isRequired,
-};

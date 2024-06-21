@@ -1,13 +1,22 @@
-import React, { useMemo, useEffect, useState } from "react";
+import React, { useMemo, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Modal } from "bootstrap";
-import PropTypes from "prop-types";
 
-export default function DeleteCategoryModal({
+import {
+  setModifyCategory,
+  resetCategoryModifiers,
   deleteCategory,
-  removeCategory,
-  onClose,
-}) {
-  const [category, setCategory] = useState();
+} from "../../features/categoriesSlice";
+
+export default function DeleteCategoryModal() {
+  const dispatch = useDispatch();
+
+  const modifyCategory = useSelector(
+    (state) => state.categories.modifyCategory
+  );
+  const removeCategory = useSelector(
+    (state) => state.categories.removeCategory
+  );
 
   const modalEl = document.getElementById("deleteCategoryModal");
   const deleteCategoryModal = useMemo(() => {
@@ -15,29 +24,21 @@ export default function DeleteCategoryModal({
   }, [modalEl]);
 
   useEffect(() => {
-    if (deleteCategory) {
-      setCategory(deleteCategory);
+    if (removeCategory) {
+      dispatch(setModifyCategory(removeCategory));
       deleteCategoryModal?.show();
     }
-  }, [deleteCategory, deleteCategoryModal]);
-
-  const resetCategory = () => {
-    setCategory({
-      title: "",
-      description: "",
-      color: "#000000",
-    });
-  };
+  }, [removeCategory, deleteCategoryModal]);
 
   const onCloseModal = () => {
-    resetCategory();
-    onClose();
+    dispatch(resetCategoryModifiers());
+    dispatch(resetCategoryModifiers);
     deleteCategoryModal?.hide();
   };
 
   const onDelete = () => {
-    removeCategory(deleteCategory);
-    resetCategory();
+    dispatch(deleteCategory(modifyCategory.id));
+    dispatch(resetCategoryModifiers());
     deleteCategoryModal?.hide();
   };
 
@@ -69,11 +70,11 @@ export default function DeleteCategoryModal({
                   width: "12px",
                   height: "12px",
                   borderRadius: "50%",
-                  backgroundColor: category?.color,
+                  backgroundColor: modifyCategory?.color,
                 }}
               ></span>
               <h5 style={{ marginLeft: "8px", marginBottom: "0" }}>
-                {category?.title}
+                {modifyCategory?.title}
               </h5>
             </div>
           </div>
@@ -99,9 +100,3 @@ export default function DeleteCategoryModal({
     </div>
   );
 }
-
-DeleteCategoryModal.prototype = {
-  deleteCategory: PropTypes.object,
-  removeCategory: PropTypes.func.isRequired,
-  onClose: PropTypes.func.isRequired,
-};

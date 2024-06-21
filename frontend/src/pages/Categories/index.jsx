@@ -1,4 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+import {
+  fetchCategories,
+  resetSuccessAndError,
+  reset as resetCategories,
+  setAddCategory,
+} from "../../features/categoriesSlice";
 
 import Navbar from "../../components/Navbar";
 import Heading from "../../components/Heading";
@@ -6,101 +14,35 @@ import CategoryList from "../../components/CategoriesList";
 import Footer from "../../components/Footer";
 import Loading from "../../components/Loading";
 
-import categoryService from "../../services/categoryService";
 import SuccessToast from "../../components/SuccessToast";
 import ErrorToast from "../../components/ErrorToast";
 import AddEditCategoryModal from "../../components/AddEditCategoryModal";
 import DeleteCategoryModal from "../../components/DeleteCategoryModal";
 
 export default function CategoriesPage() {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
 
-  const [categories, setCategories] = useState([]);
-  const [addCategory, setAddCategory] = useState();
-  const [editCategory, setEditCategory] = useState();
-  const [deleteCategory, setDeleteCategory] = useState();
-
-  const [loading, setLoading] = useState();
-  const [message, setMessage] = useState();
-  const [isSuccess, setIsSuccess] = useState();
-  const [isError, setIsError] = useState();
+  const isLoading = useSelector((state) => state.categories.isLoading);
+  const message = useSelector((state) => state.categories.message);
+  const isSuccess = useSelector((state) => state.categories.isSuccess);
+  const isError = useSelector((state) => state.categories.isError);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const categoriesRes = await categoryService.fetchCategories();
-        setCategories(categoriesRes.data);
-        setLoading(false);
-      } catch (err) {
-        setIsError(true);
-        setMessage(err);
-        setLoading(false);
-      }
+    dispatch(fetchCategories());
+    return () => {
+      dispatch(resetCategories());
     };
-
-    fetchData();
-  }, []);
+  }, [dispatch]);
 
   const onCategoryAdd = () => {
-    setAddCategory({
-      title: "",
-      description: "",
-      color: "#000000",
-    });
-  };
-
-  const onCategoryUpdate = (category) => {
-    setEditCategory(category);
-  };
-
-  const onCategoryDelete = (category) => {
-    setDeleteCategory(category);
-  };
-
-  const createCategory = async (category) => {
-    try {
-      const newCategory = await categoryService.createCategory(category);
-      setIsSuccess(true);
-      setMessage(newCategory.message);
-      setCategories((prev) => {
-        return [...prev, newCategory.data];
-      });
-    } catch (err) {
-      setIsError(true);
-      setMessage(err);
-    }
-    setAddCategory(null);
-  };
-
-  const updateCategory = async (category) => {
-    try {
-      const updatedCategory = await categoryService.updateCategory(category);
-      setIsSuccess(true);
-      setMessage(updatedCategory.message);
-      setCategories((prev) => {
-        const index = prev.findIndex((x) => x.id === updatedCategory.data.id);
-        prev[index] = updatedCategory.data;
-        return prev;
-      });
-    } catch (err) {
-      setIsError(true);
-      setMessage(err);
-    }
-    setEditCategory(null);
-  };
-
-  const removeCategory = async (category) => {
-    try {
-      const categoryRes = await categoryService.deleteCategory(category.id);
-      setIsSuccess(true);
-      setMessage(categoryRes.message);
-      setCategories((prev) => prev.filter((x) => x.id !== category.id));
-    } catch (err) {
-      setIsError(true);
-      setMessage(err);
-    }
-    setDeleteCategory(null);
+    dispatch(
+      setAddCategory({
+        title: "",
+        description: "",
+        color: "#000000",
+      })
+    );
   };
 
   const AddButton = () => {
@@ -112,7 +54,7 @@ export default function CategoriesPage() {
     );
   };
 
-  if (loading) {
+  if (isLoading) {
     return <Loading />;
   }
 
@@ -125,42 +67,23 @@ export default function CategoriesPage() {
           <p className="page-subtitle">Categories</p>
           <AddButton />
         </div>
-        <CategoryList
-          categories={categories}
-          onEdit={onCategoryUpdate}
-          onDelete={onCategoryDelete}
-        ></CategoryList>
+        <CategoryList></CategoryList>
       </div>
       <Footer />
-      <AddEditCategoryModal
-        addCategory={addCategory}
-        editCategory={editCategory}
-        createCategory={createCategory}
-        updateCategory={updateCategory}
-        onClose={() => {
-          setAddCategory(null);
-          setEditCategory(null);
-        }}
-      />
-      <DeleteCategoryModal
-        deleteCategory={deleteCategory}
-        removeCategory={removeCategory}
-        onClose={() => setDeleteCategory(null)}
-      />
+      <AddEditCategoryModal />
+      <DeleteCategoryModal />
       <SuccessToast
         show={isSuccess}
         message={message}
         onClose={() => {
-          setIsSuccess(false);
-          setMessage("");
+          dispatch(resetSuccessAndError());
         }}
       />
       <ErrorToast
         show={isError}
         message={message}
         onClose={() => {
-          setIsError(false);
-          setMessage("");
+          dispatch(resetSuccessAndError());
         }}
       />
     </>
