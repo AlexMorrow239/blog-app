@@ -5,6 +5,7 @@ import blogService from "../services/blogService";
 
 const initialState = {
   author: null,
+  authorImage: null,
   editAuthor: null,
   authorBlogs: [],
   isError: false,
@@ -71,6 +72,9 @@ export const authorSlice = createSlice({
     setEditAuthor: (state, { payload }) => {
       state.editAuthor = payload;
     },
+    setAuthorImage: (state, { payload }) => {
+      state.authorImage = payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -79,6 +83,7 @@ export const authorSlice = createSlice({
       })
       .addCase(fetchAuthor.fulfilled, (state, { payload }) => {
         state.author = payload.data;
+        state.authorImage = payload.data.image;
         state.isLoading = false;
         // state.isSuccess = true;
         state.isError = false;
@@ -111,6 +116,7 @@ export const authorSlice = createSlice({
       })
       .addCase(updateAuthor.fulfilled, (state, { payload }) => {
         state.author = payload.data;
+        state.authorImage = payload.data.image;
         state.editAuthor = null;
         state.isLoading = false;
         state.isError = false;
@@ -125,6 +131,11 @@ export const authorSlice = createSlice({
   },
 });
 
-export const { reset, resetSuccessAndError, setAuthor, setEditAuthor } =
-  authorSlice.actions;
+export const {
+  reset,
+  resetSuccessAndError,
+  setAuthor,
+  setEditAuthor,
+  setAuthorImage,
+} = authorSlice.actions;
 export default authorSlice.reducer;

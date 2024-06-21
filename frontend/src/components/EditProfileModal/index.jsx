@@ -1,8 +1,12 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo } from "react";
 import { Modal } from "bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 
-import { updateAuthor, setEditAuthor } from "../../features/authorSlice";
+import {
+  updateAuthor,
+  setEditAuthor,
+  setAuthorImage,
+} from "../../features/authorSlice";
 
 import FormImage from "../FormImage";
 
@@ -10,8 +14,6 @@ export default function EditProfileModal() {
   const dispatch = useDispatch();
 
   const authorSlice = useSelector((state) => state.author);
-
-  const [authorImage, setAuthorImage] = useState();
 
   const modalEl = document.getElementById("editProfileModal");
   const editProfileModal = useMemo(() => {
@@ -63,7 +65,7 @@ export default function EditProfileModal() {
 
     if (e?.target?.files?.length) {
       const file = e.target.files[0];
-      setAuthorImage(URL.createObjectURL(file));
+      dispatch(setAuthorImage(URL.createObjectURL(file)));
       setEditAuthor({ ...authorSlice.editAuthor, image: file });
     }
   };
@@ -93,7 +95,10 @@ export default function EditProfileModal() {
             <div className="modal-body">
               <form id="authorForm">
                 <div>
-                  <FormImage image={authorImage} onChange={onImageChange} />
+                  <FormImage
+                    image={authorSlice.authorImage}
+                    onChange={onImageChange}
+                  />
                 </div>
                 <div className="mb-3">
                   <label htmlFor="firstName" className="form-label">
