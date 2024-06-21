@@ -28,7 +28,7 @@ export default function DeleteCategoryModal() {
       dispatch(setModifyCategory(removeCategory));
       deleteCategoryModal?.show();
     }
-  }, [removeCategory, deleteCategoryModal]);
+  }, [dispatch, removeCategory, deleteCategoryModal]);
 
   const onCloseModal = () => {
     dispatch(resetCategoryModifiers());

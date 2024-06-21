@@ -31,7 +31,7 @@ export default function AddEditCategoryModal() {
       dispatch(setModifyCategory(editCategory));
       addEditCategoryModal?.show();
     }
-  }, [addCategory, editCategory, addEditCategoryModal]);
+  }, [dispatch, addCategory, editCategory, addEditCategoryModal]);
 
   const onSubmit = (e) => {
     e?.preventDefault();

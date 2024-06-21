@@ -53,7 +53,7 @@ export default function ProfilePage() {
       dispatch(resetAuthor());
       dispatch(resetAuth());
     };
-  }, [authorId]);
+  }, [dispatch, authorId]);
 
   const resetSuccessAndError = () => {
     if (isAuthSuccess) {
