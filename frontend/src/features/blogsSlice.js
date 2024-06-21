@@ -111,6 +111,9 @@ export const blogsSlice = createSlice({
       state.addBlog = null;
       state.editBlog = null;
     },
+    setBlogs: (state, { payload }) => {
+      state.blogs = payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -225,5 +228,6 @@ export const {
   setAddBlog,
   setEditBlog,
   setDeleteBlog,
+  setBlogs,
 } = blogsSlice.actions;
 export default blogsSlice.reducer;

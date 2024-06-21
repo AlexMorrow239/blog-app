@@ -5,18 +5,17 @@ import blogService from "../services/blogService";
 
 const initialState = {
   author: null,
+  editAuthor: null,
   authorBlogs: [],
   isError: false,
   isSuccess: false,
   isLoading: false,
   message: "",
-  isAuthorEditSuccess: false,
-  isAuthorEditError: false,
 };
 
 // Fetch Author
 export const fetchAuthor = createAsyncThunk(
-  "auth/fetchAuthor",
+  "author/fetchAuthor",
   async (userData, thunkAPI) => {
     try {
       return await authService.getUser(userData);
@@ -28,7 +27,7 @@ export const fetchAuthor = createAsyncThunk(
 );
 
 export const updateAuthor = createAsyncThunk(
-  "auth/updateAuthor",
+  "author/updateAuthor",
   async (userData, thunkAPI) => {
     try {
       return await authService.updateUser(userData);
@@ -51,7 +50,7 @@ export const fetchBlogsByAuthorId = createAsyncThunk(
   }
 );
 
-export const authSlice = createSlice({
+export const authorSlice = createSlice({
   name: "author",
   initialState,
   reducers: {
@@ -65,6 +64,12 @@ export const authSlice = createSlice({
       state.isAuthorEditSuccess = false;
       state.isAuthorEditError = false;
       state.message = "";
+    },
+    setAuthor: (state, { payload }) => {
+      state.author = payload;
+    },
+    setEditAuthor: (state, { payload }) => {
+      state.editAuthor = payload;
     },
   },
   extraReducers: (builder) => {
@@ -106,18 +111,20 @@ export const authSlice = createSlice({
       })
       .addCase(updateAuthor.fulfilled, (state, { payload }) => {
         state.author = payload.data;
+        state.editAuthor = null;
         state.isLoading = false;
-        state.isAuthorEditSuccess = true;
-        state.isAuthorEditError = false;
+        state.isError = false;
       })
       .addCase(updateAuthor.rejected, (state, { payload }) => {
         state.isLoading = false;
-        state.isAuthorEditError = true;
-        state.isAuthorEditSuccess = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.editAuthor = null;
         state.message = payload.message;
       });
   },
 });
 
-export const { reset, resetSuccessAndError } = authSlice.actions;
-export default authSlice.reducer;
+export const { reset, resetSuccessAndError, setAuthor, setEditAuthor } =
+  authorSlice.actions;
+export default authorSlice.reducer;

@@ -1,19 +1,17 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Modal } from "bootstrap";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
-import { updateAuthor } from "../../features/authorSlice";
+import { updateAuthor, setEditAuthor } from "../../features/authorSlice";
 
 import FormImage from "../FormImage";
 
-export default function EditProfileModal({
-  editAuthor,
-  setEditAuthor,
-  setAuthor,
-}) {
+export default function EditProfileModal() {
   const dispatch = useDispatch();
 
-  const [authorImage, setAuthorImage] = useState(editAuthor?.image);
+  const authorSlice = useSelector((state) => state.author);
+
+  const [authorImage, setAuthorImage] = useState();
 
   const modalEl = document.getElementById("editProfileModal");
   const editProfileModal = useMemo(() => {
@@ -21,20 +19,19 @@ export default function EditProfileModal({
   }, [modalEl]);
 
   useEffect(() => {
-    if (editAuthor) {
-      setAuthorImage(editAuthor.image);
+    if (authorSlice.editAuthor) {
       editProfileModal.show();
     }
-  }, [editAuthor, editProfileModal]);
+  }, [authorSlice.editAuthor, editProfileModal]);
 
   const buildFormData = () => {
     const formData = new FormData();
-    formData.append("id", editAuthor._id);
-    formData.append("image", editAuthor.image);
-    formData.append("firstName", editAuthor.firstName);
-    formData.append("lastName", editAuthor.lastName);
-    formData.append("bio", editAuthor.bio);
-    formData.append("email", editAuthor.email);
+    formData.append("id", authorSlice.editAuthor._id);
+    formData.append("image", authorSlice.editAuthor.image);
+    formData.append("firstName", authorSlice.editAuthor.firstName);
+    formData.append("lastName", authorSlice.editAuthor.lastName);
+    formData.append("bio", authorSlice.editAuthor.bio);
+    formData.append("email", authorSlice.editAuthor.email);
     return formData;
   };
 
@@ -48,13 +45,11 @@ export default function EditProfileModal({
     e?.preventDefault();
     if (isFormValid()) {
       const authorForm = buildFormData();
-      if (editAuthor) {
+      if (authorSlice.editAuthor) {
         dispatch(updateAuthor(authorForm));
       }
     }
     editProfileModal?.hide();
-    setAuthor(editAuthor);
-    setEditAuthor(null);
   };
 
   const onCloseModal = (e) => {
@@ -69,7 +64,7 @@ export default function EditProfileModal({
     if (e?.target?.files?.length) {
       const file = e.target.files[0];
       setAuthorImage(URL.createObjectURL(file));
-      setEditAuthor({ ...editAuthor, image: file });
+      setEditAuthor({ ...authorSlice.editAuthor, image: file });
     }
   };
 
@@ -108,10 +103,10 @@ export default function EditProfileModal({
                     type="text"
                     className="form-control"
                     id="firstName"
-                    value={editAuthor?.firstName}
+                    value={authorSlice.editAuthor?.firstName}
                     onChange={(e) => {
                       setEditAuthor({
-                        ...editAuthor,
+                        ...authorSlice.editAuthor,
                         firstName: e.target.value,
                       });
                     }}
@@ -128,10 +123,10 @@ export default function EditProfileModal({
                     type="text"
                     className="form-control"
                     id="lastName"
-                    value={editAuthor?.lastName}
+                    value={authorSlice.editAuthor?.lastName}
                     onChange={(e) => {
                       setEditAuthor({
-                        ...editAuthor,
+                        ...authorSlice.editAuthor,
                         lastName: e.target.value,
                       });
                     }}
@@ -147,9 +142,12 @@ export default function EditProfileModal({
                   <textarea
                     className="form-control"
                     id="bio"
-                    value={editAuthor?.bio}
+                    value={authorSlice.editAuthor?.bio}
                     onChange={(e) => {
-                      setEditAuthor({ ...editAuthor, bio: e.target.value });
+                      setEditAuthor({
+                        ...authorSlice.editAuthor,
+                        bio: e.target.value,
+                      });
                     }}
                     required
                   />
@@ -164,9 +162,12 @@ export default function EditProfileModal({
                     type="email"
                     className="form-control"
                     id="email"
-                    value={editAuthor?.email}
+                    value={authorSlice.editAuthor?.email}
                     onChange={(e) => {
-                      setEditAuthor({ ...editAuthor, email: e.target.value });
+                      setEditAuthor({
+                        ...authorSlice.editAuthor,
+                        email: e.target.value,
+                      });
                     }}
                     required
                   />

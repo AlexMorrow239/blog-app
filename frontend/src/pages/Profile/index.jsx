@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 import Navbar from "../../components/Navbar";
 import BlogList from "../../components/BlogList";
@@ -10,55 +11,56 @@ import DeleteBlogModal from "../../components/DeleteBlogModal";
 import SuccessToast from "../../components/SuccessToast";
 import ErrorToast from "../../components/ErrorToast";
 
-import blogService from "../../services/blogService";
-import authService from "../../services/authService";
 import EditProfileModal from "../../components/EditProfileModal";
 
-export default function ProfilePage() {
-  const { authorId } = useParams();
-  const user = JSON.parse(localStorage.getItem("user"));
+import { resetSuccessAndError as resetAuth } from "../../features/authSlice";
+import {
+  fetchAuthor,
+  fetchBlogsByAuthorId,
+  setEditAuthor,
+  resetSuccessAndError as resetAuthor,
+} from "../../features/authorSlice";
 
-  const [author, setAuthor] = useState();
-  const [blogs, setBlogs] = useState([]);
-  const [isError, setIsError] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [message, setMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [editAuthor, setEditAuthor] = useState();
+export default function ProfilePage() {
+  const dispatch = useDispatch();
+  const { authorId } = useParams();
+
+  const {
+    user,
+    isError: isAuthError,
+    isSuccess: isAuthSuccess,
+    isLoading: isLoadingAuth,
+    message: authMessage,
+  } = useSelector((state) => state.auth);
+
+  const {
+    author,
+    authorBlogs,
+    isError: isAuthorError,
+    isSuccess: isAuthorSuccess,
+    isLoading: isLoadingAuthor,
+    message: authorMessage,
+  } = useSelector((state) => state.author);
 
   const onEditProfile = () => {
-    setEditAuthor(author);
+    dispatch(setEditAuthor(author));
   };
 
   useEffect(() => {
-    const fetchAuthorBlogs = async () => {
-      try {
-        setIsLoading(true);
-        const author = await authService.getUser(authorId);
-        const blogs = await blogService.fetchBlogsByAuthorId(authorId);
-        setBlogs(blogs.data);
-        setAuthor(author.data);
-        setIsLoading(false);
-        // setIsSuccess(true);
-        // setMessage(blogs.message);
-        setIsError(false);
-      } catch (error) {
-        setIsError(true);
-        setIsLoading(false);
-        setMessage(error.message || error);
-      }
+    dispatch(fetchBlogsByAuthorId(authorId));
+    dispatch(fetchAuthor(authorId));
+    return () => {
+      dispatch(resetAuthor());
+      dispatch(resetAuth());
     };
-    fetchAuthorBlogs();
   }, [authorId]);
 
-  const resetSuccess = () => {
-    setIsSuccess(false);
-    setMessage("");
-  };
-
-  const resetError = () => {
-    setIsError(false);
-    setMessage("");
+  const resetSuccessAndError = () => {
+    if (isAuthSuccess) {
+      dispatch(resetAuth());
+    } else if (isAuthorSuccess) {
+      dispatch(resetAuthor());
+    }
   };
 
   const AuthorDetails = () => {
@@ -77,7 +79,7 @@ export default function ProfilePage() {
     );
   };
 
-  if (isLoading || !author || !blogs) {
+  if (isLoadingAuth || isLoadingAuthor || !author || !authorBlogs) {
     return <Loading />;
   }
 
@@ -99,18 +101,22 @@ export default function ProfilePage() {
           )}
         </div>
         <p className="page-subtitle">Author Blog Posts</p>
-        <BlogList blogs={blogs} />
+        <BlogList blogs={authorBlogs} />
         <Footer />
       </div>
       <AddEditBlogModal />
       <DeleteBlogModal />
-      <EditProfileModal
-        editAuthor={editAuthor}
-        setEditAuthor={setEditAuthor}
-        setAuthor={setAuthor}
+      <EditProfileModal />
+      <SuccessToast
+        show={isAuthSuccess || isAuthorSuccess}
+        message={authMessage || authorMessage}
+        onClose={resetSuccessAndError}
       />
-      <SuccessToast show={isSuccess} message={message} onClose={resetSuccess} />
-      <ErrorToast show={isError} message={message} onClose={resetError} />
+      <ErrorToast
+        show={isAuthError || isAuthorError}
+        message={authMessage || authorMessage}
+        onClose={resetSuccessAndError}
+      />
     </>
   );
 }

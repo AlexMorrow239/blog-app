@@ -7,7 +7,6 @@ const user = JSON.parse(localStorage.getItem("user"));
 
 const initialState = {
   user: user || null,
-  editUser: null,
   isError: false,
   isSuccess: false,
   isLoading: false,
@@ -63,9 +62,6 @@ export const authSlice = createSlice({
       state.isError = false;
       state.message = "";
     },
-    setEditUser: (state, { payload }) => {
-      state.editUser = payload;
-    },
     setUser: (state, { payload }) => {
       state.user = payload;
     },
@@ -109,7 +105,6 @@ export const authSlice = createSlice({
       })
       .addCase(updateUser.fulfilled, (state, { payload }) => {
         state.user = payload.data;
-        state.editUser = null;
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
@@ -124,6 +119,5 @@ export const authSlice = createSlice({
   },
 });
 
-export const { reset, resetSuccessAndError, setEditUser, setUser } =
-  authSlice.actions;
+export const { reset, resetSuccessAndError, setUser } = authSlice.actions;
 export default authSlice.reducer;
