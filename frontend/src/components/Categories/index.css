@@ -1,0 +1,8 @@
+.category-tag {
+  margin: 2px 2px;
+  padding: 4px 8px;
+  font-size: 14px;
+  text-align: left;
+  border-radius: 14px;
+  white-space: nowrap;
+}

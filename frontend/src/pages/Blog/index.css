@@ -1,0 +1,20 @@
+.cover-img {
+  object-fit: cover;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+
+.author {
+}
+.author:hover {
+  cursor: pointer;
+}
+
+.avatar {
+  display: block;
+  border-radius: 50%;
+  width: 50%;
+  margin: 16px auto;
+}
