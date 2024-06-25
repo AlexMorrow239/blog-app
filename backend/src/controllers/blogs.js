@@ -28,12 +28,14 @@ const createBlogs = async (req, res) => {
       })
       .populate({ path: "authorId" });
 
-    res.status(201).json({
+    res.status(201);
+    res.json({
       message: "Blog created!",
       data: blogRes,
     });
   } catch (err) {
-    res.status(500).json({ message: err.message, data: {} });
+    res.status(500);
+    res.json({ message: err.message, data: {} });
   }
 };
 
@@ -42,12 +44,14 @@ const getBlogs = async (req, res) => {
     const blogs = await Blog.find()
       .populate({ path: "categoryIds" })
       .populate({ path: "authorId" });
-    res.status(200).json({
+    res.status(200);
+    res.json({
       message: "Got all blogs!",
       data: blogs,
     });
   } catch (error) {
-    res.status(500).json({ message: error.message, data: {} });
+    res.status(500);
+    res.json({ message: error.message, data: {} });
   }
 };
 

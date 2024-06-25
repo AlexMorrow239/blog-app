@@ -28,6 +28,9 @@
 # dependencies
 /backend/node_modules
 
+# testing
+/backend/coverage
+
 # keys
 /backend/.env
 /backend/gcp_key.json
