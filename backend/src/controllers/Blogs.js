@@ -1,11 +1,12 @@
 const Blog = require("../models/Blog");
-const GoogleCloudService = require("../services/cloud-storage");
+
+const cloudStorage = require("../services/cloud-storage");
 
 const createBlogs = async (req, res) => {
   try {
     let imageURL = "";
     if (req?.file?.path) {
-      imageURL = await GoogleCloudService.uploadToFirebaseStorage(
+      imageURL = await cloudStorage.uploadToFirebaseStorage(
         req?.file?.path,
         req?.file?.path
       );
@@ -19,15 +20,12 @@ const createBlogs = async (req, res) => {
       authorId: req.body.authorId,
       categoryIds: categoryIds,
     });
-
     const newBlog = await blog.save();
-
     const blogRes = await Blog.findById(newBlog._id)
       .populate({
         path: "categoryIds",
       })
       .populate({ path: "authorId" });
-
     res.status(201);
     res.json({
       message: "Blog created!",
@@ -46,17 +44,18 @@ const getBlogs = async (req, res) => {
       .populate({ path: "authorId" });
     res.status(200);
     res.json({
-      message: "Got all blogs!",
+      message: "Get all blogs!",
       data: blogs,
     });
-  } catch (error) {
+  } catch (err) {
     res.status(500);
-    res.json({ message: error.message, data: {} });
+    res.json({ message: err.message, data: {} });
   }
 };
 
 const getBlogById = async (req, res) => {
   try {
+    console.log(req.params.id);
     const blog = await Blog.findById(req.params.id)
       .populate({
         path: "categoryIds",
@@ -67,13 +66,14 @@ const getBlogById = async (req, res) => {
     } else {
       res.status(404).json({ message: "Blog not found!", data: {} });
     }
-  } catch (error) {
-    res.status(500).json({ message: error.message, data: {} });
+  } catch (err) {
+    res.status(500).json({ message: err.message, data: {} });
   }
 };
 
 const getBlogsByCategoryID = async (req, res) => {
   try {
+    console.log(req.params.id);
     let filter = {};
     if (req.params.id != "null" && req.params.id != "undefined") {
       filter = { categoryIds: req.params.id };
@@ -84,16 +84,17 @@ const getBlogsByCategoryID = async (req, res) => {
       })
       .populate({ path: "authorId" });
     res.status(200).json({
-      message: "Got blogs by categoryID!",
+      message: "Get blogs by categoryID!",
       data: blogs,
     });
-  } catch (error) {
-    res.status(500).json({ message: error.message, data: {} });
+  } catch (err) {
+    res.status(500).json({ message: err.message, data: {} });
   }
 };
 
 const getBlogsByAuthorID = async (req, res) => {
   try {
+    console.log(req.params.id);
     let filter = {};
     if (req.params.id != "null" && req.params.id != "undefined") {
       filter = { authorId: req.params.id };
@@ -104,11 +105,11 @@ const getBlogsByAuthorID = async (req, res) => {
       })
       .populate({ path: "authorId" });
     res.status(200).json({
-      message: "Got blogs by authorID!",
+      message: "Get blogs by authorID!",
       data: blogs,
     });
   } catch (err) {
-    res.status(500).json({ message: error.message, data: {} });
+    res.status(500).json({ message: err.message, data: {} });
   }
 };
 
@@ -116,7 +117,7 @@ const updateBlogByID = async (req, res) => {
   try {
     let imageURL = "";
     if (req?.file?.path) {
-      imageURL = await GoogleCloudService.uploadToFirebaseStorage(
+      imageURL = await uploadToFirebaseStorage(
         req?.file?.path,
         req?.file?.path
       );
@@ -144,8 +145,8 @@ const updateBlogByID = async (req, res) => {
     } else {
       res.status(404).json({ message: "Blog not found!", data: [] });
     }
-  } catch (error) {
-    res.status(500).json({ message: error.message, data: {} });
+  } catch (err) {
+    res.status(500).json({ message: err.message, data: {} });
   }
 };
 
@@ -159,8 +160,8 @@ const deleteBlogByID = async (req, res) => {
     } else {
       return res.status(404).json({ message: "Blog not found!" });
     }
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
   }
 };
 const blogController = {
