@@ -1,5 +1,10 @@
+const BASE_URL =
+  process.env.NODE_ENV === "production"
+    ? process.env.REACT_APP_PROD_API_URL
+    : process.env.REACT_APP_DEV_API_URL;
+
 const createCategory = async (category) => {
-  const response = await fetch("http://localhost:8000/api/categories", {
+  const response = await fetch(`${BASE_URL}/categories`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -24,7 +29,7 @@ const createCategory = async (category) => {
 };
 
 const fetchCategories = async () => {
-  const response = await fetch("http://localhost:8000/api/categories", {
+  const response = await fetch(`${BASE_URL}/categories`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -47,18 +52,14 @@ const fetchCategories = async () => {
 };
 
 const updateCategory = async (category) => {
-  const response = await fetch(
-    "http://localhost:8000/api/categories/" + category.id,
-    {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        authorization:
-          "Bearer " + JSON.parse(localStorage.getItem("user")).token,
-      },
-      body: JSON.stringify(category),
-    }
-  );
+  const response = await fetch(`${BASE_URL}/categories/${category.id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: "Bearer " + JSON.parse(localStorage.getItem("user")).token,
+    },
+    body: JSON.stringify(category),
+  });
 
   if (!response.ok) {
     try {
@@ -76,7 +77,7 @@ const updateCategory = async (category) => {
 };
 
 const deleteCategory = async (id) => {
-  const response = await fetch("http://localhost:8000/api/categories/" + id, {
+  const response = await fetch(`${BASE_URL}/categories/${id}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
