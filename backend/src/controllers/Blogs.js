@@ -15,7 +15,7 @@ const createBlogs = async (req, res) => {
     const blog = new Blog({
       title: req.body.title,
       description: req.body.description,
-      image: imageURL,
+      image: imageURL || undefined,
       content: JSON.parse(req?.body?.content),
       authorId: req.body.authorId,
       categoryIds: categoryIds,
