@@ -58,7 +58,9 @@ const getUser = async (authorId) => {
 
 const updateUser = async (userData) => {
   const response = await fetch(
-    `http://localhost:8000/api/auth/user/${userData.get("id")}`,
+    `https://cape-chronicles-fcf5274bde23.herokuapp.com/api/auth/user/${userData.get(
+      "id"
+    )}`,
     {
       method: "PUT",
       headers: {
