@@ -105,7 +105,7 @@ const updateUser = async (req, res) => {
     user.lastName = req.body.lastName || user.lastName;
     user.email = req.body.email || user.email;
     user.bio = req.body.bio || user.bio;
-    user.image = imageUrl || user.image;
+    user.image = imageUrl || user.image || undefined;
     if (req.body.password) {
       const salt = await bcrypt.genSalt(10);
       user.password = await bcrypt.hash(req.body.password, salt);

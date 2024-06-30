@@ -1,15 +1,16 @@
+const BASE_URL =
+  process.env.NODE_ENV === "production"
+    ? process.env.REACT_APP_PROD_API_URL
+    : process.env.REACT_APP_DEV_API_URL;
+
 const createBlog = async (blog) => {
-  const response = await fetch(
-    "https://cape-chronicles-fcf5274bde23.herokuapp.com/api/blogs",
-    {
-      method: "POST",
-      headers: {
-        authorization:
-          "Bearer " + JSON.parse(localStorage.getItem("user")).token,
-      },
-      body: blog,
-    }
-  );
+  const response = await fetch(`${BASE_URL}/blogs`, {
+    method: "POST",
+    headers: {
+      authorization: "Bearer " + JSON.parse(localStorage.getItem("user")).token,
+    },
+    body: blog,
+  });
 
   if (!response.ok) {
     try {
@@ -27,15 +28,12 @@ const createBlog = async (blog) => {
 };
 
 const fetchBlogs = async () => {
-  const response = await fetch(
-    "https://cape-chronicles-fcf5274bde23.herokuapp.com/api/blogs",
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
+  const response = await fetch(`${BASE_URL}/blogs`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 
   if (!response.ok) {
     try {
@@ -53,15 +51,12 @@ const fetchBlogs = async () => {
 };
 
 const fetchBlogByID = async (id) => {
-  const response = await fetch(
-    "https://cape-chronicles-fcf5274bde23.herokuapp.com/api/blogs/" + id,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
+  const response = await fetch(`${BASE_URL}/blogs/${id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
   if (!response.ok) {
     try {
       let res = await response.json();
@@ -78,16 +73,12 @@ const fetchBlogByID = async (id) => {
 };
 
 const fetchBlogsByCategoryId = async (categoryId) => {
-  const response = await fetch(
-    "https://cape-chronicles-fcf5274bde23.herokuapp.com/api/blogs/categories/" +
-      categoryId,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
+  const response = await fetch(`${BASE_URL}/blogs/categories/${categoryId}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
   if (!response.ok) {
     try {
       let res = await response.json();
@@ -104,16 +95,12 @@ const fetchBlogsByCategoryId = async (categoryId) => {
 };
 
 const fetchBlogsByAuthorId = async (authorId) => {
-  const response = await fetch(
-    "https://cape-chronicles-fcf5274bde23.herokuapp.com/api/blogs/author/" +
-      authorId,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
+  const response = await fetch(`${BASE_URL}/blogs/author/${authorId}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
   if (!response.ok) {
     try {
       let res = await response.json();
@@ -130,18 +117,13 @@ const fetchBlogsByAuthorId = async (authorId) => {
 };
 
 const updateBlog = async (blog) => {
-  const response = await fetch(
-    "https://cape-chronicles-fcf5274bde23.herokuapp.com/api/blogs/" +
-      blog.get("id"),
-    {
-      method: "PUT",
-      headers: {
-        authorization:
-          "Bearer " + JSON.parse(localStorage.getItem("user")).token,
-      },
-      body: blog,
-    }
-  );
+  const response = await fetch(`${BASE_URL}/blogs/${blog.get("id")}`, {
+    method: "PUT",
+    headers: {
+      authorization: "Bearer " + JSON.parse(localStorage.getItem("user")).token,
+    },
+    body: blog,
+  });
   if (!response.ok) {
     try {
       let res = await response.json();
@@ -158,17 +140,13 @@ const updateBlog = async (blog) => {
 };
 
 const deleteBlog = async (id) => {
-  const response = await fetch(
-    "https://cape-chronicles-fcf5274bde23.herokuapp.com/api/blogs/" + id,
-    {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        authorization:
-          "Bearer " + JSON.parse(localStorage.getItem("user")).token,
-      },
-    }
-  );
+  const response = await fetch(`${BASE_URL}/blogs/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: "Bearer " + JSON.parse(localStorage.getItem("user")).token,
+    },
+  });
 
   if (!response.ok) {
     try {

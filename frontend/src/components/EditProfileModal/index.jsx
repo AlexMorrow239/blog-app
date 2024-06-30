@@ -110,10 +110,12 @@ export default function EditProfileModal() {
                     id="firstName"
                     value={authorSlice.editAuthor?.firstName}
                     onChange={(e) => {
-                      setEditAuthor({
-                        ...authorSlice.editAuthor,
-                        firstName: e.target.value,
-                      });
+                      dispatch(
+                        setEditAuthor({
+                          ...authorSlice.editAuthor,
+                          firstName: e.target.value,
+                        })
+                      );
                     }}
                     required
                   />
@@ -130,10 +132,12 @@ export default function EditProfileModal() {
                     id="lastName"
                     value={authorSlice.editAuthor?.lastName}
                     onChange={(e) => {
-                      setEditAuthor({
-                        ...authorSlice.editAuthor,
-                        lastName: e.target.value,
-                      });
+                      dispatch(
+                        setEditAuthor({
+                          ...authorSlice.editAuthor,
+                          lastName: e.target.value,
+                        })
+                      );
                     }}
                     required
                   />
@@ -149,10 +153,12 @@ export default function EditProfileModal() {
                     id="bio"
                     value={authorSlice.editAuthor?.bio}
                     onChange={(e) => {
-                      setEditAuthor({
-                        ...authorSlice.editAuthor,
-                        bio: e.target.value,
-                      });
+                      dispatch(
+                        setEditAuthor({
+                          ...authorSlice.editAuthor,
+                          bio: e.target.value,
+                        })
+                      );
                     }}
                     required
                   />
@@ -169,10 +175,12 @@ export default function EditProfileModal() {
                     id="email"
                     value={authorSlice.editAuthor?.email}
                     onChange={(e) => {
-                      setEditAuthor({
-                        ...authorSlice.editAuthor,
-                        email: e.target.value,
-                      });
+                      dispatch(
+                        setEditAuthor({
+                          ...authorSlice.editAuthor,
+                          email: e.target.value,
+                        })
+                      );
                     }}
                     required
                   />

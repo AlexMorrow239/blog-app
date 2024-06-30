@@ -1,14 +1,16 @@
+const BASE_URL =
+  process.env.NODE_ENV === "production"
+    ? process.env.REACT_APP_PROD_API_URL
+    : process.env.REACT_APP_DEV_API_URL;
+
 const register = async (userData) => {
-  const response = await fetch(
-    "https://cape-chronicles-fcf5274bde23.herokuapp.com/api/auth/register",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(userData),
-    }
-  );
+  const response = await fetch(`${BASE_URL}/auth/register`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(userData),
+  });
 
   if (!response.ok) {
     let res = await response.json();
@@ -21,16 +23,13 @@ const register = async (userData) => {
 };
 
 const login = async (userData) => {
-  const response = await fetch(
-    "https://cape-chronicles-fcf5274bde23.herokuapp.com/api/auth/login",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(userData),
-    }
-  );
+  const response = await fetch(`${BASE_URL}/auth/login`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(userData),
+  });
 
   if (!response.ok) {
     let res = await response.json();
@@ -43,9 +42,7 @@ const login = async (userData) => {
 };
 
 const getUser = async (authorId) => {
-  const response = await fetch(
-    `https://cape-chronicles-fcf5274bde23.herokuapp.com/api/auth/user/${authorId}`
-  );
+  const response = await fetch(`${BASE_URL}/auth/user/${authorId}`);
 
   if (!response.ok) {
     let res = await response.json();
@@ -57,19 +54,13 @@ const getUser = async (authorId) => {
 };
 
 const updateUser = async (userData) => {
-  const response = await fetch(
-    `https://cape-chronicles-fcf5274bde23.herokuapp.com/api/auth/user/${userData.get(
-      "id"
-    )}`,
-    {
-      method: "PUT",
-      headers: {
-        Authorization:
-          "Bearer " + JSON.parse(localStorage.getItem("user")).token,
-      },
-      body: userData,
-    }
-  );
+  const response = await fetch(`${BASE_URL}/auth/user/${userData.get("id")}`, {
+    method: "PUT",
+    headers: {
+      Authorization: "Bearer " + JSON.parse(localStorage.getItem("user")).token,
+    },
+    body: userData,
+  });
 
   if (!response.ok) {
     let res = await response.json();
