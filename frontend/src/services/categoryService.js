@@ -1,12 +1,16 @@
 const createCategory = async (category) => {
-  const response = await fetch("http://localhost:8000/api/categories", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      authorization: "Bearer " + JSON.parse(localStorage.getItem("user")).token,
-    },
-    body: JSON.stringify(category),
-  });
+  const response = await fetch(
+    "https://cape-chronicles-fcf5274bde23.herokuapp.com/api/categories",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        authorization:
+          "Bearer " + JSON.parse(localStorage.getItem("user")).token,
+      },
+      body: JSON.stringify(category),
+    }
+  );
 
   if (!response.ok) {
     try {
@@ -24,12 +28,15 @@ const createCategory = async (category) => {
 };
 
 const fetchCategories = async () => {
-  const response = await fetch("http://localhost:8000/api/categories", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  const response = await fetch(
+    "https://cape-chronicles-fcf5274bde23.herokuapp.com/api/categories",
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
 
   if (!response.ok) {
     try {
@@ -48,7 +55,8 @@ const fetchCategories = async () => {
 
 const updateCategory = async (category) => {
   const response = await fetch(
-    "http://localhost:8000/api/categories/" + category.id,
+    "https://cape-chronicles-fcf5274bde23.herokuapp.com/api/categories/" +
+      category.id,
     {
       method: "PUT",
       headers: {
@@ -76,13 +84,17 @@ const updateCategory = async (category) => {
 };
 
 const deleteCategory = async (id) => {
-  const response = await fetch("http://localhost:8000/api/categories/" + id, {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-      authorization: "Bearer " + JSON.parse(localStorage.getItem("user")).token,
-    },
-  });
+  const response = await fetch(
+    "https://cape-chronicles-fcf5274bde23.herokuapp.com/api/categories/" + id,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        authorization:
+          "Bearer " + JSON.parse(localStorage.getItem("user")).token,
+      },
+    }
+  );
 
   if (!response.ok) {
     try {

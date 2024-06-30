@@ -1,11 +1,14 @@
 const register = async (userData) => {
-  const response = await fetch("http://localhost:8000/api/auth/register", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(userData),
-  });
+  const response = await fetch(
+    "https://cape-chronicles-fcf5274bde23.herokuapp.com/api/auth/register",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userData),
+    }
+  );
 
   if (!response.ok) {
     let res = await response.json();
@@ -18,13 +21,16 @@ const register = async (userData) => {
 };
 
 const login = async (userData) => {
-  const response = await fetch("http://localhost:8000/api/auth/login", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(userData),
-  });
+  const response = await fetch(
+    "https://cape-chronicles-fcf5274bde23.herokuapp.com/api/auth/login",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userData),
+    }
+  );
 
   if (!response.ok) {
     let res = await response.json();
@@ -38,7 +44,7 @@ const login = async (userData) => {
 
 const getUser = async (authorId) => {
   const response = await fetch(
-    `http://localhost:8000/api/auth/user/${authorId}`
+    `https://cape-chronicles-fcf5274bde23.herokuapp.com/api/auth/user/${authorId}`
   );
 
   if (!response.ok) {
