@@ -17,6 +17,14 @@ app.use(cors());
 
 app.use(express.json());
 
+// Create upload directories if they don't exist
+const uploadDirs = ["uploads", "uploads/blogs", "uploads/users"];
+uploadDirs.forEach((dir) => {
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+});
+
 app.use("/api/blogs", blogsRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/auth", authRoutes);
