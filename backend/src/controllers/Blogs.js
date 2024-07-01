@@ -55,7 +55,6 @@ const getBlogs = async (req, res) => {
 
 const getBlogById = async (req, res) => {
   try {
-    console.log(req.params.id);
     const blog = await Blog.findById(req.params.id)
       .populate({
         path: "categoryIds",
@@ -73,7 +72,6 @@ const getBlogById = async (req, res) => {
 
 const getBlogsByCategoryID = async (req, res) => {
   try {
-    console.log(req.params.id);
     let filter = {};
     if (req.params.id != "null" && req.params.id != "undefined") {
       filter = { categoryIds: req.params.id };
@@ -94,7 +92,6 @@ const getBlogsByCategoryID = async (req, res) => {
 
 const getBlogsByAuthorID = async (req, res) => {
   try {
-    console.log(req.params.id);
     let filter = {};
     if (req.params.id != "null" && req.params.id != "undefined") {
       filter = { authorId: req.params.id };
@@ -117,7 +114,7 @@ const updateBlogByID = async (req, res) => {
   try {
     let imageURL = "";
     if (req?.file?.path) {
-      imageURL = await uploadToFirebaseStorage(
+      imageURL = await cloudStorage.uploadToFirebaseStorage(
         req?.file?.path,
         req?.file?.path
       );
