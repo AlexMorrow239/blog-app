@@ -17,6 +17,7 @@ export default function BlogItem({ index, blog, imageOrientation }) {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user"));
   const path = window.location.pathname;
+  console.log("path", path);
 
   const navigateToBlog = () => {
     navigate(`/blog/${blog.id}`);

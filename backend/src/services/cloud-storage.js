@@ -1,8 +1,13 @@
 const { Storage } = require("@google-cloud/storage");
 
+keyPath =
+  process.env.NODE_ENV === "production"
+    ? "/app/gcp_key.json"
+    : "./gcp_key.json";
+
 const storage = new Storage({
   projectId: "lunar-terra-426809-d3",
-  keyFilename: "/app/gcp_key.json",
+  keyFilename: keyPath,
 });
 
 const uploadToFirebaseStorage = async (filepath, fileName) => {
