@@ -17,7 +17,6 @@ export default function BlogItem({ index, blog, imageOrientation }) {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user"));
   const path = window.location.pathname;
-  console.log("path", path);
 
   const navigateToBlog = () => {
     navigate(`/blog/${blog.id}`);
@@ -54,11 +53,10 @@ export default function BlogItem({ index, blog, imageOrientation }) {
           <BlogItemText blogPost={blog} headerFontSize="20px" />
           <Categories categories={blog.categories} removeCategory={null} />
           {user &&
-          user.token &&
-          blog.author.id === user._id &&
-          path !== "/home" ? (
-            <EditButtonsContainer />
-          ) : null}
+            user.token &&
+            blog.author.id === user._id &&
+            path !== "/home" &&
+            path !== "/" && <EditButtonsContainer />}
         </div>
       </div>
     );
@@ -70,11 +68,11 @@ export default function BlogItem({ index, blog, imageOrientation }) {
           <BlogItemText blogPost={blog} headerFontSize="20px" />
           <Categories categories={blog.categories} removeCategory={null} />
           {user &&
-          user.token &&
-          blog.author.id === user._id &&
-          path !== "/home" ? (
-            <EditButtonsContainer />
-          ) : null}
+            user.token &&
+            blog.author.id === user._id &&
+            path !== "/home" &&
+            path !== "/" &&
+            path !== "" && <EditButtonsContainer />}
         </div>
       </div>
     );

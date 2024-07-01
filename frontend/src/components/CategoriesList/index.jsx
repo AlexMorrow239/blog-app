@@ -68,19 +68,23 @@ export default function CategoriesList() {
                 {category.description.substring(0, 100)} ...
               </p>
             </div>
-            {user && user?.token && path !== "/home" && (
-              <EditButtons
-                onEdit={() => {
-                  onCategoryUpdate(category);
-                }}
-                onDelete={() => {
-                  onCategoryDelete(category);
-                }}
-                onNavigate={() => {
-                  navigate(`/blogs/${category.id}`);
-                }}
-              />
-            )}
+            {user &&
+              user?.token &&
+              path !== "/home" &&
+              path !== "/" &&
+              path !== "" && (
+                <EditButtons
+                  onEdit={() => {
+                    onCategoryUpdate(category);
+                  }}
+                  onDelete={() => {
+                    onCategoryDelete(category);
+                  }}
+                  onNavigate={() => {
+                    navigate(`/blogs/${category.id}`);
+                  }}
+                />
+              )}
           </div>
         );
       })}
