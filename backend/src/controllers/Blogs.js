@@ -42,7 +42,8 @@ const getBlogs = async (req, res) => {
   try {
     const blogs = await Blog.find()
       .populate({ path: "categoryIds" })
-      .populate({ path: "authorId" });
+      .populate({ path: "authorId" })
+      .sort({ createdAt: -1 }); // Sort by newest first
     res.status(200);
     res.json({
       message: "Get all blogs!",
