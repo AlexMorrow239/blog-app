@@ -110,12 +110,12 @@ export default function ProfilePage() {
       <SuccessToast
         show={isAuthSuccess || isAuthorSuccess}
         message={authMessage || authorMessage}
-        onClose={dispatch(resetSuccessAndErrorBoth)}
+        onClose={resetSuccessAndErrorBoth}
       />
       <ErrorToast
         show={isAuthError || isAuthorError}
         message={authMessage || authorMessage}
-        onClose={dispatch(resetSuccessAndErrorBoth)}
+        onClose={resetSuccessAndErrorBoth}
       />
     </>
   );
