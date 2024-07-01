@@ -1,4 +1,4 @@
-import { BASE_API_URL } from "../config";
+const BASE_API_URL = process.env.REACT_APP_API_URL;
 
 const register = async (userData) => {
   const response = await fetch(`${BASE_API_URL}/auth/register`, {
