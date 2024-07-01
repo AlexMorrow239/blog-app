@@ -25,7 +25,7 @@ export default function Categories({ categories, removeCategory }) {
             {category.title}
             {editBlog || addBlog ? (
               <i
-                class="bi bi-x"
+                className="bi bi-x"
                 onClick={() => {
                   removeCategory(category);
                 }}

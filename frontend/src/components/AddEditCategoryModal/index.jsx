@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Modal } from "bootstrap";
 
@@ -18,20 +18,24 @@ export default function AddEditCategoryModal() {
     (state) => state.categories.modifyCategory
   );
 
-  const modalEl = document.getElementById("addEditCategoryModal");
-  const addEditCategoryModal = useMemo(() => {
-    return modalEl ? new Modal(modalEl) : null;
-  }, [modalEl]);
+  const modalRef = useRef(null);
+  const modalInstance = useRef(null);
+
+  useEffect(() => {
+    if (modalRef.current) {
+      modalInstance.current = new Modal(modalRef.current);
+    }
+  }, []);
 
   useEffect(() => {
     if (addCategory) {
       dispatch(setModifyCategory(addCategory));
-      addEditCategoryModal?.show();
+      modalInstance.current?.show();
     } else if (editCategory) {
       dispatch(setModifyCategory(editCategory));
-      addEditCategoryModal?.show();
+      modalInstance.current?.show();
     }
-  }, [dispatch, addCategory, editCategory, addEditCategoryModal]);
+  }, [dispatch, addCategory, editCategory]);
 
   const onSubmit = (e) => {
     e?.preventDefault();
@@ -42,13 +46,13 @@ export default function AddEditCategoryModal() {
         dispatch(updateCategory(modifyCategory));
       }
       dispatch(resetCategoryModifiers());
-      addEditCategoryModal?.hide();
+      modalInstance.current?.hide();
     }
   };
 
   const onCloseModal = () => {
     dispatch(resetCategoryModifiers());
-    addEditCategoryModal.hide();
+    modalInstance.current?.hide();
   };
 
   const isFormValid = () => {
@@ -63,6 +67,7 @@ export default function AddEditCategoryModal() {
       id="addEditCategoryModal"
       aria-labelledby="addEditCategoryModalLabel"
       aria-hidden="true"
+      ref={modalRef}
     >
       <div className="modal-dialog modal-xl">
         <div className="modal-content">
@@ -86,7 +91,7 @@ export default function AddEditCategoryModal() {
                   type="text"
                   className="form-control"
                   id="title"
-                  value={modifyCategory?.title}
+                  value={modifyCategory?.title || ""}
                   onChange={(e) => {
                     dispatch(
                       setModifyCategory({
@@ -107,7 +112,7 @@ export default function AddEditCategoryModal() {
                   type="text"
                   className="form-control"
                   id="description"
-                  value={modifyCategory?.description}
+                  value={modifyCategory?.description || ""}
                   onChange={(e) => {
                     dispatch(
                       setModifyCategory({
@@ -128,7 +133,7 @@ export default function AddEditCategoryModal() {
                   type="text"
                   className="form-control"
                   id="color"
-                  value={modifyCategory?.color}
+                  value={modifyCategory?.color || ""}
                   onChange={(e) => {
                     dispatch(
                       setModifyCategory({

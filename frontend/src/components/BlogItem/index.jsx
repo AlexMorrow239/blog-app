@@ -1,5 +1,5 @@
 import React from "react";
-
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import BlogItemText from "../BlogItemText";
@@ -10,32 +10,35 @@ import PropTypes from "prop-types";
 import "./index.css";
 import Categories from "../Categories";
 
-export default function BlogItem({
-  index,
-  blog,
-  imageOrientation,
-  onBlogEdit,
-  onBlogDelete,
-}) {
-  const user = JSON.parse(localStorage.getItem("user"));
+import { setEditBlog, setDeleteBlog } from "../../features/blogsSlice";
+
+export default function BlogItem({ index, blog, imageOrientation }) {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem("user"));
+
   const navigateToBlog = () => {
     navigate(`/blog/${blog.id}`);
+  };
+
+  const onBlogEdit = (blog) => {
+    dispatch(setEditBlog(blog));
+  };
+
+  const onBlogDelete = (blog) => {
+    dispatch(setDeleteBlog(blog));
   };
 
   const EditButtonsContainer = () => {
     return (
       <EditButtons
         onEdit={(e) => {
-          e.stopPropagation();
           onBlogEdit(blog);
         }}
         onDelete={(e) => {
-          e.stopPropagation();
           onBlogDelete(blog);
         }}
         onNavigate={(e) => {
-          e.stopPropagation();
           navigate(`/blog/${blog.id}`);
         }}
       />
@@ -81,7 +84,7 @@ export default function BlogItem({
 BlogItem.propTypes = {
   index: PropTypes.number.isRequired,
   blog: PropTypes.object.isRequired,
-  imageOrientation: PropTypes.string.isRequired,
+  imageOrientation: PropTypes.string,
   onBlogEdit: PropTypes.func,
   onBlogDelete: PropTypes.func,
 };

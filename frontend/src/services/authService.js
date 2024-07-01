@@ -1,10 +1,7 @@
-const BASE_URL =
-  process.env.NODE_ENV === "production"
-    ? process.env.REACT_APP_PROD_API_URL
-    : process.env.REACT_APP_DEV_API_URL;
+import { BASE_API_URL } from "../config";
 
 const register = async (userData) => {
-  const response = await fetch(`${BASE_URL}/auth/register`, {
+  const response = await fetch(`${BASE_API_URL}/auth/register`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -23,7 +20,7 @@ const register = async (userData) => {
 };
 
 const login = async (userData) => {
-  const response = await fetch(`${BASE_URL}/auth/login`, {
+  const response = await fetch(`${BASE_API_URL}/auth/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -42,7 +39,9 @@ const login = async (userData) => {
 };
 
 const getUser = async (authorId) => {
-  const response = await fetch(`${BASE_URL}/auth/user/${authorId}`);
+  const response = await fetch(`${BASE_API_URL}/auth/user/${authorId}`, {
+    method: "GET",
+  });
 
   if (!response.ok) {
     let res = await response.json();
@@ -54,13 +53,17 @@ const getUser = async (authorId) => {
 };
 
 const updateUser = async (userData) => {
-  const response = await fetch(`${BASE_URL}/auth/user/${userData.get("id")}`, {
-    method: "PUT",
-    headers: {
-      Authorization: "Bearer " + JSON.parse(localStorage.getItem("user")).token,
-    },
-    body: userData,
-  });
+  const response = await fetch(
+    `${BASE_API_URL}/auth/user/${userData.get("id")}`,
+    {
+      method: "PUT",
+      headers: {
+        Authorization:
+          "Bearer " + JSON.parse(localStorage.getItem("user")).token,
+      },
+      body: userData,
+    }
+  );
 
   if (!response.ok) {
     let res = await response.json();

@@ -55,7 +55,7 @@ export default function ProfilePage() {
     };
   }, [dispatch, authorId]);
 
-  const resetSuccessAndError = () => {
+  const resetSuccessAndErrorBoth = () => {
     if (isAuthSuccess) {
       dispatch(resetAuth());
     } else if (isAuthorSuccess) {
@@ -110,12 +110,12 @@ export default function ProfilePage() {
       <SuccessToast
         show={isAuthSuccess || isAuthorSuccess}
         message={authMessage || authorMessage}
-        onClose={resetSuccessAndError}
+        onClose={resetSuccessAndErrorBoth}
       />
       <ErrorToast
         show={isAuthError || isAuthorError}
         message={authMessage || authorMessage}
-        onClose={resetSuccessAndError}
+        onClose={resetSuccessAndErrorBoth}
       />
     </>
   );
