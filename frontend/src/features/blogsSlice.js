@@ -172,9 +172,7 @@ export const blogsSlice = createSlice({
       .addCase(fetchBlogById.fulfilled, (state, { payload }) => {
         state.blog = payload.data;
         state.isLoading = false;
-        // state.isSuccess = true;
         state.isError = false;
-        // state.message = payload.message;
       })
       .addCase(fetchBlogById.rejected, (state, { payload }) => {
         state.isLoading = false;
@@ -230,4 +228,7 @@ export const {
   setDeleteBlog,
   setBlogs,
 } = blogsSlice.actions;
+
 export default blogsSlice.reducer;
+
+//path: frontend/src/features/blogsSlice.js

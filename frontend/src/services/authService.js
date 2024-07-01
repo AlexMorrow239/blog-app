@@ -1,7 +1,7 @@
 const BASE_API_URL = process.env.REACT_APP_API_URL;
 
 const register = async (userData) => {
-  const response = await fetch(`${BASE_API_URL}api/auth/register`, {
+  const response = await fetch(`${BASE_API_URL}/auth/register`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

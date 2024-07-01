@@ -11,6 +11,7 @@ const createBlogs = async (req, res) => {
         req?.file?.path
       );
     }
+    console.log("MADE IT PAST FIREBASE");
     const categoryIds = JSON.parse(req?.body?.categories).map((x) => x.id);
     const blog = new Blog({
       title: req.body.title,
@@ -172,3 +173,5 @@ const blogController = {
 };
 
 module.exports = blogController;
+
+//path: backend/src/controllers/Blogs.js

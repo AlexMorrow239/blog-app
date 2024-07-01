@@ -343,3 +343,5 @@ export default function AddEditBlogModal() {
     </div>
   );
 }
+
+//path: frontend/src/components/AddEditBlogModal/index.jsx

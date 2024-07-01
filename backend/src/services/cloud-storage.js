@@ -19,7 +19,7 @@ const uploadToFirebaseStorage = async (filepath, fileName) => {
     });
     return result[0].metadata.mediaLink;
   } catch (error) {
-    console.log(error);
+    console.log("ERROR IN FIREBASE \n" + error);
     throw new Error(error.message);
   }
 };

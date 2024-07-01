@@ -13,19 +13,15 @@ connectDB();
 const port = process.env.PORT || 8000;
 const app = express();
 
-const corsOptions = {
-  origin: process.env.CORS_ORIGIN || "*",
-  optionsSuccessStatus: 200, // For legacy browser support
-};
-app.use(cors(corsOptions));
+app.use(cors());
 
 app.use(express.json());
 
 app.use("/api/blogs", blogsRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/auth", authRoutes);
-app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 app.use(express.static(path.join(__dirname, "../../frontend/build")));
 
 app.get("*", (req, res) => {
@@ -37,3 +33,5 @@ app.get("*", (req, res) => {
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
+
+//path: backend/src/index.js
