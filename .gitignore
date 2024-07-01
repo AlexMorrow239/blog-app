@@ -5,7 +5,7 @@
 /frontend.pnp.js
 
 # environment
-/frontend/.env
+/frontend/.env*
 
 # testing
 /frontend/coverage
@@ -35,8 +35,10 @@
 /backend/coverage
 
 # keys
-/backend/.env
 /backend/gcp_key.json
+
+#environment
+/backend/.env*
 
 # images
 /backend/uploads

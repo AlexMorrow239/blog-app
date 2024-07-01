@@ -1,10 +1,7 @@
-const BASE_URL =
-  process.env.NODE_ENV === "production"
-    ? process.env.REACT_APP_PROD_API_URL
-    : process.env.REACT_APP_DEV_API_URL;
+import { BASE_API_URL } from "../config";
 
 const createCategory = async (category) => {
-  const response = await fetch(`${BASE_URL}/categories`, {
+  const response = await fetch(`${BASE_API_URL}/categories`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -29,7 +26,7 @@ const createCategory = async (category) => {
 };
 
 const fetchCategories = async () => {
-  const response = await fetch(`${BASE_URL}/categories`, {
+  const response = await fetch(`${BASE_API_URL}/categories`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -52,7 +49,7 @@ const fetchCategories = async () => {
 };
 
 const updateCategory = async (category) => {
-  const response = await fetch(`${BASE_URL}/categories/${category.id}`, {
+  const response = await fetch(`${BASE_API_URL}/categories/${category.id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -77,7 +74,7 @@ const updateCategory = async (category) => {
 };
 
 const deleteCategory = async (id) => {
-  const response = await fetch(`${BASE_URL}/categories/${id}`, {
+  const response = await fetch(`${BASE_API_URL}/categories/${id}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",

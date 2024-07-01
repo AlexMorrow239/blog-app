@@ -1,10 +1,7 @@
-const BASE_URL =
-  process.env.NODE_ENV === "production"
-    ? process.env.REACT_APP_PROD_API_URL
-    : process.env.REACT_APP_DEV_API_URL;
+import { BASE_API_URL } from "../config";
 
 const createBlog = async (blog) => {
-  const response = await fetch(`${BASE_URL}/blogs`, {
+  const response = await fetch(`${BASE_API_URL}/blogs`, {
     method: "POST",
     headers: {
       authorization: "Bearer " + JSON.parse(localStorage.getItem("user")).token,
@@ -28,7 +25,7 @@ const createBlog = async (blog) => {
 };
 
 const fetchBlogs = async () => {
-  const response = await fetch(`${BASE_URL}/blogs`, {
+  const response = await fetch(`${BASE_API_URL}/blogs`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -51,7 +48,7 @@ const fetchBlogs = async () => {
 };
 
 const fetchBlogByID = async (id) => {
-  const response = await fetch(`${BASE_URL}/blogs/${id}`, {
+  const response = await fetch(`${BASE_API_URL}/blogs/${id}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -73,12 +70,15 @@ const fetchBlogByID = async (id) => {
 };
 
 const fetchBlogsByCategoryId = async (categoryId) => {
-  const response = await fetch(`${BASE_URL}/blogs/categories/${categoryId}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  const response = await fetch(
+    `${BASE_API_URL}/blogs/categories/${categoryId}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
   if (!response.ok) {
     try {
       let res = await response.json();
@@ -95,7 +95,7 @@ const fetchBlogsByCategoryId = async (categoryId) => {
 };
 
 const fetchBlogsByAuthorId = async (authorId) => {
-  const response = await fetch(`${BASE_URL}/blogs/author/${authorId}`, {
+  const response = await fetch(`${BASE_API_URL}/blogs/author/${authorId}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -117,7 +117,7 @@ const fetchBlogsByAuthorId = async (authorId) => {
 };
 
 const updateBlog = async (blog) => {
-  const response = await fetch(`${BASE_URL}/blogs/${blog.get("id")}`, {
+  const response = await fetch(`${BASE_API_URL}/blogs/${blog.get("id")}`, {
     method: "PUT",
     headers: {
       authorization: "Bearer " + JSON.parse(localStorage.getItem("user")).token,
@@ -140,7 +140,7 @@ const updateBlog = async (blog) => {
 };
 
 const deleteBlog = async (id) => {
-  const response = await fetch(`${BASE_URL}/blogs/${id}`, {
+  const response = await fetch(`${BASE_API_URL}/blogs/${id}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
