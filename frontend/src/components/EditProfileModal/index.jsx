@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Modal } from "bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -12,6 +12,8 @@ import FormImage from "../FormImage";
 
 export default function EditProfileModal() {
   const dispatch = useDispatch();
+
+  const [selectedFile, setSelectedFile] = useState(null);
 
   const authorSlice = useSelector((state) => state.author);
 
@@ -29,7 +31,7 @@ export default function EditProfileModal() {
   const buildFormData = () => {
     const formData = new FormData();
     formData.append("id", authorSlice.editAuthor._id);
-    formData.append("image", authorSlice.editAuthor.image);
+    formData.append("image", selectedFile);
     formData.append("firstName", authorSlice.editAuthor.firstName);
     formData.append("lastName", authorSlice.editAuthor.lastName);
     formData.append("bio", authorSlice.editAuthor.bio);
@@ -66,7 +68,7 @@ export default function EditProfileModal() {
     if (e?.target?.files?.length) {
       const file = e.target.files[0];
       dispatch(setAuthorImage(URL.createObjectURL(file)));
-      dispatch(setEditAuthor({ ...authorSlice.editAuthor, image: file }));
+      setSelectedFile(file);
     }
   };
 
