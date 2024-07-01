@@ -1,3 +1,5 @@
+import "./index.css";
+
 export default function EditButtons({ onEdit, onDelete, onNavigate }) {
   return (
     <>
@@ -16,13 +18,13 @@ export default function EditButtons({ onEdit, onDelete, onNavigate }) {
           onEdit();
         }}
       >
-        <i className="bi bi-pencil-fill"></i>
+        <i className="bi bi-pencil-fill edit-btn-icon p-1"></i>
       </button>
       <button
         style={{
           position: "absolute",
           top: "10px",
-          right: "35px",
+          right: "32px",
           border: "none",
           zIndex: 1,
         }}
@@ -33,13 +35,13 @@ export default function EditButtons({ onEdit, onDelete, onNavigate }) {
           onDelete();
         }}
       >
-        <i className="bi bi-trash-fill"></i>
+        <i className="bi bi-trash-fill edit-btn-icon p-1"></i>
       </button>
       <button
         style={{
           position: "absolute",
           top: "10px",
-          right: "10px",
+          right: "5px",
           border: "none",
           zIndex: 1,
         }}
@@ -50,7 +52,7 @@ export default function EditButtons({ onEdit, onDelete, onNavigate }) {
           onNavigate();
         }}
       >
-        <i className="bi bi-arrows-fullscreen"></i>
+        <i className="bi bi-arrows-fullscreen edit-btn-icon p-1"></i>
       </button>
     </>
   );
