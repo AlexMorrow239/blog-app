@@ -39,7 +39,9 @@ const login = async (userData) => {
 };
 
 const getUser = async (authorId) => {
-  const response = await fetch(`${BASE_API_URL}/auth/user/${authorId}`);
+  const response = await fetch(`${BASE_API_URL}/auth/user/${authorId}`, {
+    method: "GET",
+  });
 
   if (!response.ok) {
     let res = await response.json();

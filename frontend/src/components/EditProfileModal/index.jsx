@@ -57,7 +57,7 @@ export default function EditProfileModal() {
   const onCloseModal = (e) => {
     e?.preventDefault();
     editProfileModal?.hide();
-    setEditAuthor(null);
+    dispatch(setEditAuthor(null));
   };
 
   const onImageChange = (e) => {
@@ -66,7 +66,7 @@ export default function EditProfileModal() {
     if (e?.target?.files?.length) {
       const file = e.target.files[0];
       dispatch(setAuthorImage(URL.createObjectURL(file)));
-      setEditAuthor({ ...authorSlice.editAuthor, image: file });
+      dispatch(setEditAuthor({ ...authorSlice.editAuthor, image: file }));
     }
   };
 
