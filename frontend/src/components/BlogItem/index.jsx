@@ -56,8 +56,7 @@ export default function BlogItem({ index, blog, imageOrientation }) {
           {user &&
           user.token &&
           blog.author.id === user._id &&
-          onBlogEdit &&
-          onBlogDelete ? (
+          path !== "/home" ? (
             <EditButtonsContainer />
           ) : null}
         </div>
