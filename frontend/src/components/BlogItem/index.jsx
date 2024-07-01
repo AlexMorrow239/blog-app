@@ -16,6 +16,7 @@ export default function BlogItem({ index, blog, imageOrientation }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user"));
+  const path = window.location.pathname;
 
   const navigateToBlog = () => {
     navigate(`/blog/${blog.id}`);
@@ -71,8 +72,7 @@ export default function BlogItem({ index, blog, imageOrientation }) {
           {user &&
           user.token &&
           blog.author.id === user._id &&
-          onBlogEdit &&
-          onBlogDelete ? (
+          path !== "/home" ? (
             <EditButtonsContainer />
           ) : null}
         </div>

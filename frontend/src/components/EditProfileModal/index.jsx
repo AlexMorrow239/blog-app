@@ -197,6 +197,7 @@ export default function EditProfileModal() {
                       );
                     }}
                     required
+                    autoComplete="email"
                   />
                   <div className="valid-feedback">Looks good!</div>
                 </div>

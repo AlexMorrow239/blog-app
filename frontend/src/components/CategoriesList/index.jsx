@@ -15,6 +15,7 @@ export default function CategoriesList() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
+  const path = window.location.pathname;
 
   const categories = useSelector((state) => state.categories.categories);
   const addCategory = useSelector((state) => state.categories.addCategory);
@@ -67,7 +68,7 @@ export default function CategoriesList() {
                 {category.description.substring(0, 100)} ...
               </p>
             </div>
-            {user && user?.token && (
+            {user && user?.token && path !== "/home" && (
               <EditButtons
                 onEdit={() => {
                   onCategoryUpdate(category);
