@@ -8,7 +8,7 @@ export default function FormImage({ image, onChange }) {
 
   return (
     <div className="mb-3">
-      <label htmlFor="image" className="form-label">
+      <label htmlFor="fileInput" className="form-label">
         Image
       </label>
       <input
