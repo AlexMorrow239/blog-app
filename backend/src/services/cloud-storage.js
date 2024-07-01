@@ -29,3 +29,5 @@ const GoogleCloudService = {
 };
 
 module.exports = GoogleCloudService;
+
+//path: backend/src/services/cloud-storage.js
