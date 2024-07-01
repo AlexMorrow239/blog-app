@@ -81,7 +81,7 @@ export default function BlogItem({
 BlogItem.propTypes = {
   index: PropTypes.number.isRequired,
   blog: PropTypes.object.isRequired,
-  imageOrientation: PropTypes.string.isRequired,
+  imageOrientation: PropTypes.string,
   onBlogEdit: PropTypes.func,
   onBlogDelete: PropTypes.func,
 };
