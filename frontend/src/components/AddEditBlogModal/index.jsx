@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Modal } from "bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -20,26 +20,35 @@ export default function AddEditBlogModal() {
   const { addBlog, editBlog } = useSelector((state) => state.blogs);
   const { categories } = useSelector((state) => state.categories);
 
-  const [blog, setBlog] = useState();
+  const [blog, setBlog] = useState({
+    title: "",
+    description: "",
+    categories: [],
+    content: [],
+    authorId: "",
+  });
   const [blogImage, setBlogImage] = useState("");
 
-  const modalEl = document.getElementById("addEditModal");
+  const modalRef = useRef(null);
+  const modalInstance = useRef(null);
 
-  const addEditModal = useMemo(() => {
-    return modalEl ? new Modal(modalEl) : null;
-  }, [modalEl]);
+  useEffect(() => {
+    if (modalRef.current) {
+      modalInstance.current = new Modal(modalRef.current);
+    }
+  }, []);
 
   useEffect(() => {
     if (addBlog) {
       setBlog(addBlog);
       setBlogImage(addBlog?.image);
-      addEditModal.show();
+      modalInstance.current?.show();
     } else if (editBlog) {
       setBlog(editBlog);
       setBlogImage(editBlog?.image);
-      addEditModal.show();
+      modalInstance.current?.show();
     }
-  }, [addBlog, editBlog, addEditModal]);
+  }, [addBlog, editBlog]);
 
   const buildFormData = () => {
     const formData = new FormData();
@@ -54,7 +63,7 @@ export default function AddEditBlogModal() {
   };
 
   const onSubmit = (e) => {
-    e?.preventDefault();
+    e.preventDefault();
     if (isFormValid()) {
       const blogForm = buildFormData();
 
@@ -64,17 +73,15 @@ export default function AddEditBlogModal() {
         dispatch(updateBlog(blogForm));
       }
       resetBlog();
-      addEditModal?.hide();
+      modalInstance.current?.hide();
     }
   };
 
   const onImageChange = (e) => {
-    e?.preventDefault();
-
-    if (e?.target?.files?.length) {
+    if (e.target.files.length) {
       const file = e.target.files[0];
       setBlogImage(URL.createObjectURL(file));
-      setBlog({ ...blog, image: file });
+      setBlog((prevBlog) => ({ ...prevBlog, image: file }));
     }
   };
 
@@ -93,22 +100,17 @@ export default function AddEditBlogModal() {
 
   const isFormValid = () => {
     const form = document.getElementById("blogForm");
-    form?.classList?.add("was-validated");
-    return form?.checkValidity();
+    form.classList.add("was-validated");
+    return form.checkValidity();
   };
 
   const onCloseModal = (e) => {
-    e?.preventDefault();
+    e.preventDefault();
     resetBlog();
-    addEditModal?.hide();
-    if (editBlog) {
-      dispatch(setEditBlog(null));
-    } else if (addBlog) {
-      dispatch(setAddBlog(null));
-    }
+    modalInstance.current?.hide();
   };
 
-  if (!categories && !categories?.length) {
+  if (!categories || !categories.length) {
     return null;
   }
 
@@ -120,6 +122,7 @@ export default function AddEditBlogModal() {
         tabIndex="-1"
         aria-labelledby="addEditModalLabel"
         aria-hidden="true"
+        ref={modalRef}
       >
         <div className="modal-dialog modal-xl">
           <div className="modal-content">
@@ -150,42 +153,38 @@ export default function AddEditBlogModal() {
                     className="form-select"
                     id="categoryInputSelect"
                     onChange={(e) => {
-                      const category = categories?.find(
+                      const category = categories.find(
                         (x) => x.id === e.target.value
                       );
-                      if (!category) {
-                        return;
+                      if (
+                        category &&
+                        !blog.categories.find((x) => x.id === category.id)
+                      ) {
+                        setBlog((prevBlog) => ({
+                          ...prevBlog,
+                          categories: [...prevBlog.categories, category],
+                        }));
                       }
-                      if (blog?.categories?.find((x) => x.id === category.id)) {
-                        return;
-                      }
-                      const blogUpdate = {
-                        ...blog,
-                        categories: [...blog.categories, category],
-                      };
-                      setBlog(blogUpdate);
                     }}
-                    required={editBlog ? false : true}
+                    required={!editBlog}
                   >
-                    {categories?.map((category, index) => {
-                      return (
-                        <option key={index} value={category.id}>
-                          {category.title}
-                        </option>
-                      );
-                    })}
+                    {categories.map((category) => (
+                      <option key={category.id} value={category.id}>
+                        {category.title}
+                      </option>
+                    ))}
                   </select>
                 </div>
                 <div className="mb-3">
                   <Categories
-                    categories={blog?.categories}
+                    categories={blog.categories}
                     removeCategory={(category) => {
-                      setBlog({
-                        ...blog,
-                        categories: blog?.categories.filter(
+                      setBlog((prevBlog) => ({
+                        ...prevBlog,
+                        categories: prevBlog.categories.filter(
                           (x) => x.id !== category.id
                         ),
-                      });
+                      }));
                     }}
                   />
                 </div>
@@ -198,7 +197,7 @@ export default function AddEditBlogModal() {
                     type="text"
                     className="form-control"
                     id="title"
-                    value={blog?.title}
+                    value={blog.title}
                     onChange={(e) => {
                       setBlog({ ...blog, title: e.target.value });
                     }}
@@ -214,7 +213,7 @@ export default function AddEditBlogModal() {
                     type="text"
                     className="form-control"
                     id="description"
-                    value={blog?.description}
+                    value={blog.description}
                     onChange={(e) => {
                       setBlog({ ...blog, description: e.target.value });
                     }}
@@ -225,79 +224,66 @@ export default function AddEditBlogModal() {
                 <label htmlFor="description" className="form-label">
                   Content
                 </label>
-                {blog?.content?.map((section, index) => {
-                  return (
-                    <div className="p-3" key={index}>
-                      <div className="mb-3">
-                        <label
-                          htmlFor={"sectionHeader" + index}
-                          className="form-label"
-                        >
-                          Section Header
-                        </label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id={"sectionHeader" + index}
-                          value={section.sectionHeader}
-                          onChange={(e) => {
-                            const updatedContent = blog.content.map(
-                              (section, secIndex) => {
-                                if (index === secIndex) {
-                                  return {
-                                    ...section,
-                                    sectionHeader: e.target.value,
-                                  };
-                                }
-                                return section;
-                              }
-                            );
-                            setBlog({ ...blog, content: updatedContent });
-                          }}
-                          required
-                        />
-                        <div className="valid-feedback">Looks good!</div>
-                      </div>
-                      <div className="mb-3">
-                        <label
-                          htmlFor={"sectionText" + index}
-                          className="form-label"
-                        >
-                          Section Text
-                        </label>
-                        <textarea
-                          type="text"
-                          className="form-control"
-                          id={"sectionText" + index}
-                          value={section.sectionText}
-                          onChange={(e) => {
-                            const updatedContent = blog.content.map(
-                              (section, secIndex) => {
-                                if (index === secIndex) {
-                                  return {
-                                    ...section,
-                                    sectionText: e.target.value,
-                                  };
-                                }
-                                return section;
-                              }
-                            );
-                            setBlog({ ...blog, content: updatedContent });
-                          }}
-                          required
-                        />
-                        <div className="valid-feedback">Looks good!</div>
-                      </div>
+                {blog.content.map((section, index) => (
+                  <div className="p-3" key={index}>
+                    <div className="mb-3">
+                      <label
+                        htmlFor={"sectionHeader" + index}
+                        className="form-label"
+                      >
+                        Section Header
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id={"sectionHeader" + index}
+                        value={section.sectionHeader}
+                        onChange={(e) => {
+                          const updatedContent = blog.content.map(
+                            (sec, secIndex) =>
+                              secIndex === index
+                                ? { ...sec, sectionHeader: e.target.value }
+                                : sec
+                          );
+                          setBlog({ ...blog, content: updatedContent });
+                        }}
+                        required
+                      />
+                      <div className="valid-feedback">Looks good!</div>
                     </div>
-                  );
-                })}
+                    <div className="mb-3">
+                      <label
+                        htmlFor={"sectionText" + index}
+                        className="form-label"
+                      >
+                        Section Text
+                      </label>
+                      <textarea
+                        className="form-control"
+                        id={"sectionText" + index}
+                        value={section.sectionText}
+                        onChange={(e) => {
+                          const updatedContent = blog.content.map(
+                            (sec, secIndex) =>
+                              secIndex === index
+                                ? { ...sec, sectionText: e.target.value }
+                                : sec
+                          );
+                          setBlog({ ...blog, content: updatedContent });
+                        }}
+                        required
+                      />
+                      <div className="valid-feedback">Looks good!</div>
+                    </div>
+                  </div>
+                ))}
                 <div
                   style={{
                     display: "flex",
                     justifyContent: "center",
                   }}
                 >
-                  {blog?.content?.length > 0 && (
+                  {blog.content.length > 0 && (
                     <button
                       type="button"
                       className="btn btn-danger"
@@ -308,11 +294,10 @@ export default function AddEditBlogModal() {
                         zIndex: "1",
                       }}
                       onClick={() => {
-                        const blogUpdate = {
-                          ...blog,
-                          content: blog?.content.slice(0, -1),
-                        };
-                        setBlog(blogUpdate);
+                        setBlog((prevBlog) => ({
+                          ...prevBlog,
+                          content: prevBlog.content.slice(0, -1),
+                        }));
                       }}
                     >
                       <i className="bi bi-trash"></i>
@@ -322,14 +307,13 @@ export default function AddEditBlogModal() {
                     type="button"
                     className="btn btn-success"
                     onClick={() => {
-                      const blogUpdate = {
-                        ...blog,
+                      setBlog((prevBlog) => ({
+                        ...prevBlog,
                         content: [
-                          ...blog?.content,
+                          ...prevBlog.content,
                           { sectionHeader: "", sectionText: "" },
                         ],
-                      };
-                      setBlog(blogUpdate);
+                      }));
                     }}
                   >
                     <i className="bi bi-plus-circle"></i>

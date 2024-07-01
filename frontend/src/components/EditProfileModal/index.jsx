@@ -12,7 +12,6 @@ import FormImage from "../FormImage";
 
 export default function EditProfileModal() {
   const dispatch = useDispatch();
-
   const [selectedFile, setSelectedFile] = useState(null);
 
   const authorSlice = useSelector((state) => state.author);
@@ -24,7 +23,13 @@ export default function EditProfileModal() {
 
   useEffect(() => {
     if (authorSlice.editAuthor) {
-      editProfileModal.show();
+      editProfileModal?.show();
+    } else {
+      editProfileModal?.hide();
+      const backdrop = document.querySelector(".modal-backdrop");
+      if (backdrop) {
+        backdrop.parentNode.removeChild(backdrop);
+      }
     }
   }, [authorSlice.editAuthor, editProfileModal]);
 
@@ -54,17 +59,24 @@ export default function EditProfileModal() {
       }
     }
     editProfileModal?.hide();
+    const backdrop = document.querySelector(".modal-backdrop");
+    if (backdrop) {
+      backdrop.parentNode.removeChild(backdrop);
+    }
   };
 
   const onCloseModal = (e) => {
     e?.preventDefault();
     editProfileModal?.hide();
     dispatch(setEditAuthor(null));
+    const backdrop = document.querySelector(".modal-backdrop");
+    if (backdrop) {
+      backdrop.parentNode.removeChild(backdrop);
+    }
   };
 
   const onImageChange = (e) => {
     e?.preventDefault();
-
     if (e?.target?.files?.length) {
       const file = e.target.files[0];
       dispatch(setAuthorImage(URL.createObjectURL(file)));
@@ -95,7 +107,7 @@ export default function EditProfileModal() {
               ></button>
             </div>
             <div className="modal-body">
-              <form id="authorForm">
+              <form id="authorForm" noValidate>
                 <div>
                   <FormImage
                     image={authorSlice.authorImage}
@@ -110,7 +122,7 @@ export default function EditProfileModal() {
                     type="text"
                     className="form-control"
                     id="firstName"
-                    value={authorSlice.editAuthor?.firstName}
+                    value={authorSlice.editAuthor?.firstName || ""}
                     onChange={(e) => {
                       dispatch(
                         setEditAuthor({
@@ -132,7 +144,7 @@ export default function EditProfileModal() {
                     type="text"
                     className="form-control"
                     id="lastName"
-                    value={authorSlice.editAuthor?.lastName}
+                    value={authorSlice.editAuthor?.lastName || ""}
                     onChange={(e) => {
                       dispatch(
                         setEditAuthor({
@@ -153,7 +165,7 @@ export default function EditProfileModal() {
                   <textarea
                     className="form-control"
                     id="bio"
-                    value={authorSlice.editAuthor?.bio}
+                    value={authorSlice.editAuthor?.bio || ""}
                     onChange={(e) => {
                       dispatch(
                         setEditAuthor({
@@ -175,7 +187,7 @@ export default function EditProfileModal() {
                     type="email"
                     className="form-control"
                     id="email"
-                    value={authorSlice.editAuthor?.email}
+                    value={authorSlice.editAuthor?.email || ""}
                     onChange={(e) => {
                       dispatch(
                         setEditAuthor({
@@ -202,7 +214,6 @@ export default function EditProfileModal() {
               <button
                 type="button"
                 className="btn btn-outline-success"
-                data-bs-dismiss="modal"
                 onClick={onSubmit}
               >
                 Save changes
