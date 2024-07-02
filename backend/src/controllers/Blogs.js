@@ -11,7 +11,6 @@ const createBlogs = async (req, res) => {
         req?.file?.path
       );
     }
-    console.log("MADE IT PAST FIREBASE");
     const categoryIds = JSON.parse(req?.body?.categories).map((x) => x.id);
     const blog = new Blog({
       title: req.body.title,
@@ -126,6 +125,15 @@ const updateBlogByID = async (req, res) => {
         path: "categoryIds",
       })
       .populate({ path: "authorId" });
+    if (
+      blog &&
+      blog.image !== "https://storage.googleapis.com/ix-blog-app/default.jpeg"
+    ) {
+      // Take the URL, get the last segment, and remove the query parameters
+      const encodedFileName = blog.image.split("/").pop().split("?")[0];
+      const decodedFileName = decodeURIComponent(encodedFileName); // Decode the URL
+      await cloudStorage.deleteFromFirebaseStorage(decodedFileName);
+    }
     if (blog) {
       const categoryIds = JSON.parse(req?.body?.categories).map((x) => x.id);
       blog.image = imageURL ? imageURL : blog.image;
@@ -152,7 +160,14 @@ const updateBlogByID = async (req, res) => {
 const deleteBlogByID = async (req, res) => {
   try {
     const blog = await Blog.findByIdAndDelete(req.params.id);
+    // const blog = await Blog.findById(req.params.id);
     if (blog) {
+      if (blog.image) {
+        // Take the URL, get the last segment, and remove the query parameters
+        const encodedFileName = blog.image.split("/").pop().split("?")[0];
+        const decodedFileName = decodeURIComponent(encodedFileName); // Decode the URL
+        await cloudStorage.deleteFromFirebaseStorage(decodedFileName);
+      }
       return res
         .status(200)
         .json({ message: "Blog deleted!", id: req.params.id });

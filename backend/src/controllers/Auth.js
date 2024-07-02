@@ -101,6 +101,18 @@ const updateUser = async (req, res) => {
       res.status(404).json({ message: "User not found" });
       return;
     }
+
+    if (
+      user.image !==
+        "https://storage.googleapis.com/ix-blog-app/download.png" &&
+      req?.file?.path
+    ) {
+      // Take the URL, get the last segment, and remove the query parameters
+      const encodedFileName = user.image.split("/").pop().split("?")[0];
+      const decodedFileName = decodeURIComponent(encodedFileName); // Decode the URL
+      await GoogleCloudService.deleteFromFirebaseStorage(decodedFileName);
+    }
+
     user.firstName = req.body.firstName || user.firstName;
     user.lastName = req.body.lastName || user.lastName;
     user.email = req.body.email || user.email;
@@ -113,6 +125,7 @@ const updateUser = async (req, res) => {
     const updatedUser = await user.save();
     res.status(200).json({ message: "User updated", data: updatedUser });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: error.message });
   }
 };

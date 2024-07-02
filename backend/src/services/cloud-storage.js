@@ -29,8 +29,21 @@ const uploadToFirebaseStorage = async (filepath, fileName) => {
   }
 };
 
+const deleteFromFirebaseStorage = async (fileName) => {
+  try {
+    const gcs = storage.bucket("gs://blog-app-bucket-5543");
+    const file = gcs.file(fileName);
+    await file.delete();
+    return true;
+  } catch (error) {
+    console.log("ERROR IN FIREBASE \n" + error);
+    throw new Error(error.message);
+  }
+};
+
 const GoogleCloudService = {
   uploadToFirebaseStorage,
+  deleteFromFirebaseStorage,
 };
 
 module.exports = GoogleCloudService;
