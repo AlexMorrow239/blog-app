@@ -88,6 +88,12 @@ export const categoriesSlice = createSlice({
     setModifyCategory: (state, { payload }) => {
       state.modifyCategory = payload;
     },
+    setIsError: (state, { payload }) => {
+      state.isError = payload;
+    },
+    setMessage: (state, { payload }) => {
+      state.message = payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -166,5 +172,7 @@ export const {
   setEditCategory,
   setModifyCategory,
   resetCategoryModifiers,
+  setIsError,
+  setMessage,
 } = categoriesSlice.actions;
 export default categoriesSlice.reducer;

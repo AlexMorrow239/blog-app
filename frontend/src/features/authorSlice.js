@@ -120,6 +120,8 @@ export const authorSlice = createSlice({
         state.editAuthor = null;
         state.isLoading = false;
         state.isError = false;
+        state.isSuccess = true;
+        state.message = payload.message;
       })
       .addCase(updateAuthor.rejected, (state, { payload }) => {
         state.isLoading = false;

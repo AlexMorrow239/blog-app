@@ -55,14 +55,6 @@ export default function ProfilePage() {
     };
   }, [dispatch, authorId]);
 
-  const resetSuccessAndErrorBoth = () => {
-    if (isAuthSuccess) {
-      dispatch(resetAuth());
-    } else if (isAuthorSuccess) {
-      dispatch(resetAuthor());
-    }
-  };
-
   const AuthorDetails = () => {
     return (
       <div className="col-md-8 col-lg-6 col-xl-4 mx-auto">
@@ -110,12 +102,18 @@ export default function ProfilePage() {
       <SuccessToast
         show={isAuthSuccess || isAuthorSuccess}
         message={authMessage || authorMessage}
-        onClose={resetSuccessAndErrorBoth}
+        onClose={() => {
+          dispatch(resetAuth());
+          dispatch(resetAuthor());
+        }}
       />
       <ErrorToast
         show={isAuthError || isAuthorError}
         message={authMessage || authorMessage}
-        onClose={resetSuccessAndErrorBoth}
+        onClose={() => {
+          dispatch(resetAuth());
+          dispatch(resetAuthor());
+        }}
       />
     </>
   );
