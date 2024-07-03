@@ -17,9 +17,13 @@ export default function AddEditBlogModal() {
 
   const user = JSON.parse(localStorage.getItem("user"));
 
+  const formRef = useRef();
+  const selectRef = useRef();
+
   const { addBlog, editBlog } = useSelector((state) => state.blogs);
   const { categories } = useSelector((state) => state.categories);
 
+  // Local state for the blog form to control the input fields
   const [blog, setBlog] = useState({
     title: "",
     description: "",
@@ -28,6 +32,13 @@ export default function AddEditBlogModal() {
     authorId: "",
   });
   const [blogImage, setBlogImage] = useState("");
+  // Validation for input fields
+  const [validation, setValidation] = useState({
+    categories: { isValid: true, message: "" },
+    title: { isValid: true, message: "" },
+    description: { isValid: true, message: "" },
+    content: { isValid: true, message: "" },
+  });
 
   const modalRef = useRef(null);
   const modalInstance = useRef(null);
@@ -50,6 +61,10 @@ export default function AddEditBlogModal() {
     }
   }, [addBlog, editBlog]);
 
+  useEffect(() => {
+    validateForm();
+  }, [blog]);
+
   const buildFormData = () => {
     const formData = new FormData();
     formData.append("id", blog.id);
@@ -62,19 +77,85 @@ export default function AddEditBlogModal() {
     return formData;
   };
 
-  const onSubmit = (e) => {
-    e.preventDefault();
-    if (isFormValid()) {
-      const blogForm = buildFormData();
+  const validateForm = () => {
+    const newValidation = { ...validation };
+    let isValid = true;
 
-      if (addBlog) {
-        dispatch(createBlog(blogForm));
-      } else if (editBlog) {
-        dispatch(updateBlog(blogForm));
+    // Check if the blog has at least one category
+    if (!blog.categories || blog.categories.length === 0) {
+      newValidation.categories = {
+        isValid: false,
+        message: "At least one category is required.",
+      };
+      if (
+        selectRef.current &&
+        formRef.current.classList.contains("was-validated")
+      ) {
+        selectRef.current.classList.remove("is-valid");
+        selectRef.current.classList.add("is-invalid");
       }
-      resetBlog();
-      modalInstance.current?.hide();
+      isValid = false;
+    } else {
+      newValidation.categories = { isValid: true, message: "Looks good!" };
+      if (
+        selectRef.current &&
+        formRef.current.classList.contains("was-validated")
+      ) {
+        selectRef.current.classList.remove("is-invalid");
+        selectRef.current.classList.add("is-valid");
+      }
     }
+    // Check if the blog has a title and description
+    if (!blog.title.trim()) {
+      newValidation.title = { isValid: false, message: "Title is required." };
+      isValid = false;
+    } else {
+      newValidation.title = { isValid: true, message: "Looks good!" };
+    }
+
+    if (!blog.description.trim()) {
+      newValidation.description = {
+        isValid: false,
+        message: "Description is required.",
+      };
+      isValid = false;
+    } else {
+      newValidation.description = { isValid: true, message: "Looks good!" };
+    }
+    // Check if the blog content has at least one section and each section has a header and text
+    if (
+      blog.content.some(
+        (section) =>
+          !section.sectionHeader.trim() || !section.sectionText.trim()
+      )
+    ) {
+      newValidation.content = {
+        isValid: false,
+        message: "All content sections must have a header and text.",
+      };
+      isValid = false;
+    } else if (blog.content.length === 0) {
+      newValidation.content = {
+        isValid: false,
+        message: "At least one content section is required.",
+      };
+      isValid = false;
+    } else {
+      newValidation.content = { isValid: true, message: "Looks good!" };
+    }
+    setValidation(newValidation);
+    return isValid;
+  };
+
+  const resetValidation = () => {
+    formRef.current.classList.remove("was-validated");
+    selectRef.current.classList.remove("is-invalid", "is-valid");
+    setValidation({
+      categories: { isValid: true, message: "" },
+      title: { isValid: true, message: "" },
+      description: { isValid: true, message: "" },
+      content: { isValid: true, message: "" },
+    });
   };
 
   const onImageChange = (e) => {
@@ -98,14 +179,26 @@ export default function AddEditBlogModal() {
     });
   };
 
-  const isFormValid = () => {
-    const form = document.getElementById("blogForm");
-    form.classList.add("was-validated");
-    return form.checkValidity();
+  // These functions handle exiting the modal
+  const onSubmit = (e) => {
+    e.preventDefault();
+    formRef.current.classList.add("was-validated");
+    if (validateForm()) {
+      const blogForm = buildFormData();
+      if (addBlog) {
+        dispatch(createBlog(blogForm));
+      } else if (editBlog) {
+        dispatch(updateBlog(blogForm));
+      }
+      resetBlog();
+      formRef.current.classList.remove("was-validated");
+      resetValidation();
+      modalInstance.current?.hide();
+    }
   };
-
   const onCloseModal = (e) => {
     e.preventDefault();
+    resetValidation();
     resetBlog();
     modalInstance.current?.hide();
   };
@@ -138,7 +231,7 @@ export default function AddEditBlogModal() {
               ></button>
             </div>
             <div className="modal-body">
-              <form id="blogForm">
+              <form id="blogForm" ref={formRef}>
                 <div>
                   <FormImage image={blogImage} onChange={onImageChange} />
                 </div>
@@ -152,6 +245,7 @@ export default function AddEditBlogModal() {
                   <select
                     className="form-select"
                     id="categoryInputSelect"
+                    ref={selectRef}
                     onChange={(e) => {
                       const category = categories.find(
                         (x) => x.id === e.target.value
@@ -174,6 +268,15 @@ export default function AddEditBlogModal() {
                       </option>
                     ))}
                   </select>
+                  <div
+                    className={
+                      validation.categories.isValid
+                        ? "valid-feedback"
+                        : "invalid-feedback"
+                    }
+                  >
+                    {validation.categories.message}
+                  </div>
                 </div>
                 <div className="mb-3">
                   <Categories
@@ -203,7 +306,15 @@ export default function AddEditBlogModal() {
                     }}
                     required
                   />
-                  <div className="valid-feedback">Looks good!</div>
+                  <div
+                    className={
+                      validation.title.isValid
+                        ? "valid-feedback"
+                        : "invalid-feedback"
+                    }
+                  >
+                    {validation.title.message}
+                  </div>
                 </div>
                 <div className="mb-3">
                   <label htmlFor="description" className="form-label">
@@ -219,7 +330,15 @@ export default function AddEditBlogModal() {
                     }}
                     required
                   />
-                  <div className="valid-feedback">Looks good!</div>
+                  <div
+                    className={
+                      validation.description.isValid
+                        ? "valid-feedback"
+                        : "invalid-feedback"
+                    }
+                  >
+                    {validation.description.message}
+                  </div>
                 </div>
                 <label htmlFor="description" className="form-label">
                   Content
@@ -249,7 +368,6 @@ export default function AddEditBlogModal() {
                         }}
                         required
                       />
-                      <div className="valid-feedback">Looks good!</div>
                     </div>
                     <div className="mb-3">
                       <label
@@ -273,10 +391,18 @@ export default function AddEditBlogModal() {
                         }}
                         required
                       />
-                      <div className="valid-feedback">Looks good!</div>
                     </div>
                   </div>
                 ))}
+                <div
+                  className={
+                    validation.content.isValid
+                      ? "valid-feedback mb-3"
+                      : "invalid-feedback mb-3"
+                  }
+                >
+                  {validation.content.message}
+                </div>
                 <div
                   style={{
                     display: "flex",
@@ -325,6 +451,7 @@ export default function AddEditBlogModal() {
               <button
                 type="button"
                 className="btn btn-secondary"
+                data-bs-dismiss="modal"
                 onClick={onCloseModal}
               >
                 Close
