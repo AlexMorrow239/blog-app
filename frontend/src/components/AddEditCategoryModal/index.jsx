@@ -1,6 +1,8 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState, Fragment } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Modal } from "bootstrap";
+import Wheel from "@uiw/react-color-wheel";
+import { hsvaToHex } from "@uiw/color-convert";
 
 import {
   createCategory,
@@ -11,6 +13,8 @@ import {
 
 export default function AddEditCategoryModal() {
   const dispatch = useDispatch();
+
+  const [hsva, setHsva] = useState({ h: 214, s: 43, v: 90, a: 1 });
 
   const addCategory = useSelector((state) => state.categories.addCategory);
   const editCategory = useSelector((state) => state.categories.editCategory);
@@ -29,7 +33,7 @@ export default function AddEditCategoryModal() {
 
   useEffect(() => {
     if (addCategory) {
-      dispatch(setModifyCategory(addCategory));
+      dispatch(setModifyCategory({ ...addCategory, color: hsvaToHex(hsva) }));
       modalInstance.current?.show();
     } else if (editCategory) {
       dispatch(setModifyCategory(editCategory));
@@ -126,26 +130,49 @@ export default function AddEditCategoryModal() {
                 <div className="valid-feedback">Looks good!</div>
               </div>
               <div className="mb-3">
-                <label htmlFor="color" className="form-label">
-                  Color Hexadecimal
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="color"
-                  value={modifyCategory?.color || ""}
-                  onChange={(e) => {
-                    dispatch(
-                      setModifyCategory({
-                        ...modifyCategory,
-                        color: e.target.value,
-                      })
-                    );
-                  }}
-                  required
-                ></input>
-                <div className="valid-feedback">Looks good!</div>
+                <label className="form-label">Color</label>
+                <div className="d-flex justify-content-evenly">
+                  <Wheel
+                    color={hsva}
+                    onChange={(color) => {
+                      dispatch(
+                        setModifyCategory({
+                          ...modifyCategory,
+                          color: hsvaToHex(color.hsva),
+                        })
+                      );
+                      setHsva(color.hsva);
+                    }}
+                  />
+                  <div
+                    style={{
+                      width: "200px",
+                      height: "200px",
+                      borderRadius: "50%",
+                      background: hsvaToHex(hsva),
+                    }}
+                  ></div>
+                </div>
               </div>
+              <label htmlFor="color" className="form-label">
+                Color: Hexadecimal
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id="color"
+                value={modifyCategory?.color || ""}
+                onChange={(e) => {
+                  dispatch(
+                    setModifyCategory({
+                      ...modifyCategory,
+                      color: e.target.value,
+                    })
+                  );
+                }}
+                required
+              ></input>
+              <div className="valid-feedback">Looks good!</div>
             </form>
           </div>
           <div className="modal-footer">
