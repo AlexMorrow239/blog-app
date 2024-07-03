@@ -15,6 +15,14 @@ export default function AddEditCategoryModal() {
   const dispatch = useDispatch();
 
   const [hsva, setHsva] = useState({ h: 214, s: 43, v: 90, a: 1 });
+  const [validation, setValidation] = useState({
+    title: { isValid: true, message: "" },
+    description: { isValid: true, message: "" },
+    color: { isValid: true, message: "" },
+  });
+
+  const formRef = useRef(null);
+  const colorRef = useRef(null);
 
   const addCategory = useSelector((state) => state.categories.addCategory);
   const editCategory = useSelector((state) => state.categories.editCategory);
@@ -41,28 +49,102 @@ export default function AddEditCategoryModal() {
     }
   }, [dispatch, addCategory, editCategory]);
 
+  useEffect(() => {
+    if (modifyCategory) {
+      validateForm();
+    }
+  }, [modifyCategory]);
+
+  const validateForm = () => {
+    const newValidation = { ...validation };
+    let isValid = true;
+
+    if (!modifyCategory?.title.trim()) {
+      newValidation.title = { isValid: false, message: "Title is required" };
+      isValid = false;
+    } else {
+      newValidation.title = { isValid: true, message: "Looks good!" };
+    }
+
+    if (!modifyCategory?.description.trim()) {
+      newValidation.description = {
+        isValid: false,
+        message: "Description is required",
+      };
+      isValid = false;
+    } else {
+      newValidation.description = { isValid: true, message: "Looks good!" };
+    }
+
+    if (!modifyCategory?.color.trim()) {
+      newValidation.color = {
+        isValid: false,
+        message: "Enter a hex number or select color using the color wheel",
+      };
+      if (
+        colorRef.current &&
+        formRef.current.classList.contains("was-validated")
+      ) {
+        colorRef.current.classList.replace("is-valid", "is-invalid");
+      }
+      isValid = false;
+    } else if (!/^#[0-9A-F]{6}$/i.test(modifyCategory?.color)) {
+      newValidation.color = {
+        isValid: false,
+        message: "Enter a valid hex number",
+      };
+      if (
+        colorRef.current &&
+        formRef.current.classList.contains("was-validated")
+      ) {
+        colorRef.current.classList.remove("is-valid");
+        colorRef.current.classList.add("is-invalid");
+      }
+      isValid = false;
+    } else {
+      newValidation.color = { isValid: true, message: "Looks good!" };
+      if (
+        colorRef.current &&
+        formRef.current.classList.contains("was-validated")
+      ) {
+        colorRef.current.classList.replace("is-invalid", "is-valid");
+      }
+    }
+
+    setValidation(newValidation);
+    return isValid;
+  };
+
+  const resetValidation = () => {
+    formRef.current.classList.remove("was-validated");
+    colorRef.current.classList.remove("is-invalid", "is-valid");
+    setValidation({
+      title: { isValid: true, message: "" },
+      description: { isValid: true, message: "" },
+      color: { isValid: true, message: "" },
+    });
+  };
   const onSubmit = (e) => {
     e?.preventDefault();
-    if (isFormValid()) {
+    formRef.current.classList.add("was-validated");
+    if (validateForm()) {
       if (addCategory) {
         dispatch(createCategory(modifyCategory));
       } else if (editCategory) {
         dispatch(updateCategory(modifyCategory));
       }
       dispatch(resetCategoryModifiers());
+      formRef.current.classList.remove("was-validated");
+      resetValidation();
       modalInstance.current?.hide();
     }
   };
 
-  const onCloseModal = () => {
+  const onCloseModal = (e) => {
+    e.preventDefault();
+    resetValidation();
     dispatch(resetCategoryModifiers());
     modalInstance.current?.hide();
-  };
-
-  const isFormValid = () => {
-    const form = document.getElementById("categoryForm");
-    form?.classList?.add("was-validated");
-    return form?.checkValidity();
   };
 
   return (
@@ -82,11 +164,13 @@ export default function AddEditCategoryModal() {
             <button
               type="button"
               className="btn-close"
+              aria-label="Close"
+              data-bs-dismiss="modal"
               onClick={onCloseModal}
             ></button>
           </div>
           <div className="modal-body">
-            <form id="categoryForm">
+            <form id="categoryForm" ref={formRef}>
               <div className="mb-3">
                 <label htmlFor="title" className="form-label">
                   Title
@@ -106,7 +190,15 @@ export default function AddEditCategoryModal() {
                   }}
                   required
                 />
-                <div className="valid-feedback">Looks good!</div>
+                <div
+                  className={
+                    validation.title.isValid
+                      ? "valid-feedback"
+                      : "invalid-feedback"
+                  }
+                >
+                  {validation.title.message}
+                </div>
               </div>
               <div className="mb-3">
                 <label htmlFor="description" className="form-label">
@@ -127,7 +219,15 @@ export default function AddEditCategoryModal() {
                   }}
                   required
                 />
-                <div className="valid-feedback">Looks good!</div>
+                <div
+                  className={
+                    validation.description.isValid
+                      ? "valid-feedback"
+                      : "invalid-feedback"
+                  }
+                >
+                  {validation.description.message}
+                </div>
               </div>
               <div className="mb-3">
                 <label className="form-label">Color</label>
@@ -154,15 +254,17 @@ export default function AddEditCategoryModal() {
                   ></div>
                 </div>
               </div>
-              <label htmlFor="color" className="form-label">
+              <label htmlFor="colorInput" className="form-label">
                 Color: Hexadecimal
               </label>
               <input
                 type="text"
                 className="form-control"
-                id="color"
+                id="colorInput"
                 value={modifyCategory?.color || ""}
+                ref={colorRef}
                 onChange={(e) => {
+                  e.preventDefault();
                   dispatch(
                     setModifyCategory({
                       ...modifyCategory,
@@ -172,13 +274,22 @@ export default function AddEditCategoryModal() {
                 }}
                 required
               ></input>
-              <div className="valid-feedback">Looks good!</div>
+              <div
+                className={
+                  validation.color.isValid
+                    ? "valid-feedback"
+                    : "invalid-feedback"
+                }
+              >
+                {validation.color.message}
+              </div>
             </form>
           </div>
           <div className="modal-footer">
             <button
               type="button"
               className="btn btn-secondary"
+              data-bs-dismiss="modal"
               onClick={onCloseModal}
             >
               Close
