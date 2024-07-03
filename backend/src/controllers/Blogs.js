@@ -162,7 +162,10 @@ const deleteBlogByID = async (req, res) => {
     const blog = await Blog.findByIdAndDelete(req.params.id);
     // const blog = await Blog.findById(req.params.id);
     if (blog) {
-      if (blog.image) {
+      if (
+        blog.image &&
+        blog.image !== "https://storage.googleapis.com/ix-blog-app/default.jpeg"
+      ) {
         // Take the URL, get the last segment, and remove the query parameters
         const encodedFileName = blog.image.split("/").pop().split("?")[0];
         const decodedFileName = decodeURIComponent(encodedFileName); // Decode the URL
