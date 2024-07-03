@@ -18,6 +18,11 @@ export default function BlogItem({ index, blog, imageOrientation }) {
   const user = JSON.parse(localStorage.getItem("user"));
   const path = window.location.pathname;
 
+  const radiusLeft =
+    path === "/home" || path === "/" || path === "" ? "15%" : "0";
+  const radiusRight =
+    path === "/home" || path === "/" || path === "" ? "15%" : "0";
+
   const navigateToBlog = () => {
     navigate(`/blog/${blog.id}`);
   };
@@ -51,7 +56,10 @@ export default function BlogItem({ index, blog, imageOrientation }) {
         key={index}
         className="card-1"
         onClick={navigateToBlog}
-        style={{ borderRadius: "0" }}
+        style={{
+          borderTopLeftRadius: radiusLeft,
+          borderBottomRightRadius: radiusRight,
+        }}
       >
         <img src={blog.image} className="card-img-top" alt="..." />
         <div className="card-text-bottom bg-body-secondary">
