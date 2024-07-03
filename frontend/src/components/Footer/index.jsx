@@ -7,19 +7,13 @@ export default function Footer() {
       <footer className="py-3 my-4">
         <ul className="nav justify-content-center border-bottom pb-3 mb-3">
           <li className="nav-item">
-            <a href="" className="nav-link px-2 text-muted">
-              Home
-            </a>
+            <button className="nav-link px-2 text-muted">Home</button>
           </li>
           <li className="nav-item">
-            <a href="" className="nav-link px-2 text-muted">
-              Blogs
-            </a>
+            <button className="nav-link px-2 text-muted">Blogs</button>
           </li>
           <li className="nav-item">
-            <a href="" className="nav-link px-2 text-muted">
-              Categories
-            </a>
+            <button className="nav-link px-2 text-muted">Categories</button>
           </li>
         </ul>
         <p className="text-center text-muted">Created By: Alex Morrow</p>

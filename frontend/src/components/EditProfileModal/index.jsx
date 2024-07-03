@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useRef } from "react";
 import { Modal } from "bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -12,7 +12,16 @@ import FormImage from "../FormImage";
 
 export default function EditProfileModal() {
   const dispatch = useDispatch();
+
   const [selectedFile, setSelectedFile] = useState(null);
+  const [validation, setValidation] = useState({
+    firstName: { isValid: true, message: "" },
+    lastName: { isValid: true, message: "" },
+    bio: { isValid: true, message: "" },
+  });
+
+  const formRef = useRef();
+  const bioRef = useRef();
 
   const authorSlice = useSelector((state) => state.author);
 
@@ -23,13 +32,10 @@ export default function EditProfileModal() {
 
   useEffect(() => {
     if (authorSlice.editAuthor) {
+      validateForm();
       editProfileModal?.show();
     } else {
       editProfileModal?.hide();
-      const backdrop = document.querySelector(".modal-backdrop");
-      if (backdrop) {
-        backdrop.parentNode.removeChild(backdrop);
-      }
     }
   }, [authorSlice.editAuthor, editProfileModal]);
 
@@ -44,35 +50,101 @@ export default function EditProfileModal() {
     return formData;
   };
 
-  const isFormValid = () => {
-    const form = document.getElementById("authorForm");
-    form?.classList?.add("was-validated");
-    return form?.checkValidity();
+  const validateForm = () => {
+    const newValidation = { ...validation };
+    let isValid = true;
+
+    if (!authorSlice.editAuthor.firstName.trim()) {
+      newValidation.firstName = {
+        isValid: false,
+        message: "First Name is required.",
+      };
+      isValid = false;
+    } else {
+      newValidation.firstName = {
+        isValid: true,
+        message: "Looks good",
+      };
+    }
+
+    if (!authorSlice.editAuthor.lastName.trim()) {
+      newValidation.lastName = {
+        isValid: false,
+        message: "First Name is required.",
+      };
+      isValid = false;
+    } else {
+      newValidation.lastName = {
+        isValid: true,
+        message: "Looks good",
+      };
+    }
+
+    if (!authorSlice.editAuthor.bio.trim()) {
+      newValidation.bio = {
+        isValid: false,
+        message: "First Name is required.",
+      };
+      if (
+        bioRef.current &&
+        formRef.current.classList.contains("was-validated")
+      ) {
+        bioRef.current.classList.add("is-invalid");
+        bioRef.current.classList.remove("is-valid");
+      }
+      isValid = false;
+    } else {
+      newValidation.bio = {
+        isValid: true,
+        message: "Looks good",
+      };
+      if (
+        bioRef.current &&
+        formRef.current.classList.contains("was-validated")
+      ) {
+        bioRef.current.classList.remove("is-invalid");
+        bioRef.current.classList.add("is-valid");
+      }
+    }
+
+    setValidation(newValidation);
+    return isValid;
+  };
+
+  const resetValidation = () => {
+    formRef.current.classList.remove("was-validated");
+    bioRef.current.classList.remove("is-invalid", "is-valid");
+    setValidation({
+      firstName: { isValid: true, message: "" },
+      lastName: { isValid: true, message: "" },
+      bio: { isValid: true, message: "" },
+    });
   };
 
   const onSubmit = (e) => {
     e?.preventDefault();
-    if (isFormValid()) {
+    formRef.current.classList.add("was-validated");
+    if (validateForm()) {
       const authorForm = buildFormData();
       if (authorSlice.editAuthor) {
         dispatch(updateAuthor(authorForm));
       }
-    }
-    editProfileModal?.hide();
-    const backdrop = document.querySelector(".modal-backdrop");
-    if (backdrop) {
-      backdrop.parentNode.removeChild(backdrop);
+      setEditAuthor(null);
+      formRef.current.classList.remove("was-validated");
+      resetValidation();
+      editProfileModal?.hide();
+      const backdrop = document.querySelector(".modal-backdrop");
+      if (backdrop) {
+        backdrop.parentNode.removeChild(backdrop);
+      }
     }
   };
 
   const onCloseModal = (e) => {
     e?.preventDefault();
+    resetValidation();
     editProfileModal?.hide();
     dispatch(setEditAuthor(null));
-    const backdrop = document.querySelector(".modal-backdrop");
-    if (backdrop) {
-      backdrop.parentNode.removeChild(backdrop);
-    }
   };
 
   const onImageChange = (e) => {
@@ -107,7 +179,7 @@ export default function EditProfileModal() {
               ></button>
             </div>
             <div className="modal-body">
-              <form id="authorForm" noValidate>
+              <form id="authorForm" ref={formRef}>
                 <div>
                   <FormImage
                     image={authorSlice.authorImage}
@@ -133,7 +205,15 @@ export default function EditProfileModal() {
                     }}
                     required
                   />
-                  <div className="valid-feedback">Looks good!</div>
+                  <div
+                    className={
+                      validation.firstName.isValid
+                        ? "valid-feedback"
+                        : "invalid-feedback"
+                    }
+                  >
+                    {validation.firstName.message}
+                  </div>
                 </div>
 
                 <div className="mb-3">
@@ -155,17 +235,26 @@ export default function EditProfileModal() {
                     }}
                     required
                   />
-                  <div className="valid-feedback">Looks good!</div>
+                  <div
+                    className={
+                      validation.lastName.isValid
+                        ? "valid-feedback"
+                        : "invalid-feedback"
+                    }
+                  >
+                    {validation.lastName.message}
+                  </div>
                 </div>
 
                 <div className="mb-3">
-                  <label htmlFor="bio" className="form-label">
+                  <label htmlFor="bioInput" className="form-label">
                     Bio
                   </label>
                   <textarea
                     className="form-control"
-                    id="bio"
+                    id="bioInput"
                     value={authorSlice.editAuthor?.bio || ""}
+                    ref={bioRef}
                     onChange={(e) => {
                       dispatch(
                         setEditAuthor({
@@ -176,7 +265,15 @@ export default function EditProfileModal() {
                     }}
                     required
                   />
-                  <div className="valid-feedback">Looks good!</div>
+                  <div
+                    className={
+                      validation.bio.isValid
+                        ? "valid-feedback"
+                        : "invalid-feedback"
+                    }
+                  >
+                    {validation.bio.message}
+                  </div>
                 </div>
 
                 <div className="mb-3">
@@ -198,6 +295,8 @@ export default function EditProfileModal() {
                     }}
                     required
                     autoComplete="email"
+                    disabled
+                    readOnly
                   />
                   <div className="valid-feedback">Looks good!</div>
                 </div>
