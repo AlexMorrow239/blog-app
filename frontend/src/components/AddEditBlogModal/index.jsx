@@ -227,6 +227,7 @@ export default function AddEditBlogModal() {
                 type="button"
                 className="btn-close"
                 aria-label="Close"
+                data-bs-dismiss="modal"
                 onClick={onCloseModal}
               ></button>
             </div>
