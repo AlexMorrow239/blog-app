@@ -26,7 +26,8 @@ export default function BlogItemText({ blogPost, headerFontSize }) {
         {blogPost.title}
       </p>
       <p style={{ fontSize: "16px", color: "#667085", textAlign: "left" }}>
-        {blogPost.description.substring(0, 100)}...
+        {blogPost.description.substring(0, 100)}
+        {blogPost.description.length < 100 ? "" : "..."}
       </p>
       <Categories blogPost={blogPost?.categories} />
     </div>

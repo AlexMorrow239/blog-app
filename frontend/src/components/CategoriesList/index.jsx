@@ -59,13 +59,15 @@ export default function CategoriesList() {
                 backgroundColor: category.color + "33",
                 position: "relative",
                 zIndex: 0,
+                border: "3px solid " + (category.color + "66"),
               }}
             >
               <h5 className="card-title">{category.title}</h5>
             </div>
-            <div className="card-body">
+            <div className="card-body bg-body-secondary">
               <p className="card-text">
-                {category.description.substring(0, 100)} ...
+                {category.description.substring(0, 120)}
+                {category.description.length < 120 ? "" : "..."}
               </p>
             </div>
             {user &&

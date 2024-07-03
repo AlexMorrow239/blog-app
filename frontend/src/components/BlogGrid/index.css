@@ -30,10 +30,10 @@
 .item-4 {
   padding: 16px 0px;
   width: 100%;
-  height: 246px;
+  height: 500px;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 992px) {
   .blog-grid-container {
     display: block;
     height: auto;
@@ -51,15 +51,18 @@
   .item-2 {
     padding-left: 0px;
     padding-bottom: 0px;
+    margin-top: 2rem;
   }
 
   .item-3 {
     padding-left: 0px;
     padding-top: 0px;
+    margin-top: 2rem;
   }
 
   .item-4 {
     padding: 0px;
     height: 100%;
+    margin-top: 2rem;
   }
 }

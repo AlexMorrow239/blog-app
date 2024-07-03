@@ -11,14 +11,14 @@ export default function BlogGrid({ blogPosts }) {
   }
   return (
     <>
-      <div className="blog-grid-container py-2 w-100">
-        <div className="item-1 w-50">
+      <div className="blog-grid-container py-2">
+        <div className="item-1">
           {blogPosts.length > 0 && (
             <BlogItem imageOrientation={"top"} index={0} blog={blogPosts[0]} />
           )}
         </div>
 
-        <div className="right-block w-50">
+        <div className="right-block">
           {blogPosts.length > 1 && (
             <div className="item-2 h-50">
               <BlogItem

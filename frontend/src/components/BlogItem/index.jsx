@@ -47,9 +47,14 @@ export default function BlogItem({ index, blog, imageOrientation }) {
   };
   if (imageOrientation === "top") {
     return (
-      <div key={index} className="card-1" onClick={navigateToBlog}>
+      <div
+        key={index}
+        className="card-1"
+        onClick={navigateToBlog}
+        style={{ borderRadius: "0" }}
+      >
         <img src={blog.image} className="card-img-top" alt="..." />
-        <div className="card-text-bottom">
+        <div className="card-text-bottom bg-body-secondary">
           <BlogItemText blogPost={blog} headerFontSize="20px" />
           <Categories categories={blog.categories} removeCategory={null} />
           {user &&
@@ -64,7 +69,7 @@ export default function BlogItem({ index, blog, imageOrientation }) {
     return (
       <div key={index} className="card-2" onClick={navigateToBlog}>
         <img src={blog.image} className="card-img-left" alt="..." />
-        <div className="card-text-right">
+        <div className="card-text-right bg-body-secondary">
           <BlogItemText blogPost={blog} headerFontSize="20px" />
           <Categories categories={blog.categories} removeCategory={null} />
           {user &&

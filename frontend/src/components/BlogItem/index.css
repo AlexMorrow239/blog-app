@@ -2,6 +2,8 @@
   height: 100%;
   overflow: hidden;
   position: relative;
+  border-top-left-radius: 15%;
+  border-bottom-right-radius: 15%;
 }
 
 .card-1:hover {
@@ -14,6 +16,11 @@
   display: flex;
   overflow: hidden;
   position: relative;
+}
+
+.item-4 .card-2 {
+  border-bottom-left-radius: 15%;
+  border-top-right-radius: 15%;
 }
 
 .card-2:hover {
@@ -46,9 +53,18 @@
   padding: 8px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 992px) {
+  .card-1 {
+    border-radius: 0;
+  }
   .card-2 {
     display: block;
+    border-radius: 0;
+  }
+
+  .item-4 .card-2 {
+    border-radius: 0;
+    height: 100%;
   }
 
   .card-img-left {
