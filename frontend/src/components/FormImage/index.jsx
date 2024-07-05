@@ -5,11 +5,12 @@ import "./index.css";
 
 export default function FormImage({ image, onChange }) {
   const fileInput = useRef();
+  const path = window.location.pathname;
 
   return (
     <div className="mb-3">
       <label htmlFor="fileInput" className="form-label">
-        Image
+        {path === "/register" ? "Image (optional)" : "Image"}
       </label>
       <input
         ref={fileInput}
@@ -26,7 +27,15 @@ export default function FormImage({ image, onChange }) {
             fileInput?.current?.click();
           }}
         >
-          <img className="img-upload" src={image} alt="blog.title" />
+          <img
+            className={`${
+              path === "/register" || path.startsWith("/profile")
+                ? "avatar profile-img-upload"
+                : "img-upload"
+            }`}
+            src={image}
+            alt="blog.title"
+          />
         </div>
       ) : (
         <div

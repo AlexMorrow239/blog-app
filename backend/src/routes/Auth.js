@@ -15,7 +15,7 @@ router.post("/login", (req, res) => {
  * @route POST api/auth/register
  * @description Register User
  */
-router.post("/register", (req, res) => {
+router.post("/register", upload.single("image"), (req, res) => {
   register(req, res);
 });
 

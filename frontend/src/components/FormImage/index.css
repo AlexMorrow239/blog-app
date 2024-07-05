@@ -10,6 +10,11 @@
   margin: auto;
 }
 
+.profile-img-upload {
+  max-height: 100%;
+  width: auto;
+}
+
 .add-image {
   font-size: 2rem;
   line-height: 150px;

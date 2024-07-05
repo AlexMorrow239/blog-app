@@ -12,9 +12,20 @@ const generateToken = (id) => {
 const register = async (req, res) => {
   try {
     const { firstName, lastName, email, bio, password } = req.body;
+
+    let imageUrl = "";
+    if (req?.file?.path) {
+      imageUrl = await GoogleCloudService.uploadToFirebaseStorage(
+        req?.file?.path,
+        req?.file?.path
+      );
+    }
+
     //check payload
     if (!firstName || !lastName || !email || !bio || !password) {
-      res.status(400).json({ message: "All fields are required" });
+      res
+        .status(400)
+        .json({ message: "All fields except profile image are required" });
       return;
     }
     // check if email already exists
@@ -32,6 +43,7 @@ const register = async (req, res) => {
       lastName,
       email,
       bio,
+      image: imageUrl || undefined,
       password: hashedPassword,
     });
     const newUser = await user.save();
