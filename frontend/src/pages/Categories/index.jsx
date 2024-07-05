@@ -67,7 +67,7 @@ export default function CategoriesPage() {
           <p className="page-subtitle">Categories</p>
           <AddButton />
         </div>
-        <CategoryList></CategoryList>
+        <CategoryList />
       </div>
       <Footer />
       <AddEditCategoryModal />
