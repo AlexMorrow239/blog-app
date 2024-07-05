@@ -1,13 +1,11 @@
-import React, { useEffect, useMemo, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Modal } from "bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-
 import {
   updateAuthor,
   setEditAuthor,
   setAuthorImage,
 } from "../../features/authorSlice";
-
 import FormImage from "../FormImage";
 
 export default function EditProfileModal() {
@@ -25,19 +23,23 @@ export default function EditProfileModal() {
 
   const authorSlice = useSelector((state) => state.author);
 
-  const modalEl = document.getElementById("editProfileModal");
-  const editProfileModal = useMemo(() => {
-    return modalEl ? new Modal(modalEl) : null;
-  }, [modalEl]);
+  const editProfileModalRef = useRef(null);
+  const editProfileModalInstance = useRef(null);
+
+  useEffect(() => {
+    if (editProfileModalRef.current) {
+      editProfileModalInstance.current = new Modal(editProfileModalRef.current);
+    }
+  }, []);
 
   useEffect(() => {
     if (authorSlice.editAuthor) {
       validateForm();
-      editProfileModal?.show();
+      editProfileModalInstance.current?.show();
     } else {
-      editProfileModal?.hide();
+      editProfileModalInstance.current?.hide();
     }
-  }, [authorSlice.editAuthor, editProfileModal]);
+  }, [authorSlice.editAuthor]);
 
   const buildFormData = () => {
     const formData = new FormData();
@@ -70,7 +72,7 @@ export default function EditProfileModal() {
     if (!authorSlice.editAuthor.lastName.trim()) {
       newValidation.lastName = {
         isValid: false,
-        message: "First Name is required.",
+        message: "Last Name is required.",
       };
       isValid = false;
     } else {
@@ -83,7 +85,7 @@ export default function EditProfileModal() {
     if (!authorSlice.editAuthor.bio.trim()) {
       newValidation.bio = {
         isValid: false,
-        message: "First Name is required.",
+        message: "Bio is required.",
       };
       if (
         bioRef.current &&
@@ -113,7 +115,9 @@ export default function EditProfileModal() {
 
   const resetValidation = () => {
     formRef.current.classList.remove("was-validated");
-    bioRef.current.classList.remove("is-invalid", "is-valid");
+    if (bioRef.current) {
+      bioRef.current.classList.remove("is-invalid", "is-valid");
+    }
     setValidation({
       firstName: { isValid: true, message: "" },
       lastName: { isValid: true, message: "" },
@@ -122,28 +126,24 @@ export default function EditProfileModal() {
   };
 
   const onSubmit = (e) => {
-    e?.preventDefault();
+    e.preventDefault();
     formRef.current.classList.add("was-validated");
     if (validateForm()) {
       const authorForm = buildFormData();
       if (authorSlice.editAuthor) {
         dispatch(updateAuthor(authorForm));
       }
-      setEditAuthor(null);
+      dispatch(setEditAuthor(null));
       formRef.current.classList.remove("was-validated");
       resetValidation();
-      editProfileModal?.hide();
-      const backdrop = document.querySelector(".modal-backdrop");
-      if (backdrop) {
-        backdrop.parentNode.removeChild(backdrop);
-      }
+      editProfileModalInstance.current?.hide();
     }
   };
 
   const onCloseModal = (e) => {
     e?.preventDefault();
     resetValidation();
-    editProfileModal?.hide();
+    editProfileModalInstance.current?.hide();
     dispatch(setEditAuthor(null));
   };
 
@@ -162,24 +162,26 @@ export default function EditProfileModal() {
         className="modal fade"
         id="editProfileModal"
         tabIndex="-1"
-        aria-labelledby="addEditModalLabel"
+        aria-labelledby="editProfileModalLabel"
         aria-hidden="true"
+        ref={editProfileModalRef}
       >
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
-              <h1 className="modal-title" id="addEditModalLabel">
+              <h1 className="modal-title" id="editProfileModalLabel">
                 Edit Profile
               </h1>
               <button
                 type="button"
                 className="btn-close"
                 data-bs-dismiss="modal"
+                aria-label="Close"
                 onClick={onCloseModal}
               ></button>
             </div>
             <div className="modal-body">
-              <form id="authorForm" ref={formRef}>
+              <form id="authorForm" ref={formRef} noValidate>
                 <div>
                   <FormImage
                     image={authorSlice.authorImage}
