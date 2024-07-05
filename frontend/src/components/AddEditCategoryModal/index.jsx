@@ -155,7 +155,7 @@ export default function AddEditCategoryModal() {
       aria-hidden="true"
       ref={modalRef}
     >
-      <div className="modal-dialog modal-xl">
+      <div className="modal-dialog modal-md">
         <div className="modal-content">
           <div className="modal-header">
             <h1 className="modal-title fs-5" id="addEditCategoryModalLabel">
@@ -231,7 +231,7 @@ export default function AddEditCategoryModal() {
               </div>
               <div className="mb-3">
                 <label className="form-label">Color</label>
-                <div className="d-flex justify-content-evenly">
+                <div className="d-flex justify-content-evenly align-items-center flex-column flex-sm-row">
                   <Wheel
                     color={hsva}
                     onChange={(color) => {
@@ -245,6 +245,7 @@ export default function AddEditCategoryModal() {
                     }}
                   />
                   <div
+                    className="my-3 my-sm-0"
                     style={{
                       width: "200px",
                       height: "200px",
