@@ -2,6 +2,9 @@
   height: 100%;
   overflow: hidden;
   position: relative;
+}
+
+.card-1-home {
   border-top-left-radius: 15%;
   border-bottom-right-radius: 15%;
 }
@@ -57,6 +60,11 @@
   .card-1 {
     border-radius: 0;
   }
+
+  .card-1-home {
+    border-radius: 0;
+  }
+
   .card-2 {
     display: block;
     border-radius: 0;

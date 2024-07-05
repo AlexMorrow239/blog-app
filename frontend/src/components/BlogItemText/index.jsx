@@ -4,7 +4,11 @@ import PropTypes from "prop-types";
 import Categories from "../Categories";
 import "./index.css";
 
-export default function BlogItemText({ blogPost, headerFontSize }) {
+export default function BlogItemText({
+  blogPost,
+  headerFontSize,
+  blogPostLength,
+}) {
   return (
     <div>
       <div style={{ display: "flex" }}>
@@ -26,8 +30,8 @@ export default function BlogItemText({ blogPost, headerFontSize }) {
         {blogPost.title}
       </p>
       <p style={{ fontSize: "16px", color: "#667085", textAlign: "left" }}>
-        {blogPost.description.substring(0, 100)}
-        {blogPost.description.length < 100 ? "" : "..."}
+        {blogPost.description.substring(0, blogPostLength || 200)}
+        {blogPost.description.length < 100 ? "" : " ..."}
       </p>
       <Categories blogPost={blogPost?.categories} />
     </div>
@@ -36,4 +40,5 @@ export default function BlogItemText({ blogPost, headerFontSize }) {
 BlogItemText.propTypes = {
   blogPost: PropTypes.object.isRequired,
   headerFontSize: PropTypes.string.isRequired,
+  postLength: PropTypes.number,
 };

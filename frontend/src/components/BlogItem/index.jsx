@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -12,16 +12,21 @@ import Categories from "../Categories";
 
 import { setEditBlog, setDeleteBlog } from "../../features/blogsSlice";
 
-export default function BlogItem({ index, blog, imageOrientation }) {
+export default function BlogItem({
+  index,
+  blog,
+  imageOrientation,
+  blogPostLength,
+}) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user"));
   const path = window.location.pathname;
 
-  const radiusLeft =
-    path === "/home" || path === "/" || path === "" ? "15%" : "0";
-  const radiusRight =
-    path === "/home" || path === "/" || path === "" ? "15%" : "0";
+  const card1Ref = useRef(null);
+
+  if (path === "/home" || path === "/" || path === "")
+    card1Ref?.current?.classList.add("card-1-home");
 
   const navigateToBlog = () => {
     navigate(`/blog/${blog.id}`);
@@ -55,15 +60,16 @@ export default function BlogItem({ index, blog, imageOrientation }) {
       <div
         key={index}
         className="card-1"
+        ref={card1Ref}
         onClick={navigateToBlog}
-        style={{
-          borderTopLeftRadius: radiusLeft,
-          borderBottomRightRadius: radiusRight,
-        }}
       >
         <img src={blog.image} className="card-img-top" alt="..." />
         <div className="card-text-bottom bg-body-secondary">
-          <BlogItemText blogPost={blog} headerFontSize="20px" />
+          <BlogItemText
+            blogPost={blog}
+            headerFontSize="20px"
+            blogPostLength={blogPostLength}
+          />
           <Categories categories={blog.categories} removeCategory={null} />
           {user &&
             user.token &&
@@ -78,7 +84,11 @@ export default function BlogItem({ index, blog, imageOrientation }) {
       <div key={index} className="card-2" onClick={navigateToBlog}>
         <img src={blog.image} className="card-img-left" alt="..." />
         <div className="card-text-right bg-body-secondary">
-          <BlogItemText blogPost={blog} headerFontSize="20px" />
+          <BlogItemText
+            blogPost={blog}
+            headerFontSize="20px"
+            blogPostLength={blogPostLength}
+          />
           <Categories categories={blog.categories} removeCategory={null} />
           {user &&
             user.token &&
@@ -96,6 +106,5 @@ BlogItem.propTypes = {
   index: PropTypes.number.isRequired,
   blog: PropTypes.object.isRequired,
   imageOrientation: PropTypes.string,
-  onBlogEdit: PropTypes.func,
-  onBlogDelete: PropTypes.func,
+  blogPostLength: PropTypes.number,
 };
