@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, Fragment } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Modal } from "bootstrap";
 import Wheel from "@uiw/react-color-wheel";
@@ -62,6 +62,12 @@ export default function AddEditCategoryModal() {
     if (!modifyCategory?.title.trim()) {
       newValidation.title = { isValid: false, message: "Title is required" };
       isValid = false;
+    } else if (modifyCategory?.title.length > 50) {
+      newValidation.title = {
+        isValid: false,
+        message: "Title should be less than 50 characters",
+      };
+      isValid = false;
     } else {
       newValidation.title = { isValid: true, message: "Looks good!" };
     }
@@ -70,6 +76,12 @@ export default function AddEditCategoryModal() {
       newValidation.description = {
         isValid: false,
         message: "Description is required",
+      };
+      isValid = false;
+    } else if (modifyCategory.description.length > 500) {
+      newValidation.description = {
+        isValid: false,
+        message: "Description should be less than 500 characters",
       };
       isValid = false;
     } else {
@@ -137,6 +149,9 @@ export default function AddEditCategoryModal() {
       formRef.current.classList.remove("was-validated");
       resetValidation();
       modalInstance.current?.hide();
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     }
   };
 
@@ -145,6 +160,7 @@ export default function AddEditCategoryModal() {
     resetValidation();
     dispatch(resetCategoryModifiers());
     modalInstance.current?.hide();
+    window.location.reload();
   };
 
   return (
@@ -179,6 +195,7 @@ export default function AddEditCategoryModal() {
                   type="text"
                   className="form-control"
                   id="title"
+                  maxLength={30}
                   value={modifyCategory?.title || ""}
                   onChange={(e) => {
                     dispatch(
@@ -190,6 +207,17 @@ export default function AddEditCategoryModal() {
                   }}
                   required
                 />
+                <div
+                  style={{
+                    position: "relative",
+                    bottom: "1px",
+                    left: "10px",
+                    fontSize: "12px",
+                    color: "#6c757d",
+                  }}
+                >
+                  {modifyCategory?.title?.length}/30
+                </div>
                 <div
                   className={
                     validation.title.isValid
@@ -209,6 +237,7 @@ export default function AddEditCategoryModal() {
                   className="form-control"
                   id="description"
                   value={modifyCategory?.description || ""}
+                  maxLength={500}
                   onChange={(e) => {
                     dispatch(
                       setModifyCategory({
@@ -219,6 +248,17 @@ export default function AddEditCategoryModal() {
                   }}
                   required
                 />
+                <div
+                  style={{
+                    position: "relative",
+                    bottom: "1px",
+                    left: "10px",
+                    fontSize: "12px",
+                    color: "#6c757d",
+                  }}
+                >
+                  {modifyCategory?.description?.length}/500
+                </div>
                 <div
                   className={
                     validation.description.isValid

@@ -302,11 +302,23 @@ export default function AddEditBlogModal() {
                     className="form-control"
                     id="title"
                     value={blog.title}
+                    maxLength={50}
                     onChange={(e) => {
                       setBlog({ ...blog, title: e.target.value });
                     }}
                     required
                   />
+                  <div
+                    style={{
+                      position: "relative",
+                      bottom: "1px",
+                      left: "10px",
+                      fontSize: "12px",
+                      color: "#6c757d",
+                    }}
+                  >
+                    {blog.title.length}/50
+                  </div>
                   <div
                     className={
                       validation.title.isValid
@@ -326,11 +338,23 @@ export default function AddEditBlogModal() {
                     className="form-control"
                     id="description"
                     value={blog.description}
+                    maxLength={300}
                     onChange={(e) => {
                       setBlog({ ...blog, description: e.target.value });
                     }}
                     required
                   />
+                  <div
+                    style={{
+                      position: "relative",
+                      bottom: "1px",
+                      left: "10px",
+                      fontSize: "12px",
+                      color: "#6c757d",
+                    }}
+                  >
+                    {blog.description.length}/300
+                  </div>
                   <div
                     className={
                       validation.description.isValid
@@ -358,6 +382,7 @@ export default function AddEditBlogModal() {
                         className="form-control"
                         id={"sectionHeader" + index}
                         value={section.sectionHeader}
+                        maxLength={50}
                         onChange={(e) => {
                           const updatedContent = blog.content.map(
                             (sec, secIndex) =>
@@ -369,6 +394,17 @@ export default function AddEditBlogModal() {
                         }}
                         required
                       />
+                      <div
+                        style={{
+                          position: "relative",
+                          bottom: "1px",
+                          left: "10px",
+                          fontSize: "12px",
+                          color: "#6c757d",
+                        }}
+                      >
+                        {blog.content[index].sectionHeader.length}/50
+                      </div>
                     </div>
                     <div className="mb-3">
                       <label
@@ -381,6 +417,7 @@ export default function AddEditBlogModal() {
                         className="form-control"
                         id={"sectionText" + index}
                         value={section.sectionText}
+                        maxLength={2000}
                         onChange={(e) => {
                           const updatedContent = blog.content.map(
                             (sec, secIndex) =>
@@ -392,6 +429,17 @@ export default function AddEditBlogModal() {
                         }}
                         required
                       />
+                      <div
+                        style={{
+                          position: "relative",
+                          bottom: "1px",
+                          left: "10px",
+                          fontSize: "12px",
+                          color: "#6c757d",
+                        }}
+                      >
+                        {blog.content[index].sectionText.length}/2000
+                      </div>
                     </div>
                   </div>
                 ))}
