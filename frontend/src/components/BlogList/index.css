@@ -15,6 +15,10 @@
 
 @media (max-width: 768px) {
   .blog-list {
-    grid-template-columns: 100%;
+    display: block;
+  }
+
+  .blog-list .item {
+    margin-bottom: 4%;
   }
 }

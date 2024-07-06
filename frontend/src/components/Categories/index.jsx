@@ -10,7 +10,7 @@ export default function Categories({ categories, removeCategory }) {
 
   if (!categories && !categories?.length) return null;
   return (
-    <div className="d-flex flex-wrap">
+    <div className="d-flex flex-wrap" style={{ height: "fit-content" }}>
       {categories.map((category, index) => {
         return (
           <p

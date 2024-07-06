@@ -14,12 +14,14 @@ export default function BlogList({ blogs }) {
     <div className="blog-list">
       {blogs.map((blog, index) => {
         return (
-          <BlogItem
-            key={index}
-            index={index}
-            blog={blog}
-            imageOrientation={"top"}
-          />
+          <div className="item" key={index}>
+            <BlogItem
+              key={index}
+              index={index}
+              blog={blog}
+              imageOrientation={"top"}
+            />
+          </div>
         );
       })}
     </div>

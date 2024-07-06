@@ -1,6 +1,18 @@
 import "./index.css";
 
 export default function EditButtons({ onEdit, onDelete, onNavigate }) {
+  const path = window.location.pathname;
+
+  let backgroundColor;
+  let color;
+  if (path === "/blogs" || path === "/profile") {
+    backgroundColor = "black";
+    color = "white";
+  } else {
+    backgroundColor = "transparent";
+    color = "black";
+  }
+
   return (
     <>
       <button
@@ -18,7 +30,10 @@ export default function EditButtons({ onEdit, onDelete, onNavigate }) {
           onEdit();
         }}
       >
-        <i className="bi bi-pencil-fill edit-btn-icon p-1"></i>
+        <i
+          className="bi bi-pencil-fill edit-btn-icon p-1"
+          style={{ backgroundColor, color }}
+        ></i>
       </button>
       <button
         style={{
@@ -35,7 +50,10 @@ export default function EditButtons({ onEdit, onDelete, onNavigate }) {
           onDelete();
         }}
       >
-        <i className="bi bi-trash-fill edit-btn-icon p-1"></i>
+        <i
+          className="bi bi-trash-fill edit-btn-icon p-1"
+          style={{ backgroundColor, color }}
+        ></i>
       </button>
       <button
         style={{
@@ -52,7 +70,10 @@ export default function EditButtons({ onEdit, onDelete, onNavigate }) {
           onNavigate();
         }}
       >
-        <i className="bi bi-arrows-fullscreen edit-btn-icon p-1"></i>
+        <i
+          className="bi bi-arrows-fullscreen edit-btn-icon p-1"
+          style={{ backgroundColor, color }}
+        ></i>
       </button>
     </>
   );
