@@ -1,8 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import Navbar from "../../components/Navbar";
+import Subheading from "../../components/Subheading";
 import BlogList from "../../components/BlogList";
 import Footer from "../../components/Footer";
 import Loading from "../../components/Loading";
@@ -24,6 +25,8 @@ import {
 export default function ProfilePage() {
   const dispatch = useDispatch();
   const { authorId } = useParams();
+
+  const [isReading, setIsReading] = useState(false);
 
   const {
     user,
@@ -63,8 +66,32 @@ export default function ProfilePage() {
             <h4 className="fst-italic">
               {author.firstName} {author.lastName}
             </h4>
-            <img src={author.image} className="avatar" alt="..." />
-            <p>{author.bio.substring(0, 100)}...</p>
+            <img src={author.image} className="avatar" alt="profile" />
+            <p>
+              {isReading ? author.bio : author.bio.substring(0, 100) + "..."}
+            </p>
+            <div className="text-center">
+              <button
+                className="btn btn-outline-dark"
+                onClick={() => {
+                  setIsReading(!isReading);
+                }}
+              >
+                {isReading ? "Close" : "Read More"}
+              </button>
+            </div>
+            {authorId === user._id && (
+              <i
+                className="bi bi-pencil-fill btn btn-outline-dark px-2 py-1"
+                style={{
+                  position: "absolute",
+                  top: "15px",
+                  right: "15px",
+                  fontSize: "1.5rem",
+                }}
+                onClick={onEditProfile}
+              />
+            )}
           </div>
         </div>
       </div>
@@ -80,19 +107,7 @@ export default function ProfilePage() {
       <Navbar />
       <div className="container">
         <AuthorDetails />
-        <div className="text-center">
-          {authorId === user._id && (
-            <button
-              className="btn btn-outline-dark m-3 btn-lg"
-              data-bs-toggle="modal"
-              data-bs-target="#editProfileModal"
-              onClick={onEditProfile}
-            >
-              Edit Profile
-            </button>
-          )}
-        </div>
-        <p className="page-subtitle">Author Blog Posts</p>
+        <Subheading subHeading={"Blogs by " + author.firstName + ":"} />
         <BlogList blogs={authorBlogs} />
         <Footer />
       </div>
