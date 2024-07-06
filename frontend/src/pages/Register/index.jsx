@@ -110,10 +110,22 @@ export default function RegisterPage() {
                 className="form-control"
                 id="bio"
                 name="bio"
-                placeholder="name@example.com"
+                placeholder="bio"
                 value={bio}
+                maxLength={300}
                 onChange={onChange}
               />
+              <div
+                style={{
+                  position: "relative",
+                  bottom: "1px",
+                  left: "10px",
+                  fontSize: "12px",
+                  color: "#6c757d",
+                }}
+              >
+                {newUser.bio.length}/300
+              </div>
               <label htmlFor="bio">Bio</label>
             </div>
             <div className="form-floating mb-2">
