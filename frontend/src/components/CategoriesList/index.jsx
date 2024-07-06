@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -18,11 +18,16 @@ export default function CategoriesList() {
   const path = window.location.pathname;
 
   const categories = useSelector((state) => state.categories.categories);
-  const addCategory = useSelector((state) => state.categories.addCategory);
-  const editCategory = useSelector((state) => state.categories.editCategory);
-  const removeCategory = useSelector(
-    (state) => state.categories.removeCategory
-  );
+
+  const [expandedCategoryId, setExpandedCategoryId] = useState(null);
+
+  const toggleDescription = (categoryId) => {
+    if (expandedCategoryId === categoryId) {
+      setExpandedCategoryId(null); // Collapse if it's already expanded
+    } else {
+      setExpandedCategoryId(categoryId); // Expand the clicked category
+    }
+  };
 
   const onCategoryUpdate = (category) => {
     dispatch(setEditCategory(category));
@@ -45,12 +50,7 @@ export default function CategoriesList() {
             className="card"
             style={{ borderRadius: "0px", border: "none", padding: 0 }}
             onClick={() => {
-              if (
-                (!user && !user?.token) ||
-                (!editCategory && !addCategory && !removeCategory)
-              ) {
-                navigate(`/blogs/${category.id}`);
-              }
+              toggleDescription(category.id);
             }}
           >
             <div
@@ -66,8 +66,11 @@ export default function CategoriesList() {
             </div>
             <div className="card-body bg-body-secondary">
               <p className="card-text">
-                {category.description.substring(0, 120)}
-                {category.description.length < 120 ? "" : "..."}
+                {expandedCategoryId === category.id
+                  ? category.description
+                  : `${category.description.substring(0, 120)}${
+                      category.description.length > 120 ? "..." : ""
+                    }`}
               </p>
             </div>
             {user &&
@@ -83,7 +86,7 @@ export default function CategoriesList() {
                     onCategoryDelete(category);
                   }}
                   onNavigate={() => {
-                    navigate(`/blogs/${category.id}`);
+                    navigate(`/category/${category.id}`);
                   }}
                 />
               )}
