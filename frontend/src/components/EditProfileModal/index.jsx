@@ -277,7 +277,7 @@ export default function EditProfileModal() {
                       color: "#6c757d",
                     }}
                   >
-                    {authorSlice.editAuthor.bio.length}/300
+                    {authorSlice.editAuthor?.bio.length}/300
                   </div>
                   <div
                     className={

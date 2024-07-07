@@ -36,8 +36,8 @@ export default function BlogItemText({
           0,
           blogPostLength || BLOG_POST_DESCRIPTION_LIMIT
         )}
-        {blogPost.description.length < blogPostLength ||
-        BLOG_POST_DESCRIPTION_LIMIT
+        {blogPost.description.length <
+        (blogPostLength || BLOG_POST_DESCRIPTION_LIMIT)
           ? ""
           : " ..."}
       </p>

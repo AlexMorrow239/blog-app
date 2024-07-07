@@ -68,10 +68,10 @@ export default function ProfilePage() {
             </h4>
             <img src={author.image} className="avatar" alt="profile" />
             <p>
-              {isReading ? author.bio : author.bio.substring(0, 100)}
+              {isReading ? author?.bio : author?.bio.substring(0, 100)}
               {author.bio.length > 100 && !isReading && "..."}
             </p>
-            {author.bio.length > 100 && (
+            {author?.bio?.length > 100 && (
               <div className="text-center">
                 <button
                   className="btn btn-outline-dark"
