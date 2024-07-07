@@ -39,7 +39,7 @@ export default function FormImage({ image, onChange }) {
         </div>
       ) : (
         <div
-          className="image add-image"
+          className="add-image"
           title="Add Image"
           onClick={() => {
             fileInput?.current?.click();

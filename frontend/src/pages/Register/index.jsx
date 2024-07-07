@@ -137,6 +137,7 @@ export default function RegisterPage() {
                 placeholder="name@example.com"
                 value={email}
                 onChange={onChange}
+                autoComplete="email"
               />
               <label htmlFor="email">Email address</label>
             </div>
@@ -159,7 +160,7 @@ export default function RegisterPage() {
               Login
             </Link>
             <p className="mt-3 mb-3 text-muted text-center">
-              The Blog App &copy; 2024
+              Cape Chronicles &copy; 2024
             </p>
           </form>
         </main>

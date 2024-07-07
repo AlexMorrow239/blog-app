@@ -5,7 +5,7 @@ export default function EditButtons({ onEdit, onDelete, onNavigate }) {
 
   let backgroundColor;
   let color;
-  if (path === "/blogs" || path === "/profile") {
+  if (path.startsWith("/blogs") || path.startsWith("/profile")) {
     backgroundColor = "black";
     color = "white";
   } else {

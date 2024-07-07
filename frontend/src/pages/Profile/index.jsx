@@ -68,18 +68,21 @@ export default function ProfilePage() {
             </h4>
             <img src={author.image} className="avatar" alt="profile" />
             <p>
-              {isReading ? author.bio : author.bio.substring(0, 100) + "..."}
+              {isReading ? author.bio : author.bio.substring(0, 100)}
+              {author.bio.length > 100 && !isReading && "..."}
             </p>
-            <div className="text-center">
-              <button
-                className="btn btn-outline-dark"
-                onClick={() => {
-                  setIsReading(!isReading);
-                }}
-              >
-                {isReading ? "Close" : "Read More"}
-              </button>
-            </div>
+            {author.bio.length > 100 && (
+              <div className="text-center">
+                <button
+                  className="btn btn-outline-dark"
+                  onClick={() => {
+                    setIsReading(!isReading);
+                  }}
+                >
+                  {isReading ? "Close" : "Read More"}
+                </button>
+              </div>
+            )}
             {authorId === user._id && (
               <i
                 className="bi bi-pencil-fill btn btn-outline-dark px-2 py-1"

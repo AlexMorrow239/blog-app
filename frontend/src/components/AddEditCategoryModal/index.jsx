@@ -270,7 +270,7 @@ export default function AddEditCategoryModal() {
                 </div>
               </div>
               <div className="mb-3">
-                <label className="form-label">Color</label>
+                <div className="form-label">Color</div>
                 <div className="d-flex justify-content-evenly align-items-center flex-column flex-sm-row">
                   <Wheel
                     color={hsva}

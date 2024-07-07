@@ -62,8 +62,9 @@ export default function LoginPage() {
                 placeholder="name@example.com"
                 value={email}
                 onChange={onChange}
+                autoComplete="email"
               />
-              <label htmlFor="floatingInput">Email address</label>
+              <label htmlFor="email">Email address</label>
             </div>
             <div className="form-floating mb-2">
               <input
@@ -85,7 +86,7 @@ export default function LoginPage() {
               Register
             </Link>
             <p className="mt-5 mb-3 text-muted text-center">
-              The Blog App &copy; 2024
+              Cape Chronicles &copy; 2024
             </p>
           </form>
         </main>
