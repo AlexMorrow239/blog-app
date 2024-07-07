@@ -257,6 +257,7 @@ export default function EditProfileModal() {
                     id="bioInput"
                     value={authorSlice.editAuthor?.bio || ""}
                     ref={bioRef}
+                    maxLength={300}
                     onChange={(e) => {
                       dispatch(
                         setEditAuthor({
@@ -267,6 +268,17 @@ export default function EditProfileModal() {
                     }}
                     required
                   />
+                  <div
+                    style={{
+                      position: "relative",
+                      bottom: "1px",
+                      left: "10px",
+                      fontSize: "12px",
+                      color: "#6c757d",
+                    }}
+                  >
+                    {authorSlice.editAuthor.bio.length}/300
+                  </div>
                   <div
                     className={
                       validation.bio.isValid

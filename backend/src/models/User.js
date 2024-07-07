@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema(
     },
     bio: {
       type: String,
-      equired: [true, "Email is required"],
+      required: [true, "Bio is required"],
     },
     image: {
       type: String,
