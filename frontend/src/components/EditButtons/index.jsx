@@ -1,6 +1,6 @@
 import "./index.css";
 
-export default function EditButtons({ onEdit, onDelete, onNavigate }) {
+export default function EditButtons({ onEdit, onDelete }) {
   const path = window.location.pathname;
 
   let backgroundColor;
@@ -19,7 +19,7 @@ export default function EditButtons({ onEdit, onDelete, onNavigate }) {
         style={{
           position: "absolute",
           top: "10px",
-          right: "60px",
+          right: "32px",
           border: "none",
           zIndex: 1,
         }}
@@ -39,7 +39,7 @@ export default function EditButtons({ onEdit, onDelete, onNavigate }) {
         style={{
           position: "absolute",
           top: "10px",
-          right: "32px",
+          right: "5px",
           border: "none",
           zIndex: 1,
         }}
@@ -52,26 +52,6 @@ export default function EditButtons({ onEdit, onDelete, onNavigate }) {
       >
         <i
           className="bi bi-trash-fill edit-btn-icon p-1"
-          style={{ backgroundColor, color }}
-        ></i>
-      </button>
-      <button
-        style={{
-          position: "absolute",
-          top: "10px",
-          right: "5px",
-          border: "none",
-          zIndex: 1,
-        }}
-        type="button"
-        className="btn"
-        onClick={(e) => {
-          e.stopPropagation();
-          onNavigate();
-        }}
-      >
-        <i
-          className="bi bi-arrows-fullscreen edit-btn-icon p-1"
           style={{ backgroundColor, color }}
         ></i>
       </button>

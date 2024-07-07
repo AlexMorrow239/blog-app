@@ -6,10 +6,13 @@ import "./index.css";
 
 import EditButtons from "../EditButtons";
 
+import { CATEGORY_DESCRIPTION_LIMIT } from "../../constants";
+
 import {
   setEditCategory,
   setRemoveCategory,
 } from "../../features/categoriesSlice";
+import FullScreenButton from "../FullScreenButton";
 
 export default function CategoriesList() {
   const navigate = useNavigate();
@@ -50,7 +53,7 @@ export default function CategoriesList() {
             className="card"
             style={{ borderRadius: "0px", border: "none", padding: 0 }}
             onClick={() => {
-              toggleDescription(category.id);
+              navigate(`/blogs/${category.id}`);
             }}
           >
             <div
@@ -62,22 +65,29 @@ export default function CategoriesList() {
                 border: "3px solid " + (category.color + "66"),
               }}
             >
-              <h5 className="card-title">{category.title}</h5>
+              <h5 className="card-title h-auto">{category.title}</h5>
             </div>
             <div className="card-body bg-body-secondary">
               <p className="card-text">
                 {expandedCategoryId === category.id
                   ? category.description
-                  : `${category.description.substring(0, 120)}${
-                      category.description.length > 120 ? "..." : ""
+                  : `${category.description.substring(
+                      0,
+                      CATEGORY_DESCRIPTION_LIMIT
+                    )}${
+                      category.description.length > CATEGORY_DESCRIPTION_LIMIT
+                        ? "..."
+                        : ""
                     }`}
               </p>
             </div>
+            {/* If logged in and not on the home page */}
             {user &&
-              user?.token &&
-              path !== "/home" &&
-              path !== "/" &&
-              path !== "" && (
+            user?.token &&
+            path !== "/home" &&
+            path !== "/" &&
+            path !== "" ? (
+              <>
                 <EditButtons
                   onEdit={() => {
                     onCategoryUpdate(category);
@@ -85,11 +95,24 @@ export default function CategoriesList() {
                   onDelete={() => {
                     onCategoryDelete(category);
                   }}
-                  onNavigate={() => {
-                    navigate(`/blogs/${category.id}`);
-                  }}
                 />
-              )}
+                <FullScreenButton
+                  onFullScreen={() => {
+                    toggleDescription(category.id);
+                  }}
+                  orientation={"left"}
+                  descriptionLength={category.description.length}
+                />
+              </>
+            ) : (
+              <FullScreenButton
+                onFullScreen={() => {
+                  toggleDescription(category.id);
+                }}
+                orientation={"right"}
+                descriptionLength={category.description.length}
+              />
+            )}
           </div>
         );
       })}
