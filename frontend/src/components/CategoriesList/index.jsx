@@ -86,7 +86,7 @@ export default function CategoriesList() {
                     onCategoryDelete(category);
                   }}
                   onNavigate={() => {
-                    navigate(`/category/${category.id}`);
+                    navigate(`/blogs/${category.id}`);
                   }}
                 />
               )}
