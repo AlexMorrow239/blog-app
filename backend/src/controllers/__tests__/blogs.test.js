@@ -1,6 +1,13 @@
 const Blog = require("../../models/Blog");
 const cloudStorage = require("../../services/cloud-storage");
-const { createBlogs, getBlogs } = require("../Blogs");
+const {
+  createBlogs,
+  getBlogs,
+  getBlogById,
+  getBlogsByCategoryID,
+  getBlogsByAuthorID,
+  updateBlogByID,
+} = require("../Blogs");
 
 const { __mocks__ } = require("../../models/__mocks__/Blogs");
 
@@ -121,6 +128,7 @@ describe("Blogs Controller: getBlogs", () => {
     Blog.mockClear();
     __mocks__.mockSave.mockClear();
     __mocks__.mockPopulate.mockClear();
+    __mocks__.mockSort.mockClear();
   });
 
   test("Should return all blogs data", async () => {
@@ -144,46 +152,269 @@ describe("Blogs Controller: getBlogs", () => {
     });
   });
 
-  // test("should handle errors", async () => {
-  //   const error = new Error("Something went wrong");
-  //   __mocks__.Blog.find.mockRejectedValue(error);
+  test("should handle errors", async () => {
+    Blog.mockImplementation(() => ({
+      save: __mocks__.mockSave,
+    }));
 
-  // })
+    const error = new Error("Something went wrong");
+    Blog.find.mockImplementation(() => {
+      return {
+        populate: __mocks__.mockPopulate.mockReturnThis(),
+        sort: __mocks__.mockSort.mockRejectedValue(error),
+      };
+    });
+
+    await getBlogs(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({ message: error.message, data: {} });
+  });
 });
 
-// describe("Blogs Controller: getBlogById", () => {
-//   beforeEach(() => {
-//     (req = {
-//       params: {
-//         id: "1",
-//       },
-//     }),
-//       (res = {
-//         status: jest.fn(),
-//         json: jest.fn(),
-//       });
+describe("Blogs Controller: getBlogById", () => {
+  beforeEach(() => {
+    (req = {
+      params: {
+        id: "1",
+      },
+    }),
+      (res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      });
 
-//     Blog.mockClear();
-//     __mocks__.mockSave.mockClear();
-//   });
+    Blog.mockClear();
+    __mocks__.mockSave.mockClear();
+    __mocks__.mockPopulate.mockClear();
+  });
 
-//   test("Should return a blog by Id", async () => {
-//     findById.mockResolvedValue({ _id: "1" });
-//     __mocks__.mockPopulate.mockResolvedValue(__mocks__.mockBlogPost);
+  test("Should return a blog by Id", async () => {
+    __mocks__.mockPopulate.mockResolvedValue(__mocks__.mockBlogPost);
 
-//     Blog.findById.mockImplementation(() => ({
-//       populate: () => ({
-//         populate: __mocks__.mockPopulate,
-//       }),
-//     }));
+    Blog.findById.mockImplementation(() => ({
+      populate: () => ({
+        populate: __mocks__.mockPopulate,
+      }),
+    }));
 
-//     await getBlogById(req, res);
+    await getBlogById(req, res);
 
-//     expect(Blog.findById).toHaveBeenCalledWith("1");
-//     expect(res.status).toHaveBeenCalledWith(200);
-//     expect(res.json).toHaveBeenCalledWith({
-//       message: "Return blog by ID!",
-//       data: __mocks__.mockBlogPost,
-//     });
-//   });
-// });
+    expect(Blog.findById).toHaveBeenCalledWith("1");
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({
+      message: "Return blog by ID!",
+      data: __mocks__.mockBlogPost,
+    });
+  });
+
+  test("should handle errors", async () => {
+    const error = new Error("Something went wrong");
+    Blog.findById.mockImplementation(() => ({
+      populate: () => ({
+        populate: __mocks__.mockPopulate.mockRejectedValue(error),
+      }),
+    }));
+
+    await getBlogById(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({ message: error.message, data: {} });
+  });
+
+  test("Should return 404 if blog not found", async () => {
+    __mocks__.mockPopulate.mockResolvedValue(null);
+
+    Blog.findById.mockImplementation(() => ({
+      populate: () => ({
+        populate: __mocks__.mockPopulate,
+      }),
+    }));
+
+    await getBlogById(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(404);
+    expect(res.json).toHaveBeenCalledWith({
+      message: "Blog not found!",
+      data: {},
+    });
+  });
+});
+
+describe("Blogs Controller: getBlogsByCategoryID", () => {
+  beforeEach(() => {
+    req = {
+      params: {
+        id: "1",
+      },
+    };
+
+    res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    Blog.mockClear();
+    __mocks__.mockSave.mockClear();
+    __mocks__.mockPopulate.mockClear();
+  });
+
+  test("Should return all blogs by category ID", async () => {
+    __mocks__.mockPopulate.mockResolvedValue([__mocks__.mockBlogPost]);
+
+    Blog.find.mockImplementation(() => ({
+      populate: jest.fn(() => ({
+        populate: __mocks__.mockPopulate,
+      })),
+    }));
+
+    await getBlogsByCategoryID(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({
+      message: "Get blogs by categoryID!",
+      data: [__mocks__.mockBlogPost],
+    });
+  });
+
+  test("should handle errors", async () => {
+    const error = new Error("Something went wrong");
+    Blog.find.mockImplementation(() => ({
+      populate: jest.fn(() => ({
+        populate: __mocks__.mockPopulate.mockRejectedValue(error),
+      })),
+    }));
+
+    await getBlogsByCategoryID(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({ message: error.message, data: {} });
+  });
+});
+
+describe("Blogs Controller: getBlogsByAuthorID", () => {
+  beforeEach(() => {
+    req = {
+      params: {
+        id: "1",
+      },
+    };
+
+    res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    Blog.mockClear();
+    __mocks__.mockSave.mockClear();
+    __mocks__.mockPopulate.mockClear();
+  });
+
+  test("Should return all blogs by author ID", async () => {
+    __mocks__.mockPopulate.mockResolvedValue([__mocks__.mockBlogPost]);
+
+    Blog.find.mockImplementation(() => ({
+      populate: jest.fn(() => ({
+        populate: __mocks__.mockPopulate,
+      })),
+    }));
+
+    await getBlogsByAuthorID(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({
+      message: "Get blogs by authorID!",
+      data: [__mocks__.mockBlogPost],
+    });
+  });
+
+  test("should handle errors", async () => {
+    const error = new Error("Something went wrong");
+    Blog.find.mockImplementation(() => ({
+      populate: jest.fn(() => ({
+        populate: __mocks__.mockPopulate.mockRejectedValue(error),
+      })),
+    }));
+
+    await getBlogsByAuthorID(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({ message: error.message, data: {} });
+  });
+});
+
+describe("Blogs Controller: updateBlogById", () => {
+  beforeEach(() => {
+    req = {
+      params: { id: "1" },
+      body: {
+        title: "Updated Blog Post - Jest Unit Test",
+        categories: JSON.stringify([
+          { id: "665945dbc2294698fe74d8d4" },
+          { id: "665945ffc2294698fe74d8d9" },
+        ]),
+        content: JSON.stringify([
+          { sectionHeader: "Introduction", sectionText: "Updated content..." },
+        ]),
+      },
+      file: {
+        path: "path/to/new/image.jpg",
+      },
+    };
+
+    res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    cloudStorage.uploadToFirebaseStorage.mockResolvedValue(
+      "https://storage.googleapis.com/ix-blog-app/default/new-image.jpeg"
+    );
+
+    __mocks__.mockSave.mockClear();
+    __mocks__.mockPopulate.mockClear();
+  });
+
+  test("Should update a blog and return the updated blog data", async () => {
+    __mocks__.mockPopulate.mockResolvedValue(__mocks__.mockBlogPost);
+    __mocks__.mockSavePopulate.mockResolvedValue(__mocks__.mockUpdatedBlog);
+
+    Blog.findById.mockImplementation(() => ({
+      populate: () => ({
+        populate: __mocks__.mockPopulate,
+      }),
+    }));
+
+    Blog.mockImplementation(() => ({
+      save: jest.fn(() => ({
+        populate: jest.fn(() => ({
+          populate: __mocks__.mockSavePopulate,
+        })),
+      })),
+    }));
+
+    await updateBlogByID(req, res);
+
+    expect(Blog.findById).toHaveBeenCalledWith("1");
+    expect(cloudStorage.uploadToFirebaseStorage).toHaveBeenCalledWith(
+      req.file.path,
+      req.file.path
+    );
+    // expect(__mocks__.mockSavePopulate).toHaveBeenCalled();
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({
+      message: "Blog updated!",
+      data: __mocks__.mockBlogPost,
+    });
+  });
+
+  // test("Should handle errors", async () => {
+  //   const error = new Error("Something went wrong");
+  //   Blog.findById.mockRejectedValue(error);
+
+  //   await updateBlogByID(req, res);
+
+  //   expect(res.status).toHaveBeenCalledWith(500);
+  //   expect(res.json).toHaveBeenCalledWith({ message: error.message, data: {} });
+  // });
+});

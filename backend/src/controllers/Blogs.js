@@ -125,8 +125,10 @@ const updateBlogByID = async (req, res) => {
         path: "categoryIds",
       })
       .populate({ path: "authorId" });
+
     if (
       blog &&
+      req?.file?.path &&
       blog.image !== "https://storage.googleapis.com/ix-blog-app/default.jpeg"
     ) {
       // Take the URL, get the last segment, and remove the query parameters
@@ -144,11 +146,14 @@ const updateBlogByID = async (req, res) => {
       blog.content = req.body.content
         ? JSON.parse(req.body.content)
         : blog.content;
-      const updatedBlog = await blog.save();
-      const blogRes = await updatedBlog.populate({
-        path: "categoryIds",
-      });
-      res.status(200).json({ message: "Blog updated!", data: blogRes });
+      const updatedBlogRes = await blog
+        .save()
+        .populate({
+          path: "categoryIds",
+        })
+        .populate({ path: "authorId" });
+
+      res.status(200).json({ message: "Blog updated!", data: updatedBlogRes });
     } else {
       res.status(404).json({ message: "Blog not found!", data: [] });
     }
@@ -160,7 +165,6 @@ const updateBlogByID = async (req, res) => {
 const deleteBlogByID = async (req, res) => {
   try {
     const blog = await Blog.findByIdAndDelete(req.params.id);
-    // const blog = await Blog.findById(req.params.id);
     if (blog) {
       if (
         blog.image &&
