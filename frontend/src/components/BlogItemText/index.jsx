@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 
 import Categories from "../Categories";
 import "./index.css";
+import { BLOG_POST_DESCRIPTION_LIMIT } from "../../constants";
 
 export default function BlogItemText({
   blogPost,
@@ -31,8 +32,14 @@ export default function BlogItemText({
         {blogPost.title}
       </p>
       <p style={{ fontSize: "16px", color: "#667085", textAlign: "left" }}>
-        {blogPost.description.substring(0, blogPostLength || 150)}
-        {blogPost.description.length < 100 ? "" : " ..."}
+        {blogPost.description.substring(
+          0,
+          blogPostLength || BLOG_POST_DESCRIPTION_LIMIT
+        )}
+        {blogPost.description.length < blogPostLength ||
+        BLOG_POST_DESCRIPTION_LIMIT
+          ? ""
+          : " ..."}
       </p>
       <Categories blogPost={blogPost?.categories} />
     </div>
