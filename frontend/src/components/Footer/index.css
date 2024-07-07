@@ -1,4 +1,20 @@
-.page-footer {
-  background-color: #a28497;
-  height: 6vh;
+footer .item {
+  padding: 0 0.5rem;
+  font-size: 1.25rem;
+}
+
+footer a {
+  color: #000;
+}
+
+footer .linkedin:hover {
+  color: #0077b5;
+}
+
+footer .github:hover {
+  color: #800080;
+}
+
+footer .email:hover {
+  color: #dbc100;
 }
