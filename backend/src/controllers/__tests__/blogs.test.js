@@ -2,14 +2,14 @@ const Blog = require("../../models/Blog");
 const cloudStorage = require("../../services/cloud-storage");
 const { createBlogs, getBlogs } = require("../Blogs");
 
-const { __mocks__, findById } = require("../../models/__mocks__/Blogs");
+const { __mocks__ } = require("../../models/__mocks__/Blogs");
 
 jest.mock("../../models/Blog");
 jest.mock("../../services/cloud-storage");
 
-describe("Blogs Controller: createBlogs", () => {
-  let req, res;
+let req, res;
 
+describe("Blogs Controller: createBlogs", () => {
   beforeEach(() => {
     req = {
       body: {
@@ -125,16 +125,65 @@ describe("Blogs Controller: getBlogs", () => {
 
   test("Should return all blogs data", async () => {
     __mocks__.mockPopulate.mockResolvedValue([__mocks__.mockBlogPost]);
-    Blog.find.mockImplementation(() => ({
-      populate: () => ({
-        populate: __mocks__.mockPopulate,
-      }),
-    }));
+    __mocks__.mockSort.mockReturnValue([__mocks__.mockBlogPost]);
+
+    Blog.find.mockImplementation(() => {
+      const chain = {
+        populate: jest.fn(() => chain),
+        sort: jest.fn(() => [__mocks__.mockBlogPost]),
+      };
+      return chain;
+    });
+
     await getBlogs(req, res);
+
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith({
       message: "Get all blogs!",
       data: [__mocks__.mockBlogPost],
     });
   });
+
+  // test("should handle errors", async () => {
+  //   const error = new Error("Something went wrong");
+  //   __mocks__.Blog.find.mockRejectedValue(error);
+
+  // })
 });
+
+// describe("Blogs Controller: getBlogById", () => {
+//   beforeEach(() => {
+//     (req = {
+//       params: {
+//         id: "1",
+//       },
+//     }),
+//       (res = {
+//         status: jest.fn(),
+//         json: jest.fn(),
+//       });
+
+//     Blog.mockClear();
+//     __mocks__.mockSave.mockClear();
+//   });
+
+//   test("Should return a blog by Id", async () => {
+//     findById.mockResolvedValue({ _id: "1" });
+//     __mocks__.mockPopulate.mockResolvedValue(__mocks__.mockBlogPost);
+
+//     Blog.findById.mockImplementation(() => ({
+//       populate: () => ({
+//         populate: __mocks__.mockPopulate,
+//       }),
+//     }));
+
+//     await getBlogById(req, res);
+
+//     expect(Blog.findById).toHaveBeenCalledWith("1");
+//     expect(res.status).toHaveBeenCalledWith(200);
+//     expect(res.json).toHaveBeenCalledWith({
+//       message: "Return blog by ID!",
+//       data: __mocks__.mockBlogPost,
+//     });
+//   });
+// });
