@@ -1,7 +1,6 @@
 const mockSave = jest.fn();
 const mockPopulate = jest.fn();
 const mockSort = jest.fn();
-const mockSavePopulate = jest.fn();
 const mockFindByIdAndDelete = jest.fn();
 
 const mockBlogPost = {
@@ -83,7 +82,6 @@ module.exports.__mocks__ = {
   mockSave,
   mockPopulate,
   mockSort,
-  mockSavePopulate,
   mockFindByIdAndDelete,
   mockBlogPost,
   mockUpdatedBlog,
