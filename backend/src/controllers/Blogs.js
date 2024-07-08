@@ -125,7 +125,6 @@ const updateBlogByID = async (req, res) => {
         path: "categoryIds",
       })
       .populate({ path: "authorId" });
-
     if (
       blog &&
       req?.file?.path &&
