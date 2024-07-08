@@ -314,6 +314,31 @@ describe("Blogs Controller: getBlogsByCategoryID", () => {
     });
   });
 
+  test("Should return all blogs", async () => {
+    // When no category is specified
+    req = {
+      params: {
+        id: "null",
+      },
+    };
+
+    __mocks__.mockPopulate.mockResolvedValue([__mocks__.mockBlogPost]);
+
+    Blog.find.mockImplementation(() => ({
+      populate: jest.fn(() => ({
+        populate: __mocks__.mockPopulate,
+      })),
+    }));
+
+    await getBlogsByCategoryID(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({
+      message: "Get blogs by categoryID!",
+      data: [__mocks__.mockBlogPost],
+    });
+  });
+
   test("should handle errors", async () => {
     const error = new Error("Something went wrong");
     Blog.find.mockImplementation(() => ({
@@ -348,6 +373,31 @@ describe("Blogs Controller: getBlogsByAuthorID", () => {
   });
 
   test("Should return all blogs by author ID", async () => {
+    __mocks__.mockPopulate.mockResolvedValue([__mocks__.mockBlogPost]);
+
+    Blog.find.mockImplementation(() => ({
+      populate: jest.fn(() => ({
+        populate: __mocks__.mockPopulate,
+      })),
+    }));
+
+    await getBlogsByAuthorID(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({
+      message: "Get blogs by authorID!",
+      data: [__mocks__.mockBlogPost],
+    });
+  });
+
+  test("Should return all blogs", async () => {
+    //When no authorId is specified
+    req = {
+      params: {
+        id: "null",
+      },
+    };
+
     __mocks__.mockPopulate.mockResolvedValue([__mocks__.mockBlogPost]);
 
     Blog.find.mockImplementation(() => ({
@@ -413,6 +463,10 @@ describe("Blogs Controller: updateBlogByID", () => {
           },
         ]),
       },
+
+      file: {
+        path: "path/to/new/img.jpg",
+      },
     };
 
     res = {
@@ -424,19 +478,68 @@ describe("Blogs Controller: updateBlogByID", () => {
     __mocks__.mockPopulate.mockClear();
   });
 
-  test("Should update the blog with the specified Id", async () => {
-    __mocks__.mockPopulate.mockResolvedValue(__mocks__.mockBlogPost);
+  test("Should update the blog (including image) with the specified Id", async () => {
+    cloudStorage.uploadToFirebaseStorage.mockImplementation(
+      jest.fn().mockResolvedValue(__mocks__.mockUpdatedBlog.image)
+    );
+    // Adding the chained save method to mockBlogPost
+    const mockBlog = {
+      ...__mocks__.mockBlogPost,
+      save: jest.fn(() => ({
+        populate: jest.fn(() => ({
+          populate: jest.fn().mockResolvedValue(__mocks__.mockUpdatedBlog),
+        })),
+      })),
+    };
 
     Blog.findById.mockImplementation(() => ({
-      populate: () => ({
-        populate: __mocks__.mockPopulate,
-      }),
+      populate: jest.fn(() => ({
+        populate: jest.fn().mockResolvedValue(mockBlog),
+      })),
     }));
 
-    Blog.mockImplementation(() => ({
-      save: () => ({
-        populate: jest.fn().mockResolvedValue(__mocks__.mockUpdatedBlog),
-      }),
+    cloudStorage.deleteFromFirebaseStorage.mockImplementation(
+      jest.fn().mockResolvedValue(true)
+    );
+
+    await updateBlogByID(req, res);
+
+    expect(cloudStorage.uploadToFirebaseStorage).toHaveBeenCalledWith(
+      req.file.path,
+      req.file.path
+    );
+    expect(Blog.findById).toHaveBeenCalledWith("1");
+    expect(cloudStorage.deleteFromFirebaseStorage).toHaveBeenCalledWith(
+      "blog-app-bucket-5543/uploads/blogs/1718873403923.jpeg"
+    );
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({
+      message: "Blog updated!",
+      data: __mocks__.mockUpdatedBlog,
+    });
+  });
+
+  test("Should not update the blog at specified Id", async () => {
+    req = {
+      params: {
+        id: "1",
+      },
+    };
+
+    // Adding the chained save method to mockBlogPost
+    const mockBlog = {
+      ...__mocks__.mockBlogPost,
+      save: jest.fn(() => ({
+        populate: jest.fn(() => ({
+          populate: jest.fn().mockResolvedValue(__mocks__.mockBlogPost),
+        })),
+      })),
+    };
+
+    Blog.findById.mockImplementation(() => ({
+      populate: jest.fn(() => ({
+        populate: jest.fn().mockResolvedValue(mockBlog),
+      })),
     }));
 
     await updateBlogByID(req, res);
@@ -445,11 +548,11 @@ describe("Blogs Controller: updateBlogByID", () => {
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith({
       message: "Blog updated!",
-      data: __mocks__.mockUpdatedBlog,
+      data: __mocks__.mockBlogPost,
     });
   });
 
-  test("Should hanlde errors", async () => {
+  test("Should handle errors", async () => {
     const error = new Error("Something went wrong");
     __mocks__.mockPopulate.mockRejectedValue(error);
 
@@ -502,7 +605,7 @@ describe("Blogs Controller: deleteBlogByID", () => {
     __mocks__.mockFindByIdAndDelete.mockClear();
   });
 
-  test("Should delete a blog by Id and return the id", async () => {
+  test("Should delete a blog by id and return it", async () => {
     __mocks__.mockFindByIdAndDelete.mockResolvedValue(__mocks__.mockBlogPost);
 
     Blog.findByIdAndDelete.mockImplementation(__mocks__.mockFindByIdAndDelete);
@@ -513,8 +616,28 @@ describe("Blogs Controller: deleteBlogByID", () => {
 
     await deleteBlogByID(req, res);
 
-    expect(__mocks__.mockFindByIdAndDelete).toHaveBeenCalled();
+    expect(__mocks__.mockFindByIdAndDelete).toHaveBeenCalledWith("1");
     expect(cloudStorage.deleteFromFirebaseStorage).toHaveBeenCalled();
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({
+      message: "Blog deleted!",
+      id: req.params.id,
+    });
+  });
+
+  test("Should delete a blog by id and return it", async () => {
+    const mockBlog = {
+      ...__mocks__.mockBlog,
+      image: "https://storage.googleapis.com/ix-blog-app/default.jpeg",
+    };
+
+    __mocks__.mockFindByIdAndDelete.mockResolvedValue(mockBlog);
+
+    Blog.findByIdAndDelete.mockImplementation(__mocks__.mockFindByIdAndDelete);
+
+    await deleteBlogByID(req, res);
+
+    expect(__mocks__.mockFindByIdAndDelete).toHaveBeenCalledWith("1");
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith({
       message: "Blog deleted!",

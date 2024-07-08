@@ -74,6 +74,7 @@ const getBlogById = async (req, res) => {
 const getBlogsByCategoryID = async (req, res) => {
   try {
     let filter = {};
+    // String comparison because it comes from a useParams hook on frontend
     if (req.params.id != "null" && req.params.id != "undefined") {
       filter = { categoryIds: req.params.id };
     }
@@ -136,13 +137,16 @@ const updateBlogByID = async (req, res) => {
       await cloudStorage.deleteFromFirebaseStorage(decodedFileName);
     }
     if (blog) {
-      const categoryIds = JSON.parse(req?.body?.categories).map((x) => x.id);
+      let categoryIds = "";
+      if (req?.body?.categories) {
+        categoryIds = JSON.parse(req?.body?.categories).map((x) => x.id);
+      }
       blog.image = imageURL ? imageURL : blog.image;
       blog.authorId = req?.body?.authorId || blog.authorId;
       blog.categoryIds = categoryIds ? categoryIds : blog.categoryIds;
       blog.title = req?.body?.title || blog.title;
       blog.description = req?.body?.description || blog.description;
-      blog.content = req.body.content
+      blog.content = req?.body?.content
         ? JSON.parse(req.body.content)
         : blog.content;
       const updatedBlogRes = await blog
@@ -157,6 +161,7 @@ const updateBlogByID = async (req, res) => {
       res.status(404).json({ message: "Blog not found!", data: [] });
     }
   } catch (err) {
+    console.log(err);
     res.status(500).json({ message: err.message, data: {} });
   }
 };
