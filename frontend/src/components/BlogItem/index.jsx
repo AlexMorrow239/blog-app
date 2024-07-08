@@ -49,9 +49,6 @@ export default function BlogItem({
         onDelete={(e) => {
           onBlogDelete(blog);
         }}
-        onNavigate={(e) => {
-          navigate(`/blog/${blog.id}`);
-        }}
       />
     );
   };
