@@ -149,14 +149,14 @@ const updateBlogByID = async (req, res) => {
       blog.content = req?.body?.content
         ? JSON.parse(req.body.content)
         : blog.content;
-      const updatedBlogRes = await blog
-        .save()
-        .populate({
-          path: "categoryIds",
-        })
-        .populate({ path: "authorId" });
+      const updatedBlogRes = await blog.save();
+      const populatedBlogRes = await updatedBlogRes.populate({
+        path: "categoryIds",
+      });
 
-      res.status(200).json({ message: "Blog updated!", data: updatedBlogRes });
+      res
+        .status(200)
+        .json({ message: "Blog updated!", data: populatedBlogRes });
     } else {
       res.status(404).json({ message: "Blog not found!", data: [] });
     }

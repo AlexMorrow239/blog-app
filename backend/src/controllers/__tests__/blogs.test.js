@@ -482,14 +482,18 @@ describe("Blogs Controller: updateBlogByID", () => {
     cloudStorage.uploadToFirebaseStorage.mockImplementation(
       jest.fn().mockResolvedValue(__mocks__.mockUpdatedBlog.image)
     );
+
     // Adding the chained save method to mockBlogPost
+    // save resolves with updated blog and a populate function
+    // populate simply returns the updated blog
     const mockBlog = {
       ...__mocks__.mockBlogPost,
-      save: jest.fn(() => ({
-        populate: jest.fn(() => ({
-          populate: jest.fn().mockResolvedValue(__mocks__.mockUpdatedBlog),
-        })),
-      })),
+      save: __mocks__.mockSave.mockResolvedValue({
+        ...__mocks__.mockUpdatedBlog,
+        populate: __mocks__.mockPopulate.mockResolvedValue(
+          __mocks__.mockUpdatedBlog
+        ),
+      }),
     };
 
     Blog.findById.mockImplementation(() => ({
@@ -527,13 +531,16 @@ describe("Blogs Controller: updateBlogByID", () => {
     };
 
     // Adding the chained save method to mockBlogPost
+    // save resolves with updated blog (but no changes) and a populate function
+    // populate simply returns the updated blog (no changes as per req body)
     const mockBlog = {
       ...__mocks__.mockBlogPost,
-      save: jest.fn(() => ({
-        populate: jest.fn(() => ({
-          populate: jest.fn().mockResolvedValue(__mocks__.mockBlogPost),
-        })),
-      })),
+      save: __mocks__.mockSave.mockResolvedValue({
+        ...__mocks__.mockBlogPost,
+        populate: __mocks__.mockPopulate.mockResolvedValue(
+          __mocks__.mockBlogPost
+        ),
+      }),
     };
 
     Blog.findById.mockImplementation(() => ({
