@@ -26,13 +26,13 @@ export default function FullScreenButton({
         zIndex: 1,
       }}
       type="button"
-      className="btn"
+      className="btn btn-outline-dark py-1 px-2 me-2"
       onClick={(e) => {
         e.stopPropagation();
         onFullScreen();
       }}
     >
-      <i className="bi bi-arrows-fullscreen edit-btn-icon p-1"></i>
+      <i className="bi bi-arrows-fullscreen edit-btn-icon"></i>
     </button>
   );
 }

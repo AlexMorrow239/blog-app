@@ -3,14 +3,11 @@ import "./index.css";
 export default function EditButtons({ onEdit, onDelete }) {
   const path = window.location.pathname;
 
-  let backgroundColor;
-  let color;
+  let rightPencil = "32px";
+  let isBlogs = false;
   if (path.startsWith("/blogs") || path.startsWith("/profile")) {
-    backgroundColor = "black";
-    color = "white";
-  } else {
-    backgroundColor = "transparent";
-    color = "black";
+    rightPencil = "40px";
+    isBlogs = true;
   }
 
   return (
@@ -19,21 +16,20 @@ export default function EditButtons({ onEdit, onDelete }) {
         style={{
           position: "absolute",
           top: "10px",
-          right: "32px",
+          right: rightPencil,
           border: "none",
           zIndex: 1,
         }}
         type="button"
-        className="btn"
+        className={`btn ${
+          isBlogs ? "btn-dark" : "btn-outline-dark"
+        } py-1 px-2 me-2`}
         onClick={(e) => {
           e.stopPropagation();
           onEdit();
         }}
       >
-        <i
-          className="bi bi-pencil-fill edit-btn-icon p-1"
-          style={{ backgroundColor, color }}
-        ></i>
+        <i className="bi bi-pencil-fill"></i>
       </button>
       <button
         style={{
@@ -44,16 +40,15 @@ export default function EditButtons({ onEdit, onDelete }) {
           zIndex: 1,
         }}
         type="button"
-        className="btn"
+        className={`btn ${
+          isBlogs ? "btn-dark" : "btn-outline-dark"
+        } py-1 px-2 me-2`}
         onClick={(e) => {
           e.stopPropagation();
           onDelete();
         }}
       >
-        <i
-          className="bi bi-trash-fill edit-btn-icon p-1"
-          style={{ backgroundColor, color }}
-        ></i>
+        <i className="bi bi-trash-fill"></i>
       </button>
     </>
   );
