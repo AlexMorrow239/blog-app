@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, NavLink } from "react-router-dom";
 import { Navbar, Nav, NavDropdown } from "react-bootstrap";
 import { setUser, resetSuccessAndError } from "../../features/authSlice";
-import "bootstrap/dist/css/bootstrap.min.css";
+
 import "./index.css";
 
 export default function NavbarComponent() {
@@ -42,6 +42,7 @@ export default function NavbarComponent() {
                 <NavDropdown
                   title={<i className="bi bi-person-circle"></i>}
                   id="basic-nav-dropdown"
+                  style={{ maxWidth: "75px" }}
                 >
                   <NavDropdown.Item as={NavLink} to={`/profile/${user._id}`}>
                     Profile

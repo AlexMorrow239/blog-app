@@ -26,9 +26,6 @@ export default function BlogItem({
 
   const card1Ref = useRef(null);
 
-  if (path === "/home" || path === "/" || path === "")
-    card1Ref?.current?.classList.add("card-1-home");
-
   const navigateToBlog = () => {
     navigate(`/blog/${blog.id}`);
   };
