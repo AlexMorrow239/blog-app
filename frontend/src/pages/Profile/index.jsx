@@ -112,8 +112,9 @@ export default function ProfilePage() {
         <AuthorDetails />
         <Subheading subHeading={"Blogs by " + author.firstName + ":"} />
         <BlogList blogs={authorBlogs} />
-        <Footer />
       </div>
+      <Footer />
+
       <AddEditBlogModal />
       <DeleteBlogModal />
       <EditProfileModal />

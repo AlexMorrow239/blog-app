@@ -15,7 +15,7 @@ import {
 export default function AddEditBlogModal() {
   const dispatch = useDispatch();
 
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = useSelector((state) => state.auth.user);
 
   const formRef = useRef();
   const selectRef = useRef();

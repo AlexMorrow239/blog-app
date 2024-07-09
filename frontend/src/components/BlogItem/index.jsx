@@ -20,6 +20,7 @@ export default function BlogItem({
 }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const user = JSON.parse(localStorage.getItem("user"));
   const path = window.location.pathname;
 
