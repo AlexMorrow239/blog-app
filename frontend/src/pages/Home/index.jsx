@@ -48,8 +48,8 @@ export default function Home() {
         <BlogGrid blogPosts={blogs}></BlogGrid>
         <SubHeading subHeading={"Categories"} />
         <CategoriesList categories={categories}></CategoriesList>
-        <Footer />
       </div>
+      <Footer />
     </>
   );
 }

@@ -27,7 +27,7 @@ import {
 } from "../../features/categoriesSlice";
 
 export default function BlogsPage() {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
   const { categoryId } = useParams();
 

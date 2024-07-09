@@ -1,3 +1,7 @@
+.nav-link:hover {
+  transition: all 0.3s ease-in-out;
+  color: #000 !important;
+}
 footer .item {
   padding: 0 0.5rem;
   font-size: 1.25rem;
@@ -5,6 +9,10 @@ footer .item {
 
 footer a {
   color: #000;
+}
+
+footer a:hover {
+  transition: all 0.3s ease-in-out;
 }
 
 footer .linkedin:hover {

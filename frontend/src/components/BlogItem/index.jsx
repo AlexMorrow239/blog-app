@@ -20,13 +20,11 @@ export default function BlogItem({
 }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const user = JSON.parse(localStorage.getItem("user"));
   const path = window.location.pathname;
 
   const card1Ref = useRef(null);
-
-  if (path === "/home" || path === "/" || path === "")
-    card1Ref?.current?.classList.add("card-1-home");
 
   const navigateToBlog = () => {
     navigate(`/blog/${blog.id}`);

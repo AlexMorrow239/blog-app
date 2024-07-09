@@ -51,7 +51,7 @@ export default function CategoriesList() {
           <div
             key={category.id}
             className="card"
-            style={{ borderRadius: "0px", border: "none", padding: 0 }}
+            style={{ padding: 0, zIndex: 0 }}
             onClick={() => {
               navigate(`/blogs/${category.id}`);
             }}
@@ -61,13 +61,21 @@ export default function CategoriesList() {
               style={{
                 backgroundColor: category.color + "33",
                 position: "relative",
-                zIndex: 0,
+                zIndex: 1,
                 border: "3px solid " + (category.color + "66"),
+                borderTopLeftRadius: "0.3rem",
+                borderTopRightRadius: "0.3rem",
               }}
             >
               <h5 className="card-title h-auto">{category.title}</h5>
             </div>
-            <div className="card-body bg-body-secondary">
+            <div
+              className="card-body bg-body-secondary"
+              style={{
+                borderBottomLeftRadius: "0.3rem",
+                borderBottomRightRadius: "0.3rem",
+              }}
+            >
               <p className="card-text">
                 {expandedCategoryId === category.id
                   ? category.description

@@ -2,11 +2,7 @@
   height: 100%;
   overflow: hidden;
   position: relative;
-}
-
-.card-1-home {
-  border-top-left-radius: 15%;
-  border-bottom-right-radius: 15%;
+  border-radius: 0.375rem;
 }
 
 .card-1:hover {
@@ -19,11 +15,7 @@
   display: flex;
   overflow: hidden;
   position: relative;
-}
-
-.item-4 .card-2 {
-  border-bottom-left-radius: 15%;
-  border-top-right-radius: 15%;
+  border-radius: 0.375rem;
 }
 
 .card-2:hover {
@@ -47,6 +39,9 @@
   height: 50%;
   text-align: left;
   padding: 8px;
+  border: 2px solid rgba(0, 0, 0, 0.175);
+  border-bottom-left-radius: 0.375rem;
+  border-bottom-right-radius: 0.375rem;
 }
 
 .card-text-right {
@@ -54,20 +49,19 @@
   height: 100%;
   width: 50%;
   padding: 8px;
+  border: 2px solid rgba(0, 0, 0, 0.175);
+  border-top-right-radius: 0.375rem;
+  border-bottom-right-radius: 0.375rem;
 }
 
 @media (max-width: 992px) {
   .card-1 {
-    border-radius: 0;
-  }
-
-  .card-1-home {
-    border-radius: 0;
+    border-radius: 0.375rem;
   }
 
   .card-2 {
     display: block;
-    border-radius: 0;
+    border-radius: 0.375rem;
   }
 
   .item-4 .card-2 {
@@ -83,5 +77,8 @@
   .card-text-right {
     width: 100%;
     margin-left: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0.375rem;
+    border-bottom-left-radius: 0.375rem;
   }
 }
