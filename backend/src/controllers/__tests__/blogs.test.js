@@ -17,13 +17,22 @@ jest.mock("../../services/cloud-storage");
 
 let req, res;
 
+const resetMocks = () => {
+  Blog.mockClear();
+  __mocks__.mockFindByIdAndDelete.mockClear();
+  __mocks__.mockPopulate.mockClear();
+  __mocks__.mockSave.mockClear();
+  __mocks__.mockSort.mockClear();
+};
+
+// Tests for the createBlogs controller
 describe("Blogs Controller: createBlogs", () => {
   beforeEach(() => {
     req = {
       body: {
         title: "My First Blog Post - Jest Unit Test",
         description:
-          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+          "Lorem Ipsum is simply dummy text of the printing and typesetting industry...",
         categories: JSON.stringify([
           {
             id: "665945dbc2294698fe74d8d4",
@@ -41,17 +50,15 @@ describe("Blogs Controller: createBlogs", () => {
           {
             sectionHeader: "Introduction",
             sectionText:
-              "I'm so excited to share my first blog post with the world. I've been working on this for a while and I'm happy to finally share it with you.\n\nLorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+              "I'm so excited to share my first blog post with the world...",
           },
           {
             sectionHeader: "Body",
-            sectionText:
-              "This is the body of my blog post. I hope you enjoy reading it as much as I enjoyed writing it.\n\nLorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+            sectionText: "This is the body of my blog post...",
           },
           {
             sectionHeader: "Conclusion",
-            sectionText:
-              "I hope you enjoyed reading my first blog post. I'm looking forward to sharing more with you in the future.\n\nLorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+            sectionText: "I hope you enjoyed reading my first blog post...",
           },
         ]),
       },
@@ -61,7 +68,7 @@ describe("Blogs Controller: createBlogs", () => {
     };
 
     res = {
-      status: jest.fn(),
+      status: jest.fn().mockReturnThis(),
       json: jest.fn(),
     };
 
@@ -69,11 +76,10 @@ describe("Blogs Controller: createBlogs", () => {
       "https://storage.googleapis.com/download/storage/v1/b/blog-app-bucket-5543/o/blog-app-bucket-5543%2Fuploads%2Fblogs%2F1718873403923.jpeg?generation=1718873407280113&alt=media"
     );
 
-    Blog.mockClear();
-    __mocks__.mockSave.mockClear();
-    __mocks__.mockPopulate.mockClear();
+    resetMocks();
   });
 
+  // Test case for creating a blog with an image
   test("Should create a blog with an image and return the blog data", async () => {
     __mocks__.mockSave.mockResolvedValue({ _id: "1" });
     __mocks__.mockPopulate.mockResolvedValue(__mocks__.mockBlogPost);
@@ -103,6 +109,7 @@ describe("Blogs Controller: createBlogs", () => {
     });
   });
 
+  // Test case for creating a blog without an image
   test("Should create a blog with no image specified and return the blog data", async () => {
     req = {
       ...req,
@@ -139,6 +146,7 @@ describe("Blogs Controller: createBlogs", () => {
     });
   });
 
+  // Test case for handling errors during blog creation
   test("should handle errors", async () => {
     const error = new Error("Something went wrong");
     __mocks__.mockSave.mockRejectedValue(error);
@@ -151,6 +159,7 @@ describe("Blogs Controller: createBlogs", () => {
   });
 });
 
+// Tests for the getBlogs controller
 describe("Blogs Controller: getBlogs", () => {
   beforeEach(() => {
     req = {
@@ -158,16 +167,15 @@ describe("Blogs Controller: getBlogs", () => {
     };
 
     res = {
-      status: jest.fn(),
+      status: jest.fn().mockReturnThis(),
       json: jest.fn(),
     };
 
-    Blog.mockClear();
-    __mocks__.mockSave.mockClear();
-    __mocks__.mockPopulate.mockClear();
+    resetMocks();
     __mocks__.mockSort.mockClear();
   });
 
+  // Test case for retrieving all blogs
   test("Should return all blogs data", async () => {
     __mocks__.mockPopulate.mockResolvedValue([__mocks__.mockBlogPost]);
     __mocks__.mockSort.mockReturnValue([__mocks__.mockBlogPost]);
@@ -189,6 +197,7 @@ describe("Blogs Controller: getBlogs", () => {
     });
   });
 
+  // Test case for handling errors during blog retrieval
   test("should handle errors", async () => {
     Blog.mockImplementation(() => ({
       save: __mocks__.mockSave,
@@ -209,23 +218,24 @@ describe("Blogs Controller: getBlogs", () => {
   });
 });
 
+// Tests for the getBlogById controller
 describe("Blogs Controller: getBlogById", () => {
   beforeEach(() => {
-    (req = {
+    req = {
       params: {
         id: "1",
       },
-    }),
-      (res = {
-        status: jest.fn().mockReturnThis(),
-        json: jest.fn(),
-      });
+    };
 
-    Blog.mockClear();
-    __mocks__.mockSave.mockClear();
-    __mocks__.mockPopulate.mockClear();
+    res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    resetMocks();
   });
 
+  // Test case for retrieving a blog by its ID
   test("Should return a blog by Id", async () => {
     __mocks__.mockPopulate.mockResolvedValue(__mocks__.mockBlogPost);
 
@@ -245,6 +255,7 @@ describe("Blogs Controller: getBlogById", () => {
     });
   });
 
+  // Test case for handling errors during blog retrieval by ID
   test("should handle errors", async () => {
     const error = new Error("Something went wrong");
     Blog.findById.mockImplementation(() => ({
@@ -259,6 +270,7 @@ describe("Blogs Controller: getBlogById", () => {
     expect(res.json).toHaveBeenCalledWith({ message: error.message, data: {} });
   });
 
+  // Test case for when a blog is not found by ID
   test("Should return 404 if blog not found", async () => {
     __mocks__.mockPopulate.mockResolvedValue(null);
 
@@ -278,6 +290,7 @@ describe("Blogs Controller: getBlogById", () => {
   });
 });
 
+// Tests for the getBlogsByCategoryID controller
 describe("Blogs Controller: getBlogsByCategoryID", () => {
   beforeEach(() => {
     req = {
@@ -291,11 +304,10 @@ describe("Blogs Controller: getBlogsByCategoryID", () => {
       json: jest.fn(),
     };
 
-    Blog.mockClear();
-    __mocks__.mockSave.mockClear();
-    __mocks__.mockPopulate.mockClear();
+    resetMocks();
   });
 
+  // Test case for returning all blogs that contain the specified id
   test("Should return all blogs by category ID", async () => {
     __mocks__.mockPopulate.mockResolvedValue([__mocks__.mockBlogPost]);
 
@@ -314,8 +326,8 @@ describe("Blogs Controller: getBlogsByCategoryID", () => {
     });
   });
 
+  // Test case for when no category is specified and all blogs should be returned
   test("Should return all blogs", async () => {
-    // When no category is specified
     req = {
       params: {
         id: "null",
@@ -339,6 +351,7 @@ describe("Blogs Controller: getBlogsByCategoryID", () => {
     });
   });
 
+  // Test case for error handling errors when finding blogs
   test("should handle errors", async () => {
     const error = new Error("Something went wrong");
     Blog.find.mockImplementation(() => ({
@@ -354,6 +367,7 @@ describe("Blogs Controller: getBlogsByCategoryID", () => {
   });
 });
 
+// Tests for the getBlogsByAuthorID controller
 describe("Blogs Controller: getBlogsByAuthorID", () => {
   beforeEach(() => {
     req = {
@@ -367,11 +381,10 @@ describe("Blogs Controller: getBlogsByAuthorID", () => {
       json: jest.fn(),
     };
 
-    Blog.mockClear();
-    __mocks__.mockSave.mockClear();
-    __mocks__.mockPopulate.mockClear();
+    resetMocks();
   });
 
+  // Test case for when authorId is specified
   test("Should return all blogs by author ID", async () => {
     __mocks__.mockPopulate.mockResolvedValue([__mocks__.mockBlogPost]);
 
@@ -390,8 +403,8 @@ describe("Blogs Controller: getBlogsByAuthorID", () => {
     });
   });
 
+  // Test case for when no authorId is specified
   test("Should return all blogs", async () => {
-    //When no authorId is specified
     req = {
       params: {
         id: "null",
@@ -415,6 +428,7 @@ describe("Blogs Controller: getBlogsByAuthorID", () => {
     });
   });
 
+  // Test case for handling errors in finding blogs
   test("should handle errors", async () => {
     const error = new Error("Something went wrong");
     Blog.find.mockImplementation(() => ({
@@ -430,6 +444,7 @@ describe("Blogs Controller: getBlogsByAuthorID", () => {
   });
 });
 
+// Tests for the updateBlogByID controller
 describe("Blogs Controller: updateBlogByID", () => {
   beforeEach(() => {
     req = {
@@ -474,11 +489,11 @@ describe("Blogs Controller: updateBlogByID", () => {
       json: jest.fn(),
     };
 
-    Blog.mockClear();
-    __mocks__.mockPopulate.mockClear();
+    resetMocks();
   });
 
-  test("Should update the blog (including image) with the specified Id", async () => {
+  // Test case for updating blogs and blog images
+  test("Should update the blog with the specified Id", async () => {
     cloudStorage.uploadToFirebaseStorage.mockImplementation(
       jest.fn().mockResolvedValue(__mocks__.mockUpdatedBlog.image)
     );
@@ -523,6 +538,7 @@ describe("Blogs Controller: updateBlogByID", () => {
     });
   });
 
+  // Test case for when the req.body is empty or undefined
   test("Should not update the blog at specified Id", async () => {
     req = {
       params: {
@@ -559,6 +575,7 @@ describe("Blogs Controller: updateBlogByID", () => {
     });
   });
 
+  // Test case for handling errors in the findById
   test("Should handle errors", async () => {
     const error = new Error("Something went wrong");
     __mocks__.mockPopulate.mockRejectedValue(error);
@@ -575,6 +592,7 @@ describe("Blogs Controller: updateBlogByID", () => {
     expect(res.json).toHaveBeenCalledWith({ message: error.message, data: {} });
   });
 
+  // Test case for when the blog is not in the databse
   test("Should return 404 if blog is not in database", async () => {
     __mocks__.mockPopulate.mockResolvedValue(null);
 
@@ -595,6 +613,7 @@ describe("Blogs Controller: updateBlogByID", () => {
   });
 });
 
+// Tests for the deleteBlogById controller
 describe("Blogs Controller: deleteBlogByID", () => {
   beforeEach(() => {
     req = {
@@ -608,10 +627,10 @@ describe("Blogs Controller: deleteBlogByID", () => {
       json: jest.fn(),
     };
 
-    Blog.mockClear();
-    __mocks__.mockFindByIdAndDelete.mockClear();
+    resetMocks();
   });
 
+  // Test case for when the id is provided properly and the image is not default
   test("Should delete a blog by id and return it", async () => {
     __mocks__.mockFindByIdAndDelete.mockResolvedValue(__mocks__.mockBlogPost);
 
@@ -632,6 +651,7 @@ describe("Blogs Controller: deleteBlogByID", () => {
     });
   });
 
+  // Test case for deleting a blog with a default image
   test("Should delete a blog by id and return it", async () => {
     const mockBlog = {
       ...__mocks__.mockBlog,
@@ -652,6 +672,7 @@ describe("Blogs Controller: deleteBlogByID", () => {
     });
   });
 
+  // Test case for handling errors in findVyIdAndDelete
   test("Should handle errors", async () => {
     const error = new Error("Something went wrong");
     __mocks__.mockFindByIdAndDelete.mockRejectedValue(error);
@@ -665,6 +686,7 @@ describe("Blogs Controller: deleteBlogByID", () => {
     expect(res.json).toHaveBeenCalledWith({ message: error.message });
   });
 
+  // Test case for when the blog is not found in the database
   test("Should return 404 if blog is not in database", async () => {
     __mocks__.mockFindByIdAndDelete.mockResolvedValue(null);
 
