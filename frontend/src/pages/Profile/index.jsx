@@ -61,11 +61,24 @@ export default function ProfilePage() {
   const AuthorDetails = () => {
     return (
       <div className="col-md-8 col-lg-6 col-xl-4 mx-auto">
-        <div className="position-sticky my-5" style={{ top: "2rem" }}>
+        <div className="my-5" style={{ top: "2rem" }}>
+          <h3 className="fst-italic">About</h3>
+
           <div className="p-4 mb-3 bg-light rounded">
-            <h4 className="fst-italic">
-              {author.firstName} {author.lastName}
-            </h4>
+            <div className="d-flex justify-content-between">
+              <h4 className="fst-italic">
+                {author.firstName} {author.lastName}
+              </h4>
+              {authorId === user._id && (
+                <button
+                  className="btn btn-outline-dark d-flex align-items-center"
+                  onClick={onEditProfile}
+                >
+                  <span className="me-2">EDIT</span>
+                  <i className="bi bi-pencil-fill" />
+                </button>
+              )}
+            </div>
             <img src={author.image} className="avatar" alt="profile" />
             <p>
               {isReading ? author?.bio : author?.bio.substring(0, 100)}
@@ -82,18 +95,6 @@ export default function ProfilePage() {
                   {isReading ? "Close" : "Read More"}
                 </button>
               </div>
-            )}
-            {authorId === user._id && (
-              <i
-                className="bi bi-pencil-fill btn btn-outline-dark px-2 py-1"
-                style={{
-                  position: "absolute",
-                  top: "15px",
-                  right: "15px",
-                  fontSize: "1.5rem",
-                }}
-                onClick={onEditProfile}
-              />
             )}
           </div>
         </div>
