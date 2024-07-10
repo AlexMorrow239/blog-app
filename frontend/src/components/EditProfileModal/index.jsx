@@ -143,8 +143,9 @@ export default function EditProfileModal() {
   const onCloseModal = (e) => {
     e?.preventDefault();
     resetValidation();
-    editProfileModalInstance.current?.hide();
+    dispatch(setAuthorImage(authorSlice.editAuthor?.image || null));
     dispatch(setEditAuthor(null));
+    editProfileModalInstance.current?.hide();
   };
 
   const onImageChange = (e) => {

@@ -6,6 +6,7 @@ import "./index.css";
 export default function FormImage({ image, onChange }) {
   const fileInput = useRef();
   const path = window.location.pathname;
+  const isProfile = path === "/register" || path.startsWith("/profile");
 
   return (
     <div className="mb-3">
@@ -23,15 +24,14 @@ export default function FormImage({ image, onChange }) {
       {image ? (
         <div
           className="image"
+          style={{ height: { isProfile } ? "233px" : "150px" }}
           onClick={() => {
             fileInput?.current?.click();
           }}
         >
           <img
             className={`${
-              path === "/register" || path.startsWith("/profile")
-                ? "avatar profile-img-upload"
-                : "img-upload"
+              isProfile ? "avatar profile-img-upload" : "img-upload"
             }`}
             src={image}
             alt="blog.title"
