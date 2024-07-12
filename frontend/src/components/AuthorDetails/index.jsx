@@ -31,7 +31,12 @@ export default function AuthorDetails({ onEditProfile }) {
             </button>
           )}
         </div>
-        <img src={author.image} className="avatar" alt="profile" />
+        <img
+          src={author.image}
+          className="avatar"
+          alt="profile"
+          style={{ aspectRatio: "1/1", objectFit: "cover" }}
+        />
         <p>
           {isReading ? author?.bio : author?.bio.substring(0, 100)}
           {author.bio.length > 100 && !isReading && "..."}
