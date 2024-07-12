@@ -108,23 +108,17 @@ export default function BlogsPage() {
       return null;
     }
     return categories.map((category) => {
-      return categoryId === category.id ? (
+      const isActive = categoryId === category.id ? "active" : "";
+      return (
         <Link
-          className="link"
+          className={`link ${isActive}`}
           key={category.id}
           to={"/blogs/" + category.id}
-          style={{ color: "blue" }}
+          style={{
+            backgroundColor: isActive ? category.color : "none",
+          }}
         >
-          <p key={category.id}>{category.title}</p>
-        </Link>
-      ) : (
-        <Link
-          className="link"
-          key={category.id}
-          to={"/blogs/" + category.id}
-          style={{ color: "black" }}
-        >
-          <p key={category.id}>{category.title}</p>
+          <span key={category.id}>{category.title}</span>
         </Link>
       );
     });
