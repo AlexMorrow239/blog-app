@@ -56,7 +56,7 @@ export default function BlogsPage() {
   }, [categoryId]);
 
   const testingBlogAdd = false;
-  const onBlogAdd = () => {
+  const onBlogAdd = (catId = null) => {
     if (categories && categories.length) {
       if (testingBlogAdd) {
         dispatch(
@@ -76,11 +76,17 @@ export default function BlogsPage() {
           })
         );
       } else {
+        let categoryArr = [];
+        if (catId) {
+          categoryArr.push(
+            categories.find((category) => category.id === catId)
+          );
+        }
         dispatch(
           setAddBlog({
             title: "",
             description: "",
-            categories: [],
+            categories: categoryArr,
             authorId: user._id,
             content: [{ sectionHeader: "", sectionText: "" }],
           })
@@ -97,7 +103,12 @@ export default function BlogsPage() {
       return null;
     }
     return (
-      <button className="btn btn-outline-dark m-3" onClick={onBlogAdd}>
+      <button
+        className="btn btn-outline-dark m-3"
+        onClick={() => {
+          onBlogAdd();
+        }}
+      >
         ADD BLOG
       </button>
     );
@@ -140,7 +151,24 @@ export default function BlogsPage() {
           <p className="page-subtitle">Blog Posts</p>
           <AddButton />
         </div>
-        <BlogList blogs={blogs} />
+        {!blogs || !blogs.length ? (
+          <div className="container">
+            <span className="text-muted">
+              There are no blogs under this caetgory. Would you like to{" "}
+              <button
+                onClick={() => {
+                  onBlogAdd(categoryId);
+                }}
+                className="link"
+              >
+                add one
+              </button>
+              ?
+            </span>
+          </div>
+        ) : (
+          <BlogList blogs={blogs} />
+        )}
         <AddEditBlogModal />
         <DeleteBlogModal />
       </div>

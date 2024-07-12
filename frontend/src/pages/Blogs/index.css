@@ -30,3 +30,16 @@
 .scroll-menu a.active {
   color: #fff;
 }
+
+.link {
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-decoration: underline;
+  color: #007bff;
+  transition: all 0.3s ease;
+}
+
+.link:hover {
+  color: #0056b3;
+}
