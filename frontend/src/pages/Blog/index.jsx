@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import Navbar from "../../components/Navbar";
 import Categories from "../../components/Categories";
 import Footer from "../../components/Footer";
-
-import blogService from "../../services/blogService";
 import SuccessToast from "../../components/SuccessToast";
 import ErrorToast from "../../components/ErrorToast";
 import Loading from "../../components/Loading";
