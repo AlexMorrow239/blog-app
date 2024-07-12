@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-
 import { useParams, useNavigate, Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 import Navbar from "../../components/Navbar";
-
 import Categories from "../../components/Categories";
 import Footer from "../../components/Footer";
 
@@ -15,42 +14,35 @@ import AuthorDetails from "../../components/AuthorDetails";
 
 import "./index.css";
 
+import {
+  fetchBlogById,
+  reset as resetBlog,
+  resetSuccessAndError,
+} from "../../features/blogsSlice";
+import { setAuthor } from "../../features/authorSlice";
+
 export default function BlogPage() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { blogId } = useParams();
 
-  const [blog, setBlog] = useState(null);
-  const [isError, setIsError] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [message, setMessage] = useState("");
+  const { blog, isLoading, isError, isSuccess, message } = useSelector(
+    (state) => state.blogs
+  );
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        const blogRes = await blogService.fetchBlogByID(blogId);
-        setBlog(blogRes.data);
-        setMessage(blogRes.message);
-        setIsLoading(false);
-      } catch (error) {
-        setIsError(true);
-        setMessage(error.message || error);
-        setIsLoading(false);
-      }
+    dispatch(fetchBlogById(blogId));
+    return () => {
+      dispatch(resetBlog());
+      dispatch(setAuthor(null));
     };
-    fetchData();
-  }, [blogId]);
+  }, [blogId, dispatch]);
 
-  const resetSuccess = () => {
-    setIsSuccess(false);
-    setMessage("");
-  };
-
-  const resetError = () => {
-    setIsError(false);
-    setMessage("");
-  };
+  useEffect(() => {
+    if (blog) {
+      dispatch(setAuthor(blog.author));
+    }
+  }, [blog, dispatch]);
 
   const navigateToAuthorProfile = () => {
     navigate("/profile/" + blog.author.id);
@@ -73,7 +65,7 @@ export default function BlogPage() {
                 <p className="blog-post-meta">
                   {blog.updatedAt.slice(0, 10)} by{" "}
                   <Link to={"/profile/" + blog.author.id}>
-                    {blog.author.firstName} {blog.author.lastName}
+                    {blog.author.firstName} {blog.author?.lastName}
                   </Link>
                 </p>
                 <p>{blog.description}</p>
@@ -101,8 +93,16 @@ export default function BlogPage() {
         </div>
       </main>
       <Footer />
-      <SuccessToast show={isSuccess} message={message} onClose={resetSuccess} />
-      <ErrorToast show={isError} message={message} onClose={resetError} />
+      <SuccessToast
+        show={isSuccess}
+        message={message}
+        onClose={resetSuccessAndError}
+      />
+      <ErrorToast
+        show={isError}
+        message={message}
+        onClose={resetSuccessAndError}
+      />
     </>
   );
 }

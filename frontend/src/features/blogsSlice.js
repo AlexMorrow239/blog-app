@@ -54,7 +54,7 @@ export const fetchBlogById = createAsyncThunk(
   "blogs/fetchBlogById",
   async (blogId, thunkAPI) => {
     try {
-      return await blogService.fetchBlogById(blogId);
+      return await blogService.fetchBlogByID(blogId);
     } catch (error) {
       const message = error.message || error;
       return thunkAPI.rejectWithValue(message);

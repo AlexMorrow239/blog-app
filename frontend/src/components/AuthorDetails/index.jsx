@@ -7,8 +7,8 @@ export default function AuthorDetails({ onEditProfile }) {
 
   const { authorId } = useParams();
 
-  const user = useSelector((state) => state.auth.user);
-  const author = useSelector((state) => state.author.author);
+  const { user } = useSelector((state) => state.auth);
+  const { author } = useSelector((state) => state.author);
 
   const path = window.location.pathname;
 
@@ -19,7 +19,7 @@ export default function AuthorDetails({ onEditProfile }) {
       <div className="p-4 mb-3 bg-light rounded">
         <div className="d-flex justify-content-between">
           <h4 className="fst-italic">
-            {author.firstName} {author.lastName}
+            {author?.firstName} {author?.lastName}
           </h4>
           {onEditProfile && authorId === user?._id && (
             <button
@@ -32,14 +32,14 @@ export default function AuthorDetails({ onEditProfile }) {
           )}
         </div>
         <img
-          src={author.image}
+          src={author?.image}
           className="avatar"
           alt="profile"
           style={{ aspectRatio: "1/1", objectFit: "cover" }}
         />
         <p>
           {isReading ? author?.bio : author?.bio.substring(0, 100)}
-          {author.bio.length > 100 && !isReading && "..."}
+          {author?.bio.length > 100 && !isReading && "..."}
         </p>
         {path.startsWith("/profile") && author?.bio?.length > 100 && (
           <div className="text-center">
