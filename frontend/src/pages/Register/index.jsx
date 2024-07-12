@@ -5,8 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { register, reset } from "../../features/authSlice";
 
 import ErrorToast from "../../components/ErrorToast";
-import ProfileFormImage from "../../ProfileFormImage";
-import Navbar from "../../components/Navbar";
+import ProfileFormImage from "../../components/ProfileFormImage";
 
 export default function RegisterPage() {
   const [newUser, setNewUser] = useState({

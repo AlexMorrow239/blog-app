@@ -12,7 +12,6 @@ import DeleteBlogModal from "../../components/DeleteBlogModal";
 import SuccessToast from "../../components/SuccessToast";
 import ErrorToast from "../../components/ErrorToast";
 import AuthorDetails from "../../components/AuthorDetails";
-
 import EditProfileModal from "../../components/EditProfileModal";
 
 import { resetSuccessAndError as resetAuth } from "../../features/authSlice";
