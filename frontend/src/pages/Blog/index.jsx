@@ -11,6 +11,7 @@ import blogService from "../../services/blogService";
 import SuccessToast from "../../components/SuccessToast";
 import ErrorToast from "../../components/ErrorToast";
 import Loading from "../../components/Loading";
+import AuthorDetails from "../../components/AuthorDetails";
 
 import "./index.css";
 
@@ -94,11 +95,7 @@ export default function BlogPage() {
           </div>
           <div className="author col-md-4" onClick={navigateToAuthorProfile}>
             <div className="position-sticky my-5" style={{ top: "2rem" }}>
-              <div className="p-4 mb-3 bg-light rounded">
-                <h4 className="fst-italic">About the author</h4>
-                <img src={blog.author.image} className="avatar" alt="..." />
-                <p>{blog.author.bio.substring(0, 100)}...</p>
-              </div>
+              <AuthorDetails author={blog.author} />
             </div>
           </div>
         </div>

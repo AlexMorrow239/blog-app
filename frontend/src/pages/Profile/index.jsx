@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -11,6 +11,7 @@ import AddEditBlogModal from "../../components/AddEditBlogModal";
 import DeleteBlogModal from "../../components/DeleteBlogModal";
 import SuccessToast from "../../components/SuccessToast";
 import ErrorToast from "../../components/ErrorToast";
+import AuthorDetails from "../../components/AuthorDetails";
 
 import EditProfileModal from "../../components/EditProfileModal";
 
@@ -26,10 +27,7 @@ export default function ProfilePage() {
   const dispatch = useDispatch();
   const { authorId } = useParams();
 
-  const [isReading, setIsReading] = useState(false);
-
   const {
-    user,
     isError: isAuthError,
     isSuccess: isAuthSuccess,
     isLoading: isLoadingAuth,
@@ -58,50 +56,6 @@ export default function ProfilePage() {
     };
   }, [dispatch, authorId]);
 
-  const AuthorDetails = () => {
-    return (
-      <div className="col-md-8 col-lg-6 col-xl-4 mx-auto">
-        <div className="my-5" style={{ top: "2rem" }}>
-          <h3 className="fst-italic">About</h3>
-
-          <div className="p-4 mb-3 bg-light rounded">
-            <div className="d-flex justify-content-between">
-              <h4 className="fst-italic">
-                {author.firstName} {author.lastName}
-              </h4>
-              {authorId === user._id && (
-                <button
-                  className="btn btn-outline-dark d-flex align-items-center"
-                  onClick={onEditProfile}
-                >
-                  <span className="me-2">EDIT</span>
-                  <i className="bi bi-pencil-fill" />
-                </button>
-              )}
-            </div>
-            <img src={author.image} className="avatar" alt="profile" />
-            <p>
-              {isReading ? author?.bio : author?.bio.substring(0, 100)}
-              {author.bio.length > 100 && !isReading && "..."}
-            </p>
-            {author?.bio?.length > 100 && (
-              <div className="text-center">
-                <button
-                  className="btn btn-outline-dark"
-                  onClick={() => {
-                    setIsReading(!isReading);
-                  }}
-                >
-                  {isReading ? "Close" : "Read More"}
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    );
-  };
-
   if (isLoadingAuth || isLoadingAuthor || !author || !authorBlogs) {
     return <Loading />;
   }
@@ -110,7 +64,11 @@ export default function ProfilePage() {
     <>
       <Navbar />
       <div className="container">
-        <AuthorDetails />
+        <div className="col-md-8 col-lg-6 col-xl-4 mx-auto">
+          <div className="my-5" style={{ top: "2rem" }}>
+            <AuthorDetails onEditProfile={onEditProfile} />
+          </div>
+        </div>
         <Subheading subHeading={"Blogs by " + author.firstName + ":"} />
         <BlogList blogs={authorBlogs} />
       </div>
