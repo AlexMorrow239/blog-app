@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { register, reset } from "../../features/authSlice";
 
 import ErrorToast from "../../components/ErrorToast";
-import FormImage from "../../components/FormImage";
+import ProfileFormImage from "../../ProfileFormImage";
 import Navbar from "../../components/Navbar";
 
 export default function RegisterPage() {
@@ -72,13 +72,12 @@ export default function RegisterPage() {
 
   return (
     <>
-      <Navbar />
       <div className="html-body">
         <main className="form-signin">
           <form onSubmit={onSubmit}>
             <h1 className="h3 mb-3 fw-normal">Author registration</h1>
             <div className="form-floating">
-              <FormImage image={userImage} onChange={onImageChange} />
+              <ProfileFormImage image={userImage} onChange={onImageChange} />
             </div>
             <div className="form-floating mb-2">
               <input
@@ -156,10 +155,11 @@ export default function RegisterPage() {
             <button className="w-100 btn btn-lg btn-primary" type="submit">
               Register
             </button>
-            <Link to="/login" className="my-5">
-              Login
-            </Link>
-            <p className="mt-3 mb-3 text-muted text-center">
+            <div className="d-flex" style={{ justifyContent: "space-between" }}>
+              <Link to="/login">Login</Link>
+              <Link to="/home">Continue as guest</Link>
+            </div>
+            <p className="my-3 text-muted text-center">
               Cape Chronicles &copy; 2024
             </p>
           </form>

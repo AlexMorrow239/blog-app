@@ -217,7 +217,7 @@ export default function AddEditBlogModal() {
         aria-hidden="true"
         ref={modalRef}
       >
-        <div className="modal-dialog modal-xl">
+        <div className="modal-dialog modal-md">
           <div className="modal-content">
             <div className="modal-header">
               <h1 className="modal-title fs-5" id="addEditModalLabel">

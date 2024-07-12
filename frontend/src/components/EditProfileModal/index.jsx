@@ -6,7 +6,8 @@ import {
   setEditAuthor,
   setAuthorImage,
 } from "../../features/authorSlice";
-import FormImage from "../FormImage";
+
+import ProfileFormImage from "../../ProfileFormImage";
 
 export default function EditProfileModal() {
   const dispatch = useDispatch();
@@ -184,7 +185,7 @@ export default function EditProfileModal() {
             <div className="modal-body">
               <form id="authorForm" ref={formRef} noValidate>
                 <div>
-                  <FormImage
+                  <ProfileFormImage
                     image={authorSlice.authorImage}
                     onChange={onImageChange}
                   />

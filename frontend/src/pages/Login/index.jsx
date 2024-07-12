@@ -49,7 +49,6 @@ export default function LoginPage() {
 
   return (
     <>
-      <Navbar />
       <div className="html-body">
         <main className="form-signin">
           <form onSubmit={onSubmit}>
@@ -82,11 +81,11 @@ export default function LoginPage() {
             <button className="w-100 btn btn-lg btn-primary" type="submit">
               Sign in
             </button>
-
-            <Link to="/register" className="my-5">
-              Register
-            </Link>
-            <p className="mt-5 mb-3 text-muted text-center">
+            <div className="d-flex" style={{ justifyContent: "space-between" }}>
+              <Link to="/register">Register</Link>
+              <Link to="/home">Continue as guest</Link>
+            </div>
+            <p className="mt-4 mb-3 text-muted text-center">
               Cape Chronicles &copy; 2024
             </p>
           </form>

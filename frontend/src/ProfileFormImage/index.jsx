@@ -3,13 +3,14 @@ import PropTypes from "prop-types";
 
 import "./index.css";
 
-export default function FormImage({ image, onChange }) {
+export default function ProfileFormImage({ image, onChange }) {
   const fileInput = useRef();
+  const path = window.location.pathname;
 
   return (
-    <div className="mb-3">
+    <div className={image ? "" : "mb-3"}>
       <label htmlFor="fileInput" className="form-label">
-        <span className="text">Image (optional)</span>
+        {path === "/register" ? "Image (optional)" : "Image"}
       </label>
       <input
         ref={fileInput}
@@ -21,16 +22,15 @@ export default function FormImage({ image, onChange }) {
       ></input>
       {image ? (
         <div
-          className="image img-upload"
           onClick={() => {
             fileInput?.current?.click();
           }}
         >
-          <img className="img-upload" src={image} alt="blog.title" />
+          <img className="avatar img-thumbnail" src={image} alt="blog.title" />
         </div>
       ) : (
         <div
-          className="add-image"
+          className="profile-add-image m-auto"
           title="Add Image"
           onClick={() => {
             fileInput?.current?.click();
@@ -43,7 +43,7 @@ export default function FormImage({ image, onChange }) {
   );
 }
 
-FormImage.propTypes = {
+ProfileFormImage.propTypes = {
   image: PropTypes.string,
   onChange: PropTypes.func.isRequired,
 };
