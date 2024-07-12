@@ -64,7 +64,7 @@ const updateCategory = async (category) => {
       throw res.message || JSON.stringify(res);
     } catch (err) {
       console.log(err);
-      const error = new Error("Something went wrong");
+      const error = new Error(err ?? "Something went wrong");
       throw error.message;
     }
   }

@@ -3,6 +3,13 @@ const Blog = require("../models/Blog");
 
 const createCategory = async (req, res) => {
   try {
+    const sameCategory = await Category.find({ title: req.body.title });
+    if (sameCategory.length > 0) {
+      return res
+        .status(409)
+        .json({ message: "Category already exists!", data: [] });
+    }
+
     const category = new Category({
       title: req.body.title,
       description: req.body.description,
@@ -38,6 +45,16 @@ const getCategoryById = async (req, res) => {
 
 const updateCategoryByID = async (req, res) => {
   try {
+    if (req.body.title) {
+      const sameCategory = await Category.find({ title: req.body.title });
+      for (let i = 0; i < sameCategory.length; i++) {
+        if (sameCategory[i]._id != req.params.id) {
+          return res
+            .status(409)
+            .json({ message: "Category already exists!", data: [] });
+        }
+      }
+    }
     const category = await Category.findById(req.params.id);
     if (category) {
       category.title = req.body.title || category.title;

@@ -7,7 +7,7 @@ import {
   setAuthorImage,
 } from "../../features/authorSlice";
 
-import ProfileFormImage from "../../ProfileFormImage";
+import ProfileFormImage from "../../components/ProfileFormImage";
 
 export default function EditProfileModal() {
   const dispatch = useDispatch();
