@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { register, reset } from "../../features/authSlice";
 
-import SuccessToast from "../../components/SuccessToast";
 import ErrorToast from "../../components/ErrorToast";
 import FormImage from "../../components/FormImage";
 import Navbar from "../../components/Navbar";
@@ -68,6 +67,7 @@ export default function RegisterPage() {
     e.preventDefault();
     const userData = buildFormData();
     dispatch(register(userData));
+    dispatch(reset());
   };
 
   return (
@@ -165,13 +165,6 @@ export default function RegisterPage() {
           </form>
         </main>
       </div>
-      <SuccessToast
-        show={isSuccess}
-        message={message}
-        onClose={() => {
-          dispatch(reset());
-        }}
-      />
       <ErrorToast
         show={isError}
         message={message}

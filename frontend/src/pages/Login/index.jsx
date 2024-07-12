@@ -3,9 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { login, resetSuccessAndError } from "../../features/authSlice";
 
-import SuccessToast from "../../components/SuccessToast";
 import ErrorToast from "../../components/ErrorToast";
 import Navbar from "../../components/Navbar";
+import Loading from "../../components/Loading";
 
 import "./index.css";
 
@@ -40,10 +40,11 @@ export default function LoginPage() {
   const onSubmit = async (e) => {
     e.preventDefault();
     dispatch(login(formData));
+    dispatch(resetSuccessAndError());
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   return (
@@ -91,13 +92,6 @@ export default function LoginPage() {
           </form>
         </main>
       </div>
-      <SuccessToast
-        show={isSuccess}
-        message={message}
-        onClose={() => {
-          dispatch(resetSuccessAndError());
-        }}
-      />
       <ErrorToast
         show={isError}
         message={message}
