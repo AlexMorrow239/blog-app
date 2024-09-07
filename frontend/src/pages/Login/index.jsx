@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { login, resetSuccessAndError } from "../../features/authSlice";
 
 import ErrorToast from "../../components/ErrorToast";
-import Navbar from "../../components/Navbar";
 import Loading from "../../components/Loading";
 
 import "./index.css";
@@ -40,7 +39,6 @@ export default function LoginPage() {
   const onSubmit = async (e) => {
     e.preventDefault();
     dispatch(login(formData));
-    dispatch(resetSuccessAndError());
   };
 
   if (isLoading) {
