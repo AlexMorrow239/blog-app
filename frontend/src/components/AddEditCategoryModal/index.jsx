@@ -1,14 +1,14 @@
+import { hsvaToHex } from "@uiw/color-convert";
+import Wheel from "@uiw/react-color-wheel";
+import { Modal } from "bootstrap";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Modal } from "bootstrap";
-import Wheel from "@uiw/react-color-wheel";
-import { hsvaToHex } from "@uiw/color-convert";
 
 import {
   createCategory,
-  updateCategory,
-  setModifyCategory,
   resetCategoryModifiers,
+  setModifyCategory,
+  updateCategory,
 } from "../../features/categoriesSlice";
 
 export default function AddEditCategoryModal() {
@@ -47,12 +47,14 @@ export default function AddEditCategoryModal() {
       dispatch(setModifyCategory(editCategory));
       modalInstance.current?.show();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, addCategory, editCategory]);
 
   useEffect(() => {
     if (modifyCategory) {
       validateForm();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [modifyCategory]);
 
   const validateForm = () => {

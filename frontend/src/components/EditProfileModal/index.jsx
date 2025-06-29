@@ -1,10 +1,10 @@
-import React, { useEffect, useState, useRef } from "react";
 import { Modal } from "bootstrap";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  updateAuthor,
-  setEditAuthor,
   setAuthorImage,
+  setEditAuthor,
+  updateAuthor,
 } from "../../features/authorSlice";
 
 import ProfileFormImage from "../../components/ProfileFormImage";
@@ -40,6 +40,7 @@ export default function EditProfileModal() {
     } else {
       editProfileModalInstance.current?.hide();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authorSlice.editAuthor]);
 
   const buildFormData = () => {

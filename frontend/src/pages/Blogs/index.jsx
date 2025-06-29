@@ -1,29 +1,29 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams, Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
-import Navbar from "../../components/Navbar";
-import Heading from "../../components/Heading";
-import BlogList from "../../components/BlogList";
-import Footer from "../../components/Footer";
 import AddEditBlogModal from "../../components/AddEditBlogModal";
-import Loading from "../../components/Loading";
-import SuccessToast from "../../components/SuccessToast";
-import ErrorToast from "../../components/ErrorToast";
+import BlogList from "../../components/BlogList";
 import DeleteBlogModal from "../../components/DeleteBlogModal";
+import ErrorToast from "../../components/ErrorToast";
+import Footer from "../../components/Footer";
+import Heading from "../../components/Heading";
+import Loading from "../../components/Loading";
+import Navbar from "../../components/Navbar";
+import SuccessToast from "../../components/SuccessToast";
 
 import "./index.css";
 
 import {
-  setAddBlog,
   fetchBlogsByCategoryId,
   resetSuccessAndError as resetBlog,
+  setAddBlog,
 } from "../../features/blogsSlice";
 import {
   fetchCategories,
   resetSuccessAndError as resetCategory,
-  setIsError as setIsCategoriesError,
   setMessage as setCategoriesMessage,
+  setIsError as setIsCategoriesError,
 } from "../../features/categoriesSlice";
 
 export default function BlogsPage() {
@@ -53,6 +53,7 @@ export default function BlogsPage() {
       dispatch(resetBlog());
       dispatch(resetCategory());
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [categoryId]);
 
   const testingBlogAdd = false;

@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
 import { Modal } from "bootstrap";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import Categories from "../Categories";
@@ -7,9 +7,9 @@ import FormImage from "../FormImage";
 
 import {
   createBlog,
-  updateBlog,
   setAddBlog,
   setEditBlog,
+  updateBlog,
 } from "../../features/blogsSlice";
 
 export default function AddEditBlogModal() {
@@ -63,6 +63,7 @@ export default function AddEditBlogModal() {
 
   useEffect(() => {
     validateForm();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [blog]);
 
   const buildFormData = () => {
