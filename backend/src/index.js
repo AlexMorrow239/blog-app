@@ -30,6 +30,15 @@ app.use("/api/blogs", blogsRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/auth", authRoutes);
 
+// Health check endpoint
+app.get("/api/health", (req, res) => {
+  res.status(200).json({ 
+    status: "healthy", 
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime()
+  });
+});
+
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 app.use(express.static(path.join(__dirname, "../../frontend/build")));
 
