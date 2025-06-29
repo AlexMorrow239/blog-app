@@ -49,3 +49,8 @@
 # misc
 .DS_Store
 .env.local
+
+CLAUDE.md
+.claude
+
+.DS_Store
